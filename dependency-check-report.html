@@ -1,0 +1,950 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet"
+        href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css"
+        integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/dt-1.10.20/datatables.min.css" />
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@10.3.1/build/styles/atom-one-dark.min.css">
+
+    <title>NPM Audit Report</title>
+    <meta name="description" content="11 known vulnerabilities found.">
+
+    <style>
+        pre {
+            background-color: #333333;
+            padding: 15px;
+        }
+
+        pre code {
+            color: #fff;
+        }
+    </style>
+
+</head>
+
+<body class="mb-3">
+    <div class="container">
+        <h1 class="mt-5 text-center">NPM Audit Report</h1>
+
+        <div class="text-center">
+            <div class="card-deck my-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            11
+                        </h5>
+                        <p class="card-text">Known vulnerabilities</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            750
+                        </h5>
+                        <p class="card-text">Dependencies</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            October 4th 2021, 5:00:14 am
+                        </h5>
+                        <p class="card-text">Last updated</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card-deck my-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            0
+                        </h5>
+                        <p class="card-text">
+                            <span class="badge badge-danger">critical</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            5
+                        </h5>
+                        <p class="card-text">
+                            <span class="badge badge-warning">high</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            5
+                        </h5>
+                        <p class="card-text">
+                            <span class="badge badge-secondary">moderate</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            1
+                        </h5>
+                        <p class="card-text">
+                            <span class="badge badge-primary">low</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            0
+                        </h5>
+                        <p class="card-text">
+                            <span class="badge badge-info">info</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+
+                <table id="advisories" class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Module</th>
+                            <th scope="col">Severity</th>
+                            <th scope="col">CVEs</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">
+                                <a href="https://npmjs.com/advisories/28" data-toggle="modal" data-target="#advisory-modal-28">Denial-of-Service Extended Event Loop Blocking</a>
+                            </th>
+                            <td>
+                                <a href="https://npmjs.com/package/qs" target="_blank"
+                                    rel="noopener">qs</a>
+                            </td>
+                            <td data-order="2"><span
+                                    class="badge badge-warning">high</span></td>
+                            <td>
+                                CWE-730
+                                , CVE-2014-10064
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                <a href="https://npmjs.com/advisories/29" data-toggle="modal" data-target="#advisory-modal-29">Denial-of-Service Memory Exhaustion</a>
+                            </th>
+                            <td>
+                                <a href="https://npmjs.com/package/qs" target="_blank"
+                                    rel="noopener">qs</a>
+                            </td>
+                            <td data-order="2"><span
+                                    class="badge badge-warning">high</span></td>
+                            <td>
+                                CWE-730
+                                , CVE-2014-7191
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                <a href="https://npmjs.com/advisories/535" data-toggle="modal" data-target="#advisory-modal-535">Regular Expression Denial of Service</a>
+                            </th>
+                            <td>
+                                <a href="https://npmjs.com/package/mime" target="_blank"
+                                    rel="noopener">mime</a>
+                            </td>
+                            <td data-order="3"><span
+                                    class="badge badge-secondary">moderate</span></td>
+                            <td>
+                                CWE-400
+                                , CVE-2017-16138
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                <a href="https://npmjs.com/advisories/602" data-toggle="modal" data-target="#advisory-modal-602">Remote Memory Exposure</a>
+                            </th>
+                            <td>
+                                <a href="https://npmjs.com/package/mysql" target="_blank"
+                                    rel="noopener">mysql</a>
+                            </td>
+                            <td data-order="3"><span
+                                    class="badge badge-secondary">moderate</span></td>
+                            <td>
+                                CWE-20
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                <a href="https://npmjs.com/advisories/1203" data-toggle="modal" data-target="#advisory-modal-1203">Denial of Service</a>
+                            </th>
+                            <td>
+                                <a href="https://npmjs.com/package/mongodb" target="_blank"
+                                    rel="noopener">mongodb</a>
+                            </td>
+                            <td data-order="2"><span
+                                    class="badge badge-warning">high</span></td>
+                            <td>
+                                CWE-248
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                <a href="https://npmjs.com/advisories/1469" data-toggle="modal" data-target="#advisory-modal-1469">Prototype Pollution Protection Bypass</a>
+                            </th>
+                            <td>
+                                <a href="https://npmjs.com/package/qs" target="_blank"
+                                    rel="noopener">qs</a>
+                            </td>
+                            <td data-order="2"><span
+                                    class="badge badge-warning">high</span></td>
+                            <td>
+                                CWE-471
+                                , CVE-2017-1000048
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                <a href="https://npmjs.com/advisories/1587" data-toggle="modal" data-target="#advisory-modal-1587">Regular Expression Denial of Service</a>
+                            </th>
+                            <td>
+                                <a href="https://npmjs.com/package/fast-csv" target="_blank"
+                                    rel="noopener">fast-csv</a>
+                            </td>
+                            <td data-order="4"><span
+                                    class="badge badge-primary">low</span></td>
+                            <td>
+                                CWE-400
+                                , CVE-2020-26256
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                <a href="https://npmjs.com/advisories/1686" data-toggle="modal" data-target="#advisory-modal-1686">Deserialization of Untrusted Data in bson</a>
+                            </th>
+                            <td>
+                                <a href="https://npmjs.com/package/bson" target="_blank"
+                                    rel="noopener">bson</a>
+                            </td>
+                            <td data-order="2"><span
+                                    class="badge badge-warning">high</span></td>
+                            <td>
+                                CWE-502
+                                , CVE-2020-7610
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                <a href="https://npmjs.com/advisories/1767" data-toggle="modal" data-target="#advisory-modal-1767">Denial of Service</a>
+                            </th>
+                            <td>
+                                <a href="https://npmjs.com/package/xlsx" target="_blank"
+                                    rel="noopener">xlsx</a>
+                            </td>
+                            <td data-order="3"><span
+                                    class="badge badge-secondary">moderate</span></td>
+                            <td>
+                                CWE-400
+                                , CVE-2021-32014
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                <a href="https://npmjs.com/advisories/1774" data-toggle="modal" data-target="#advisory-modal-1774">Prototype Pollution</a>
+                            </th>
+                            <td>
+                                <a href="https://npmjs.com/package/jszip" target="_blank"
+                                    rel="noopener">jszip</a>
+                            </td>
+                            <td data-order="3"><span
+                                    class="badge badge-secondary">moderate</span></td>
+                            <td>
+                                CWE-1321
+                                , CVE-2021-23413
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal" tabindex="-1" role="dialog" id="advisory-modal-28">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span class="badge badge-warning">high</span>
+                        Denial-of-Service Extended Event Loop Blocking
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul>
+                                <li>Module:
+                                    <a href="https://npmjs.com/package/qs" target="_blank"
+                                        rel="noopener">qs</a>
+                                </li>
+                                <li>Published: October 17th 2015 </li>
+                                <li>Reported by: Tom Steele</li>
+                                <li>CWE-730</li>
+                                <li>CVE-2014-10064</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul>
+                                <li>Vulnerable: &lt;1.0.0</li>
+                                <li>Patched: &gt;&#x3D; 1.x</li>
+                                <li>Exploitability: 8</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <h3>Overview</h3>
+                    <p class="card-text"><p>Versions prior to 1.0.0 of <code>qs</code> are affected by a denial of service vulnerability that results from excessive recursion in parsing a deeply nested JSON string.</p>
+</p>
+
+                    <h3>Findings</h3>
+                    <ul>
+                        <li>datapumps&gt;restler&gt;qs </li>
+                    </ul>
+
+                    <h3>Remediation</h3>
+                    <p class="card-text"><p>Update to version 1.0.0 or later</p>
+</p>
+                     
+                    <h3>References</h3>
+                    <p class="card-text"><p><a href="https://github.com/advisories/GHSA-f9cm-p3w6-xvr3">GitHub Advisory</a></p>
+</p>
+                     
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-raised mr-2 btn-primary" href="https://npmjs.com/advisories/28" target="_blank" rel="noopener">More about
+                        this vulnerability</a>
+                    <button type="button" class="btn btn-raised btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" tabindex="-1" role="dialog" id="advisory-modal-29">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span class="badge badge-warning">high</span>
+                        Denial-of-Service Memory Exhaustion
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul>
+                                <li>Module:
+                                    <a href="https://npmjs.com/package/qs" target="_blank"
+                                        rel="noopener">qs</a>
+                                </li>
+                                <li>Published: October 17th 2015 </li>
+                                <li>Reported by: Dustin Shiver</li>
+                                <li>CWE-730</li>
+                                <li>CVE-2014-7191</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul>
+                                <li>Vulnerable: &lt;1.0.0</li>
+                                <li>Patched: &gt;&#x3D; 1.x</li>
+                                <li>Exploitability: 9</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <h3>Overview</h3>
+                    <p class="card-text"><p>Versions prior to 1.0 of <code>qs</code> are affected by a denial of service condition. This condition is triggered by parsing a crafted string that deserializes into very large sparse arrays, resulting in the process running out of memory and eventually crashing.</p>
+</p>
+
+                    <h3>Findings</h3>
+                    <ul>
+                        <li>datapumps&gt;restler&gt;qs </li>
+                    </ul>
+
+                    <h3>Remediation</h3>
+                    <p class="card-text"><p>Update to version 1.0.0 or later.</p>
+</p>
+                     
+                    <h3>References</h3>
+                    <p class="card-text"><ul>
+<li><a href="https://github.com/visionmedia/node-querystring/issues/104">https://github.com/visionmedia/node-querystring/issues/104</a></li>
+<li><a href="https://github.com/advisories/GHSA-jjv7-qpx3-h62q">GitHub Advisory</a></li>
+</ul>
+</p>
+                     
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-raised mr-2 btn-primary" href="https://npmjs.com/advisories/29" target="_blank" rel="noopener">More about
+                        this vulnerability</a>
+                    <button type="button" class="btn btn-raised btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" tabindex="-1" role="dialog" id="advisory-modal-535">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span class="badge badge-secondary">moderate</span>
+                        Regular Expression Denial of Service
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul>
+                                <li>Module:
+                                    <a href="https://npmjs.com/package/mime" target="_blank"
+                                        rel="noopener">mime</a>
+                                </li>
+                                <li>Published: September 25th 2017 </li>
+                                <li>Reported by: Cristian-Alexandru Staicu</li>
+                                <li>CWE-400</li>
+                                <li>CVE-2017-16138</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul>
+                                <li>Vulnerable: &lt; 1.4.1 || &gt; 2.0.0 &lt; 2.0.3</li>
+                                <li>Patched: &gt;&#x3D; 1.4.1 &lt; 2.0.0 || &gt;&#x3D; 2.0.3</li>
+                                <li>Exploitability: 4</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <h3>Overview</h3>
+                    <p class="card-text"><p>Affected versions of <code>mime</code> are vulnerable to regular expression denial of service when a mime lookup is performed on untrusted user input.</p>
+</p>
+
+                    <h3>Findings</h3>
+                    <ul>
+                        <li>datapumps&gt;excel4node&gt;mime </li>
+                    </ul>
+
+                    <h3>Remediation</h3>
+                    <p class="card-text"><p>Update to version 2.0.3 or later.</p>
+</p>
+                     
+                    <h3>References</h3>
+                    <p class="card-text"><ul>
+<li><a href="https://github.com/broofa/node-mime/issues/167">Issue #167</a></li>
+<li><a href="https://github.com/advisories/GHSA-wrvr-8mpx-r7pp">GitHub Advisory</a></li>
+</ul>
+</p>
+                     
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-raised mr-2 btn-primary" href="https://npmjs.com/advisories/535" target="_blank" rel="noopener">More about
+                        this vulnerability</a>
+                    <button type="button" class="btn btn-raised btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" tabindex="-1" role="dialog" id="advisory-modal-602">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span class="badge badge-secondary">moderate</span>
+                        Remote Memory Exposure
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul>
+                                <li>Module:
+                                    <a href="https://npmjs.com/package/mysql" target="_blank"
+                                        rel="noopener">mysql</a>
+                                </li>
+                                <li>Published: April 24th 2018 </li>
+                                <li>Reported by: Сковорода Никита Андреевич</li>
+                                <li>CWE-20</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul>
+                                <li>Vulnerable: &gt;&#x3D;2.0.0-alpha8 &lt;&#x3D;2.0.0-rc2 || &gt;&#x3D;2.0.0 &lt;&#x3D;2.13.0</li>
+                                <li>Patched: &gt;&#x3D;2.14.0</li>
+                                <li>Exploitability: 3</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <h3>Overview</h3>
+                    <p class="card-text"><p>Versions of <code>mysql</code> before 2.14.0 are vulnerable to remove memory exposure.</p>
+<p>Affected versions of <code>mysql</code> package allocate and send an uninitialized memory over the network when a number is provided as a password.</p>
+<p>Only <code>mysql</code> running on Node.js versions below 6.0.0 is affected due to a throw added in newer node.js versions.</p>
+<p>Proof of Concept:</p>
+<pre><code>require(<span class="hljs-string">&#x27;mysql&#x27;</span>).createConnection({
+  host: <span class="hljs-string">&#x27;localhost&#x27;</span>,
+  <span class="hljs-keyword">user</span>: <span class="hljs-string">&#x27;user&#x27;</span>,
+  <span class="hljs-keyword">password</span> : USERPROVIDEDINPUT,  // number
+  <span class="hljs-keyword">database</span> : <span class="hljs-string">&#x27;my_db&#x27;</span>
+}).<span class="hljs-keyword">connect</span>();
+</code></pre>
+</p>
+
+                    <h3>Findings</h3>
+                    <ul>
+                        <li>datapumps&gt;mysql </li>
+                    </ul>
+
+                    <h3>Remediation</h3>
+                    <p class="card-text"><p>Update to version 2.14.0 or later.</p>
+</p>
+                     
+                    <h3>References</h3>
+                    <p class="card-text"><ul>
+<li><a href="https://github.com/mysqljs/mysql/commit/310c6a7d1b2e14b63b572dbfbfa10128f20c6d52">Commit #310c6a7</a></li>
+<li><a href="https://github.com/advisories/GHSA-5f7m-mmpc-qhh4">GitHub Advisory</a></li>
+</ul>
+</p>
+                     
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-raised mr-2 btn-primary" href="https://npmjs.com/advisories/602" target="_blank" rel="noopener">More about
+                        this vulnerability</a>
+                    <button type="button" class="btn btn-raised btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" tabindex="-1" role="dialog" id="advisory-modal-1203">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span class="badge badge-warning">high</span>
+                        Denial of Service
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul>
+                                <li>Module:
+                                    <a href="https://npmjs.com/package/mongodb" target="_blank"
+                                        rel="noopener">mongodb</a>
+                                </li>
+                                <li>Published: October 4th 2019 </li>
+                                <li>Reported by: Behnaz Hassanshahi</li>
+                                <li>CWE-248</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul>
+                                <li>Vulnerable: &lt;3.1.13</li>
+                                <li>Patched: &gt;&#x3D;3.1.13</li>
+                                <li>Exploitability: 3</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <h3>Overview</h3>
+                    <p class="card-text"><p>Versions of <code>mongodb</code> prior to 3.1.13 are vulnerable to Denial of Service. The package fails to properly catch an exception when a collection name is invalid and the DB does not exist, crashing the application.</p>
+</p>
+
+                    <h3>Findings</h3>
+                    <ul>
+                        <li>datapumps&gt;mongodb </li>
+                    </ul>
+
+                    <h3>Remediation</h3>
+                    <p class="card-text"><p>Upgrade to version 3.1.13 or later.</p>
+</p>
+                     
+                    <h3>References</h3>
+                    <p class="card-text"><p><a href="https://github.com/advisories/GHSA-mh5c-679w-hh4r">GitHub Advisory</a></p>
+</p>
+                     
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-raised mr-2 btn-primary" href="https://npmjs.com/advisories/1203" target="_blank" rel="noopener">More about
+                        this vulnerability</a>
+                    <button type="button" class="btn btn-raised btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" tabindex="-1" role="dialog" id="advisory-modal-1469">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span class="badge badge-warning">high</span>
+                        Prototype Pollution Protection Bypass
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul>
+                                <li>Module:
+                                    <a href="https://npmjs.com/package/qs" target="_blank"
+                                        rel="noopener">qs</a>
+                                </li>
+                                <li>Published: February 10th 2020 </li>
+                                <li>Reported by: Unknown</li>
+                                <li>CWE-471</li>
+                                <li>CVE-2017-1000048</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul>
+                                <li>Vulnerable: &lt;6.0.4 || &gt;&#x3D;6.1.0 &lt;6.1.2 || &gt;&#x3D;6.2.0 &lt;6.2.3 || &gt;&#x3D;6.3.0 &lt;6.3.2</li>
+                                <li>Patched: &gt;&#x3D;6.0.4 &lt;6.1.0 || &gt;&#x3D;6.1.2 &lt;6.2.0 || &gt;&#x3D;6.2.3 &lt;6.3.0 || &gt;&#x3D;6.3.2</li>
+                                <li>Exploitability: 4</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <h3>Overview</h3>
+                    <p class="card-text"><p>Affected version of <code>qs</code> are vulnerable to Prototype Pollution because it is possible to bypass the protection. The <code>qs.parse</code> function fails to properly prevent an object&#39;s prototype to be altered when parsing arbitrary input. Input containing <code>[</code> or <code>]</code> may bypass the prototype pollution protection and alter the Object prototype. This allows attackers to override properties that will exist in all objects, which may lead to Denial of Service or Remote Code Execution in specific circumstances.</p>
+</p>
+
+                    <h3>Findings</h3>
+                    <ul>
+                        <li>datapumps&gt;restler&gt;qs </li>
+                    </ul>
+
+                    <h3>Remediation</h3>
+                    <p class="card-text"><p>Upgrade to 6.0.4, 6.1.2, 6.2.3, 6.3.2 or later.</p>
+</p>
+                     
+                    <h3>References</h3>
+                    <p class="card-text"><ul>
+<li><a href="https://github.com/ljharb/qs/issues/200">GitHub Issue</a></li>
+<li><a href="https://snyk.io/vuln/npm:qs:20170213">Snyk Report</a></li>
+<li><a href="https://github.com/advisories/GHSA-gqgv-6jq5-jjj9">GitHub Advisory</a></li>
+</ul>
+</p>
+                     
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-raised mr-2 btn-primary" href="https://npmjs.com/advisories/1469" target="_blank" rel="noopener">More about
+                        this vulnerability</a>
+                    <button type="button" class="btn btn-raised btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" tabindex="-1" role="dialog" id="advisory-modal-1587">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span class="badge badge-primary">low</span>
+                        Regular Expression Denial of Service
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul>
+                                <li>Module:
+                                    <a href="https://npmjs.com/package/fast-csv" target="_blank"
+                                        rel="noopener">fast-csv</a>
+                                </li>
+                                <li>Published: December 8th 2020 </li>
+                                <li>Reported by: Anonymous</li>
+                                <li>CWE-400</li>
+                                <li>CVE-2020-26256</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul>
+                                <li>Vulnerable: &lt;4.3.6</li>
+                                <li>Patched: &gt;&#x3D;4.3.6</li>
+                                <li>Exploitability: 4</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <h3>Overview</h3>
+                    <p class="card-text"><p><code>fast-csv</code> and <code>@fast-csv/parse</code> before version 4.3.6 has a possible ReDoS vulnerability (Regular Expression Denial of Service) when using ignoreEmpty option when parsing.</p>
+<h4 id="impact">Impact</h4>
+<p>You will only be affected by this if you use the <code>ignoreEmpty</code> parsing option. If you do use this option it is recommended that you upgrade to the latest version <code>v4.3.6</code></p>
+<h2 id="patches">Patches</h2>
+<p>This has been patched in <code>v4.3.6</code></p>
+<p>This vulnerability was found using a CodeQL query which identified <code>EMPTY_ROW_REGEXP</code> regular expression as vulnerable.</p>
+</p>
+
+                    <h3>Findings</h3>
+                    <ul>
+                        <li>datapumps&gt;fast-csv </li>
+                    </ul>
+
+                    <h3>Remediation</h3>
+                    <p class="card-text"><p>Upgrade to version 4.3.6 or later.</p>
+</p>
+                     
+                    <h3>References</h3>
+                    <p class="card-text"><ul>
+<li><a href="https://github.com/C2FO/fast-csv/security/advisories/GHSA-8cv5-p934-3hwp">https://github.com/C2FO/fast-csv/security/advisories/GHSA-8cv5-p934-3hwp</a></li>
+<li><a href="https://lgtm.com/query/8609731774537641779/">https://lgtm.com/query/8609731774537641779/</a></li>
+<li><a href="https://github.com/C2FO/fast-csv/issues/540">https://github.com/C2FO/fast-csv/issues/540</a></li>
+<li><a href="https://github.com/C2FO/fast-csv/commit/4bbd39f26a8cd7382151ab4f5fb102234b2f829e">https://github.com/C2FO/fast-csv/commit/4bbd39f26a8cd7382151ab4f5fb102234b2f829e</a></li>
+<li><a href="https://www.npmjs.com/package/@fast-csv/parse">https://www.npmjs.com/package/@fast-csv/parse</a></li>
+<li><a href="https://www.npmjs.com/package/fast-csv">https://www.npmjs.com/package/fast-csv</a></li>
+<li><a href="https://github.com/advisories/GHSA-8cv5-p934-3hwp">GitHub Advisory</a></li>
+</ul>
+</p>
+                     
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-raised mr-2 btn-primary" href="https://npmjs.com/advisories/1587" target="_blank" rel="noopener">More about
+                        this vulnerability</a>
+                    <button type="button" class="btn btn-raised btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" tabindex="-1" role="dialog" id="advisory-modal-1686">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span class="badge badge-warning">high</span>
+                        Deserialization of Untrusted Data in bson
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul>
+                                <li>Module:
+                                    <a href="https://npmjs.com/package/bson" target="_blank"
+                                        rel="noopener">bson</a>
+                                </li>
+                                <li>Published: May 7th 2021 </li>
+                                <li>Reported by: Anonymous</li>
+                                <li>CWE-502</li>
+                                <li>CVE-2020-7610</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul>
+                                <li>Vulnerable: &lt;1.1.4</li>
+                                <li>Patched: &gt;&#x3D;1.1.4</li>
+                                <li>Exploitability: 7</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <h3>Overview</h3>
+                    <p class="card-text"><p>Versions of <code>bson</code> before 1.1.4 are vulnerable to Deserialization of Untrusted Data. The package will ignore an unknown value for an object&#39;s _bsotype, leading to cases where an object is serialized as a document rather than the intended BSON type.</p>
+</p>
+
+                    <h3>Findings</h3>
+                    <ul>
+                        <li>datapumps&gt;mongodb&gt;mongodb-core&gt;bson </li>
+                    </ul>
+
+                    <h3>Remediation</h3>
+                    <p class="card-text"><p>Upgrade to version 1.1.4 or later</p>
+</p>
+                     
+                    <h3>References</h3>
+                    <p class="card-text"><ul>
+<li><a href="https://nvd.nist.gov/vuln/detail/CVE-2020-7610">CVE</a></li>
+<li><a href="https://github.com/advisories/GHSA-v8w9-2789-6hhr">GitHub Advisory</a></li>
+</ul>
+</p>
+                     
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-raised mr-2 btn-primary" href="https://npmjs.com/advisories/1686" target="_blank" rel="noopener">More about
+                        this vulnerability</a>
+                    <button type="button" class="btn btn-raised btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" tabindex="-1" role="dialog" id="advisory-modal-1767">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span class="badge badge-secondary">moderate</span>
+                        Denial of Service
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul>
+                                <li>Module:
+                                    <a href="https://npmjs.com/package/xlsx" target="_blank"
+                                        rel="noopener">xlsx</a>
+                                </li>
+                                <li>Published: July 22nd 2021 </li>
+                                <li>Reported by: Anonymous</li>
+                                <li>CWE-400</li>
+                                <li>CVE-2021-32014</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul>
+                                <li>Vulnerable: &lt;0.17.0</li>
+                                <li>Patched: &gt;&#x3D;0.17.0</li>
+                                <li>Exploitability: 5</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <h3>Overview</h3>
+                    <p class="card-text"><p>SheetJS Pro through 0.16.9 allows attackers to cause a denial of service (CPU consumption) via a crafted .xlsx document that is mishandled when read by xlsx.js.</p>
+</p>
+
+                    <h3>Findings</h3>
+                    <ul>
+                        <li>datapumps&gt;xlsx </li>
+                    </ul>
+
+                    <h3>Remediation</h3>
+                    <p class="card-text"><p>Upgrade to version 0.17.0 or later</p>
+</p>
+                     
+                    <h3>References</h3>
+                    <p class="card-text"><ul>
+<li><a href="https://github.com/advisories/GHSA-8vcr-vxm8-293m">GitHub Advisory</a></li>
+<li><a href="https://nvd.nist.gov/vuln/detail/CVE-2021-32014">CVE</a></li>
+</ul>
+</p>
+                     
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-raised mr-2 btn-primary" href="https://npmjs.com/advisories/1767" target="_blank" rel="noopener">More about
+                        this vulnerability</a>
+                    <button type="button" class="btn btn-raised btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" tabindex="-1" role="dialog" id="advisory-modal-1774">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span class="badge badge-secondary">moderate</span>
+                        Prototype Pollution
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul>
+                                <li>Module:
+                                    <a href="https://npmjs.com/package/jszip" target="_blank"
+                                        rel="noopener">jszip</a>
+                                </li>
+                                <li>Published: August 10th 2021 </li>
+                                <li>Reported by: Anonymous</li>
+                                <li>CWE-1321</li>
+                                <li>CVE-2021-23413</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul>
+                                <li>Vulnerable: &lt;3.7.0</li>
+                                <li>Patched: &gt;&#x3D;3.7.0</li>
+                                <li>Exploitability: 5</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <h3>Overview</h3>
+                    <p class="card-text"><p>Affected versions of <code>jszip</code> have a prototype pollution vulnerability. Crafting a new zip file with filenames set to Object prototype values (e.g <strong>proto</strong>, toString, etc) results in a returned object with a modified prototype instance.</p>
+</p>
+
+                    <h3>Findings</h3>
+                    <ul>
+                        <li>datapumps&gt;excel4node&gt;jszip </li>
+                    </ul>
+                    <ul>
+                        <li>datapumps&gt;xlsx&gt;jszip </li>
+                    </ul>
+
+                    <h3>Remediation</h3>
+                    <p class="card-text"><p>Upgrade to version 3.7.0 or later</p>
+</p>
+                     
+                    <h3>References</h3>
+                    <p class="card-text"><ul>
+<li><a href="https://nvd.nist.gov/vuln/detail/CVE-2021-23413">CVE</a></li>
+<li><a href="https://github.com/advisories/GHSA-jg8v-48h5-wgxg">GitHub Advisory</a></li>
+</ul>
+</p>
+                     
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-raised mr-2 btn-primary" href="https://npmjs.com/advisories/1774" target="_blank" rel="noopener">More about
+                        this vulnerability</a>
+                    <button type="button" class="btn btn-raised btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/dt-1.10.20/datatables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#advisories').DataTable({
+                order: [[2, 'asc']]
+            });
+        });
+    </script>
+</body>
+
+</html>

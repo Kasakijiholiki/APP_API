@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken')
 let account = require('../models/account.model')
 let SQL = ``
 const logger = require('../config-log/logger')
-const process = require('../Processes')
+const process = require('../tasks')
 
 //.............Login......................//
 exports.login = async (req, res) => {
@@ -62,13 +62,10 @@ exports.PasswordChage = async (req, res) => {
     account = req.params
     SQL = `UPDATE public.tbl_user_seller SET us_pwd = $1 WHERE device_code = $2 AND us_pwd = $3`
 
-    logger.info(account.params)
-
-    if (!account.device_code || !account.us_pwd || !account.us_newpwd)
-        return res.status(400).send({ message: "Enter device_code Or oldPassword Or newPassword" })
     process.PUT(
         res,
         `POST/api/userpasswordchange/${account.device_code}/${account.us_pwd}/${account.us_newpwd}`,
+        ``,
         SQL,
         [account.us_newpwd, account.device_code, account.us_pwd]
     )
@@ -178,3 +175,4 @@ exports.CheckVersionV2 = async (req, res) => {
         }
     })
 }
+

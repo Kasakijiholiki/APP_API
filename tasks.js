@@ -1,6 +1,6 @@
 
-const connection = require('./DBConfig/connection')
-const logger = require('./LogConfig/logger')
+const connection = require('./config-db/connection')
+const logger = require('./config-log/logger')
 
 //Create one action 
 const POST = async function (res, request, log, SQL, Parameters) {

@@ -2,7 +2,8 @@
 const connection = require('../config-db/connection')
 const logger = require('../config-log/logger')
 let SQL = ``
-const process = require('../Processes')
+const process = require('../tasks')
+
 exports.getperiod = async (req, res) => {
 
     const deviceCode = req.params.deviceCode

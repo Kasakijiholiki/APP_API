@@ -58,6 +58,10 @@ const option = {
 const swaggerDocs = swaggerJSDoc(option)
 app.use('/Swagger', swaggerUI.serve, swaggerUI.setup(swaggerDocs))
 
+const online = require('./other_tasks/isonline')
+
+console.log(online.isonline())
+
 
 app.listen(PORT, console.log(`Server Running on port ${PORT}`))
 module.exports = app;

@@ -1,6 +1,5 @@
 
 const bill = require('../models/bill.model')
-const bill_detail = require('../models/bill_detail.model')
 const db = require('../config-db/connection')
 let SQL = ""
 
@@ -9,9 +8,9 @@ const logger = require('../config-log/logger')
 exports.createsale = async (req, res) => {
 
     bill = req.body
-    bill_detail = req.body
+    let saleList = []
+    saleList = req.body
     SQL = `INSERT INTO tbl_bill VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`
-
     //Check that server is online or not
     if (isonline) {
         //Check that the number is over max sale or not
@@ -22,24 +21,35 @@ exports.createsale = async (req, res) => {
 
                     //Add data to bill
                     cleint.query(SQL, [bill.bill_id, bill.bill_number, bill.period_number, bill.device_code, bill.device_ref, bill.bill_price,
-                    bill.date_bill, bill.time_bill, bill.branch_id, bill.unit_id, bill.ref_code], (error, results) => {
+                    bill.date_bill, bill.time_bill, bill.branch_id, bill.unit_id, bill.ref_code], (error) => {
                         if (error) {
                             logger.error(error)
                             return res.status(403).send({ error: error })
                         }
                         else {
+                            //check number max sell 
+                           SQL = ``
+                            for (let i = 0; i < saleList.length; i++) {
+                                                         
+                            }
+                            //add data to saleList for prepare to add
+                            for (let i = 0; i < saleList.length; i++) {
+
+                                saleList.push(bill.bill_id, bill.bill_number, bill.lottery_number[i], bill.lottery_price[i], bill.date_bill)
+
+                            }
 
                             //Add data sale to  bill detail
-                            SQL = `INSERT INTO tbl_bill(bill_id, bill_number, lottery_number, lottery_price, date_bill_detail)
+                            SQL = `INSERT  INTO tbl_bill(bill_id, bill_number, lottery_number, lottery_price, date_bill_detail)
                                            VALUES ($1, $2, $3, $4, $5)`
-                          
-                            cleint.query(SQL, [bill.bill_id, bill.bill_number, bill.lottery_number, bill.lottery_price, bill.date_bill], (error, results) => {
+
+                            cleint.query(SQL, [saleList], (er) => {
                                 if (error) {
-                                    logger.error(error)
-                                    return res.status(403).send({ error: error })
+                                    logger.error(er)
+                                    return res.status(403).send({ error: er })
                                 }
                                 else {
-                                    return res.status(201).send({ message: "Success" })
+                                    return res.status(201).send({ message: "Created" })
                                 }
                             })
 
@@ -60,3 +70,4 @@ exports.createsale = async (req, res) => {
         return res.status(403).send({ message: "Server offline" })
     }
 }
+

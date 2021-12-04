@@ -49,6 +49,7 @@ const option = {
     servers: [
       {
         url: `http://49.0.198.122:7000`
+        //url: `http://localhost:7000`
       }
     ],
   },
@@ -58,10 +59,12 @@ const option = {
 const swaggerDocs = swaggerJSDoc(option)
 app.use('/Swagger', swaggerUI.serve, swaggerUI.setup(swaggerDocs))
 
-const online = require('./other_tasks/isonline')
+let cperiod = require('./morefunction/getcurrentperiod')
+let isonline = require('./morefunction/isonline')
 
-console.log(online.isonline())
-
+isonline.isonline();
+cperiod.getcurrentperiod();
+console.log(cperiod.getcurrentperiod())
 
 app.listen(PORT, console.log(`Server Running on port ${PORT}`))
 module.exports = app;

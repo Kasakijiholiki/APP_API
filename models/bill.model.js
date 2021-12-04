@@ -13,7 +13,7 @@ const  bill = {
     branch_id: 0,
     unit_id: 0,
     ref_code: 0,
-    lottery_number: String,
-    lottery_price: 0
+    lottery_number: [],
+    lottery_price: []
 }
 module.exports = bill

@@ -14,9 +14,7 @@ exports.login = async (req, res) => {
 
     SQL = `SELECT * FROM  public.tbl_user_seller WHERE  device_code = $1 AND us_pwd = $2`
 
-    if (!account.device_code || !account.us_pwd) {
-        return res.status(400).send({ message: 'Enter your password' })
-    }
+
     await connection.connect((err, cleint, done) => {
 
         if (!err) {
@@ -34,7 +32,7 @@ exports.login = async (req, res) => {
 
                     connection.query(SQL, (err, rs) => {
                         jwt.sign({ account }, 'secretkey', (err, accessToken) => {
-                            res.json({
+                            rs.json({
                                 online: true,
                                 deviceCode: account.device_code,
                                 offlineDate: '05/11/2021',
@@ -115,6 +113,7 @@ exports.CheckVersionV2 = async (req, res) => {
     let isVersionLatest = false;
     account = req.params
 
+    //Check version of app
     SQL = `SELECT * FROM tbl_version_mobile WHERE version_name = $1`
     await connection.connect((err, cleint, done) => {
 
@@ -129,7 +128,6 @@ exports.CheckVersionV2 = async (req, res) => {
                 if (results.rows > 0 && results.rows[0].version_status == 1)
                     isVersionLatest = true
             })
-
             done();
         } else {
             return res.status(500).send({ message: "Server error" })
@@ -139,6 +137,7 @@ exports.CheckVersionV2 = async (req, res) => {
 
     logger.info(`GET/api/account/CheckVersionV2/${account.version_name}/${account.device_imei}`)
 
+    //Check device imei of devive
     SQL = `SELECT  tbl_device.device_number, tbl_device.device_code,
                    tbl_branch_code.branch_id, tbl_province.province_name , tbl_branch_code.branch_code
            FROM    tbl_branch_code, tbl_province, tbl_device
@@ -147,7 +146,6 @@ exports.CheckVersionV2 = async (req, res) => {
              AND   tbl_device.device_imei      = $1`
 
     await connection.connect((err, cleint, done) => {
-
         if (!err) {
             cleint.query(SQL, [account.device_imei], (error, results) => {
 

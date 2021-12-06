@@ -33,7 +33,7 @@ exports.cancelbilllist = (req, res) => {
                     for (let i = 0; i < results.rowCount; i++) {
                         totalPrice += results.rows[i].billprice;
                     }
-                    
+
                     res.json({
                         status: true,
                         statusCode: 200,
@@ -60,6 +60,58 @@ exports.cancelbilllist = (req, res) => {
     })
 }
 
+exports.billdetaillist = (req, res) => {
+    totalReords = 0;
+    totalPrice = 0;
+    bill_id = req.params.bill_id;
+    sql = `SELECT   tbl_bill.bill_number, 
+                    tbl_bill_detail.lottery_number AS number, 
+                    tbl_bill_detail.lottery_price  AS price 
+           FROM     tbl_bill, tbl_bill_detail 
+           WHERE    tbl_bill.bill_id = tbl_bill_detail.bill_id
+           AND      tbl_bill.bill_id =$1`;
+
+           db.connect((err, client, done) => {
+            if (!err) {
+                client.query(sql, [bill_id], (error, results) => {
+                    if (error) {
+                        logger.error(error)
+                        return res.status(403).send(error);
+                    }
+                    if (results.rowCount == 0) {
+                        return res.status(404).send('not found');
+                    }
+                    else {
+                        for (let i = 0; i < results.rowCount; i++) {
+                            totalPrice += results.rows[i].price;
+                        }
+                        res.json({
+                            status: true,
+                            statusCode: 200,
+                            message: "OK",
+                            totalReords: 0,
+                            data: {
+                                billNumber: results.rows[0].bill_number,
+                                totalPrice: totalPrice,
+                                list: results.rows
+                            }
+                        });
+                    }
+                }
+                )
+                done()
+            }
+    
+            else {
+                logger.error(err);
+                return res.status(500).send('Server error');
+    
+            }
+    
+        })
+
+
+}
 
 exports.cancelbilldetaillist = (req, res) => {
     totalPrice = 0;
@@ -110,6 +162,12 @@ exports.cancelbilldetaillist = (req, res) => {
     })
 
 };
+
+
+
+
+
+
 
 
 

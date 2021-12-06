@@ -28,19 +28,32 @@ exports.login = async (req, res) => {
                     return res.status(404).send({ message: 'password incorrect' })
                 }
                 else {
+
                     SQL = `SELECT * FROM public.tbl_set_number`
 
                     connection.query(SQL, (err, rs) => {
-                        jwt.sign({ account }, 'secretkey', (err, accessToken) => {
-                            rs.json({
-                                online: true,
-                                deviceCode: account.device_code,
-                                offlineDate: '05/11/2021',
-                                isOverMaxSell: false,
-                                accessToken, accessToken,
-                                setNumberList: rs.rows
-                            });
-                        });
+                        if(err){
+                          return res.status(403).send({error: err.stack})
+                        } else {
+                            
+                            jwt.sign({ account }, 'secretkey', (err, accessToken) => {
+                                if(!err){
+                                    res.json({
+                                        online: true,
+                                        deviceCode: account.device_code,
+                                        offlineDate: '05/11/2021',
+                                        isOverMaxSell: false,
+                                        accessToken: accessToken,
+                                        setNumberList: rs.rows
+                                    });
+                                } else {
+                                    return res.status(403).send({error: err.stack})
+
+                                }
+                               
+                           });
+                        }
+                        
                     })
 
                 }
@@ -92,7 +105,6 @@ exports.checkversion = async (req, res) => {
                 }
 
                 else {
-                    logger.info(results.rows)
                     return res.status(200).send(true)
                 }
 
@@ -110,7 +122,7 @@ exports.checkversion = async (req, res) => {
 //...........Check device imei..............//
 exports.CheckVersionV2 = async (req, res) => {
 
-    let isVersionLatest = false;
+    let isVersionLatest = true;
     account = req.params
 
     //Check version of app
@@ -134,6 +146,8 @@ exports.CheckVersionV2 = async (req, res) => {
         }
 
     })
+
+
 
     logger.info(`GET/api/account/CheckVersionV2/${account.version_name}/${account.device_imei}`)
 

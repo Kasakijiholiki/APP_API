@@ -217,3 +217,18 @@
 {"level":"info","message":"GET/api/account/CheckVersion/2.0.27","timestamp":"2021-11-12T06:49:34.358Z"}
 {"level":"info","message":[{"version_date":"2021-09-26T17:00:00.000Z","version_name":"2.0.27","version_status":1}],"timestamp":"2021-11-12T06:49:34.443Z"}
 {"level":"info","message":"GET/api/account/CheckVersionV2/{version_name}/863237041347802","timestamp":"2021-11-12T06:50:09.095Z"}
+{"code":"23502","column":"ref_code","detail":"Failing row contains (eb01bc85-72d6-49b9-b6b6-bf839323b786, 2100212300, 21002, 1111111, , 1000, 2021-12-06, 13:43:47, null, null, null).","file":"execMain.c","length":289,"level":"error","line":"1948","name":"error","routine":"ExecConstraints","schema":"public","severity":"ERROR","table":"tbl_bill","timestamp":"2021-12-06T06:43:47.295Z"}
+{"code":"23502","column":"ref_code","detail":"Failing row contains (bbf636f1-87f4-484b-b0ad-57e6269b145b, 2100212300, 21002, 1111111, , 1000, 2021-12-06, 13:45:20, null, null, null).","file":"execMain.c","length":289,"level":"error","line":"1948","name":"error","routine":"ExecConstraints","schema":"public","severity":"ERROR","table":"tbl_bill","timestamp":"2021-12-06T06:45:20.099Z"}
+{"code":"23502","column":"ref_code","detail":"Failing row contains (97bb0916-e12e-4982-9531-84c08d54a334, 2100212300, 21002, 1111111, , 1000, 2021-12-06, 13:46:15, null, null, null).","file":"execMain.c","length":289,"level":"error","line":"1948","name":"error","routine":"ExecConstraints","schema":"public","severity":"ERROR","table":"tbl_bill","timestamp":"2021-12-06T06:46:15.856Z"}
+{"code":"23502","column":"ref_code","detail":"Failing row contains (e48a2e45-ca73-4cac-bab6-e6cf768e9f1c, 2100212300, 21002, 1111111, , 1000, 2021-12-06, 13:55:24, null, null, null).","file":"execMain.c","length":289,"level":"error","line":"1948","name":"error","routine":"ExecConstraints","schema":"public","severity":"ERROR","table":"tbl_bill","timestamp":"2021-12-06T06:55:24.330Z"}
+{"code":"22P02","file":"numutils.c","length":147,"level":"error","line":"256","name":"error","routine":"pg_strtoint32","severity":"ERROR","timestamp":"2021-12-06T06:57:36.371Z"}
+{"level":"info","message":"POST/api/login/123123/123","timestamp":"2021-12-06T09:06:38.289Z"}
+{"level":"info","message":"POST/api/login/123123/123","timestamp":"2021-12-06T09:07:50.719Z"}
+{"level":"info","message":"POST/api/login/123123/123","timestamp":"2021-12-06T09:08:28.686Z"}
+{"level":"info","message":"POST/api/login/123123/123","timestamp":"2021-12-06T09:09:57.559Z"}
+{"level":"info","message":"POST/api/login/123123/123","timestamp":"2021-12-06T09:10:24.879Z"}
+{"level":"info","message":"POST/api/login/123123/123","timestamp":"2021-12-06T09:11:33.189Z"}
+{"level":"info","message":"POST/api/login/123123/123","timestamp":"2021-12-06T09:13:08.329Z"}
+{"level":"info","message":"POST/api/login/123123/123","timestamp":"2021-12-06T09:16:09.307Z"}
+{"level":"info","message":"POST/api/login/123123/123","timestamp":"2021-12-06T09:16:40.040Z"}
+{"level":"info","message":"POST/api/login/123123/123","timestamp":"2021-12-06T09:17:39.044Z"}

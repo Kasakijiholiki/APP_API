@@ -217,3 +217,15 @@
 {"level":"info","message":"GET/api/account/CheckVersion/2.0.27","timestamp":"2021-11-12T06:49:34.358Z"}
 {"level":"info","message":[{"version_date":"2021-09-26T17:00:00.000Z","version_name":"2.0.27","version_status":1}],"timestamp":"2021-11-12T06:49:34.443Z"}
 {"level":"info","message":"GET/api/account/CheckVersionV2/{version_name}/863237041347802","timestamp":"2021-11-12T06:50:09.095Z"}
+{"code":"22P02","file":"uuid.c","length":130,"level":"error","line":"134","name":"error","routine":"string_to_uuid","severity":"ERROR","timestamp":"2021-12-06T07:02:04.682Z"}
+{"code":"22P02","file":"uuid.c","length":130,"level":"error","line":"134","name":"error","routine":"string_to_uuid","severity":"ERROR","timestamp":"2021-12-06T07:04:27.796Z"}
+{"code":"22P02","file":"uuid.c","length":130,"level":"error","line":"134","name":"error","routine":"string_to_uuid","severity":"ERROR","timestamp":"2021-12-06T07:04:32.812Z"}
+{"code":"22P02","file":"uuid.c","length":120,"level":"error","line":"134","name":"error","routine":"string_to_uuid","severity":"ERROR","timestamp":"2021-12-06T07:04:51.185Z"}
+{"code":"42703","file":"parse_relation.c","length":127,"level":"error","line":"3349","name":"error","position":"72","routine":"errorMissingColumn","severity":"ERROR","timestamp":"2021-12-06T07:17:52.309Z"}
+{"code":"42703","file":"parse_relation.c","length":127,"level":"error","line":"3349","name":"error","position":"72","routine":"errorMissingColumn","severity":"ERROR","timestamp":"2021-12-06T07:17:53.419Z"}
+{"code":"42703","file":"parse_relation.c","length":127,"level":"error","line":"3349","name":"error","position":"72","routine":"errorMissingColumn","severity":"ERROR","timestamp":"2021-12-06T07:19:09.355Z"}
+{"code":"42703","file":"parse_relation.c","length":127,"level":"error","line":"3349","name":"error","position":"72","routine":"errorMissingColumn","severity":"ERROR","timestamp":"2021-12-06T07:19:12.076Z"}
+{"code":"42703","file":"parse_relation.c","length":127,"level":"error","line":"3349","name":"error","position":"72","routine":"errorMissingColumn","severity":"ERROR","timestamp":"2021-12-06T07:19:12.920Z"}
+{"code":"42703","file":"parse_relation.c","length":127,"level":"error","line":"3349","name":"error","position":"72","routine":"errorMissingColumn","severity":"ERROR","timestamp":"2021-12-06T07:19:13.543Z"}
+{"code":"42703","file":"parse_relation.c","length":127,"level":"error","line":"3349","name":"error","position":"72","routine":"errorMissingColumn","severity":"ERROR","timestamp":"2021-12-06T07:19:33.081Z"}
+{"code":"42703","file":"parse_relation.c","length":127,"level":"error","line":"3349","name":"error","position":"72","routine":"errorMissingColumn","severity":"ERROR","timestamp":"2021-12-06T07:25:29.557Z"}

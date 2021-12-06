@@ -16,10 +16,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //routes
 const account = require('./routes/account.route')
 const period = require('./routes/period.route')
+const dashboard = require('./routes/dashboard')
+
 
 //use routes
 app.use('/api/', account)
 app.use('/api/', period)
+app.use('/api/', dashboard);
 
 //Swagger
 const PORT = process.env.port || 8000

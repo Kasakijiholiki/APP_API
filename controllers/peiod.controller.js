@@ -16,7 +16,7 @@ exports.getperiod = async (req, res) => {
         cleint.query(SQL, [deviceCode], (error, results) => {
             if (error) {
                 logger.error(error)
-                res.status(403).send({ error: error })
+                res.status(403).send({ error: error.stack })
             }
 
             if (results.rowCount == 0) {

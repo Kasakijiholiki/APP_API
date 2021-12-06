@@ -17,11 +17,21 @@ var format = require('pg-format');
 //routes
 const account = require('./routes/account.route')
 const period = require('./routes/period.route')
+<<<<<<< HEAD
 const sale = require('./routes/salemanagement.route')
 //use routes
 app.use('/api/', account)
 app.use('/api/', period)
 app.use('/api/', sale)
+=======
+const dashboard = require('./routes/dashboard')
+
+
+//use routes
+app.use('/api/', account)
+app.use('/api/', period)
+app.use('/api/', dashboard);
+>>>>>>> 1875c49be9024701daa7a6f607735eb8c5d3e8c9
 
 //Swagger
 const PORT = process.env.port || 8000

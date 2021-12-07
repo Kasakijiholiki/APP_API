@@ -67,6 +67,8 @@ const option = {
 const swaggerDocs = swaggerJSDoc(option)
 app.use('/Swagger', swaggerUI.serve, swaggerUI.setup(swaggerDocs))
 
+<<<<<<< HEAD
+=======
 // let cperiod = require('./morefunction/getcurrentperiod')
  let isonline = require('./morefunction/isonline')
 
@@ -99,5 +101,10 @@ app.use('/Swagger', swaggerUI.serve, swaggerUI.setup(swaggerDocs))
   
 // })
 
+<<<<<<< HEAD
+=======
+// a.
+>>>>>>> 66e64b3f8dc078109393fd56385efd9d7a1ffe8f
+>>>>>>> 707e411f554b73d6b0d815113179af73d0d888c5
 app.listen(PORT, console.log(`Server Running on port ${PORT}`))
 module.exports = app;

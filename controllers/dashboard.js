@@ -2,7 +2,66 @@
 const db = require("../config-db/connection");
 let bill_id, device_code, drawnumber, totalPrice, totalSale, sql, totalReords;
 const logger = require('../config-log/logger')
+const task = require('../tasks')
 
+
+exports.billlist = (req, res) => {
+    totalPrice = 0;
+    totalSale = 0;
+    device_code = req.params.device_code;
+    drawnumber = req.params.drawnumber;
+    sql = `SELECT tbl_bill.bill_id AS key,
+                  to_char("date_bill", 'DD/MM/YYYY') AS date,
+                  tbl_bill.time_bill AS time, 
+                  tbl_bill_detail.bill_id AS key,
+                  tbl_bill_detail.bill_number AS billNUmber,
+                  tbl_bill.bill_price AS billPrice
+           FROM   tbl_bill, tbl_bill_detail
+           WHERE  tbl_bill.bill_id = tbl_bill_detail.bill_id
+           AND    tbl_bill.device_code = $1
+           AND    tbl_bill.period_number = $2`;
+    db.connect((err, client, done) => {
+        if (!err) {
+            client.query(sql, [device_code, drawnumber], (error, results) => {
+                if (error) {
+                    logger.error(error)
+                    return res.status(403).send(error.stack);
+                }
+                if (results.rowCount == 0) {
+
+                    return res.status(404).send('not found');
+                }
+                else {
+                    for (let i = 0; i < results.rowCount; i++) {
+                        totalPrice += results.rows[i].billprice;
+                    }
+                    res.json({
+                        status: true,
+                        statusCode: 200,
+                        message: "OK",
+                        totalReords: 0,
+                        data: {
+                            totalSale: results.rowCount,
+                            totalPrice: totalPrice,
+                            billlist: results.rows
+                        }
+                    });
+
+                }
+            }
+            )
+            done()
+        }
+
+        else {
+            logger.error(err);
+            return res.status(500).send('Server error');
+
+        }
+
+    })
+
+}
 exports.cancelbilllist = (req, res) => {
     totalPrice = 0;
     totalSale = 0;
@@ -33,7 +92,6 @@ exports.cancelbilllist = (req, res) => {
                     for (let i = 0; i < results.rowCount; i++) {
                         totalPrice += results.rows[i].billprice;
                     }
-
                     res.json({
                         status: true,
                         statusCode: 200,
@@ -59,7 +117,6 @@ exports.cancelbilllist = (req, res) => {
 
     })
 }
-
 exports.billdetaillist = (req, res) => {
     totalReords = 0;
     totalPrice = 0;
@@ -71,48 +128,45 @@ exports.billdetaillist = (req, res) => {
            WHERE    tbl_bill.bill_id = tbl_bill_detail.bill_id
            AND      tbl_bill.bill_id =$1`;
 
-           db.connect((err, client, done) => {
-            if (!err) {
-                client.query(sql, [bill_id], (error, results) => {
-                    if (error) {
-                        logger.error(error)
-                        return res.status(403).send(error);
-                    }
-                    if (results.rowCount == 0) {
-                        return res.status(404).send('not found');
-                    }
-                    else {
-                        for (let i = 0; i < results.rowCount; i++) {
-                            totalPrice += results.rows[i].price;
-                        }
-                        res.json({
-                            status: true,
-                            statusCode: 200,
-                            message: "OK",
-                            totalReords: 0,
-                            data: {
-                                billNumber: results.rows[0].bill_number,
-                                totalPrice: totalPrice,
-                                list: results.rows
-                            }
-                        });
-                    }
+    db.connect((err, client, done) => {
+        if (!err) {
+            client.query(sql, [bill_id], (error, results) => {
+                if (error) {
+                    logger.error(error)
+                    return res.status(403).send(error);
                 }
-                )
-                done()
+                if (results.rowCount == 0) {
+                    return res.status(404).send('not found');
+                }
+                else {
+                    for (let i = 0; i < results.rowCount; i++) {
+                        totalPrice += results.rows[i].price;
+                    }
+                    res.json({
+                        status: true,
+                        statusCode: 200,
+                        message: "OK",
+                        totalReords: 0,
+                        data: {
+                            billNumber: results.rows[0].bill_number,
+                            totalPrice: totalPrice,
+                            list: results.rows
+                        }
+                    });
+                }
             }
-    
-            else {
-                logger.error(err);
-                return res.status(500).send('Server error');
-    
-            }
-    
-        })
+            )
+            done()
+        }
 
+        else {
+            logger.error(err);
+            return res.status(500).send('Server error');
 
+        }
+
+    })
 }
-
 exports.cancelbilldetaillist = (req, res) => {
     totalPrice = 0;
     bill_id = req.params.bill_id;
@@ -158,8 +212,69 @@ exports.cancelbilldetaillist = (req, res) => {
             return res.status(500).send('Server error');
 
         }
-
     })
+};
+
+exports.get = (req, res) => {
+    totalPrice = 0;
+    device_code = req.params.device_code;
+    drawnumber = req.params.drawnumber;
+
+    sql = `SELECT tbl_bill.bill_price AS price,
+                  tbl_bill.bill_id AS key,
+                  tbl_bill.period_number AS drawnumber,
+                  tbl_bill.bill_number
+           FROM   tbl_bill, tbl_bill_detail
+           WHERE  tbl_bill.bill_number = tbl_bill_detail.bill_number
+           AND    device_code = $1 AND period_number = $2`;
+
+    db.connect((err, client, done) => {
+        if (!err) {
+            client.query(sql, [device_code, drawnumber], (error, results) => {
+                if (error) {
+                    logger.error(error)
+                    return res.status(403).send(error);
+                }
+                if (results.rowCount == 0) {
+                    return res.status(404).send('not found');
+                }
+                else {
+                    for (let i = 0; i < results.rowCount; i++) {
+                        totalPrice += results.rows[i].price;
+                    }
+                    let level = []
+                    for(let j  = 0 ; j < results.rowCount; j++) {
+                     level.push(j, results.rows[j].bill_number)
+                    }
+
+                    console.log(results.rows.bill_number)
+                   
+                    res.json({
+                        drawNumber: results.rows.drawnumber,
+                        totalSale: results.rowCount,
+                        totalCancel: 0,
+                        billDetailList:{
+                           
+
+                        }  
+                
+                        
+                    });
+                }
+            }
+            )
+            done()
+        }
+
+        else {
+            logger.error(err);
+            return res.status(500).send('Server error');
+
+        }
+    })
+
+
+
 
 };
 

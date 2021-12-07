@@ -57,26 +57,31 @@ const account = require('../controllers/account.controller')
  *  post:
  *   summary: Logined
  *   tags: [Account]
+ *   requestBody:
+ *    content:
+ *     application/json:
+ *      schema:
+ *       $ref: '#/components/schemas/login'
  *   parameters:
  *    - in: path
- *      name: device_code
+ *      name: deviceCode
  *      schema:
  *       type: string
  *      required: true
  *      description: Device code
- *      example: 317643
  *    - in: path
- *      name: us_pwd
+ *      name: deviceNumber
  *      schema:
  *       type: string
  *      required: true
- *      description: Password
- *      example: 123
+ *      description: Device number
  *   responses:
  *    200:
  *       description: OK
  *    403:
  *       description: Forbiden
+ *    401:
+ *       description: Unauthorization
  *    404:
  *       description: Not found
  *    500:

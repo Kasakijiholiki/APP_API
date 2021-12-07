@@ -11,11 +11,19 @@ app.use(cors())
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+var format = require('pg-format');
 
 
 //routes
 const account = require('./routes/account.route')
 const period = require('./routes/period.route')
+<<<<<<< HEAD
+const sale = require('./routes/salemanagement.route')
+//use routes
+app.use('/api/', account)
+app.use('/api/', period)
+app.use('/api/', sale)
+=======
 const dashboard = require('./routes/dashboard')
 
 
@@ -23,6 +31,7 @@ const dashboard = require('./routes/dashboard')
 app.use('/api/', account)
 app.use('/api/', period)
 app.use('/api/', dashboard);
+>>>>>>> 1875c49be9024701daa7a6f607735eb8c5d3e8c9
 
 //Swagger
 const PORT = process.env.port || 8000
@@ -48,11 +57,11 @@ const option = {
     security: [{
       jwt: []
     }],
-  swagger: "3.0",
+    swagger: "3.0",
     servers: [
       {
-        url: `http://49.0.198.122:7000`
-        //url: `http://localhost:7000`
+         url: `http://49.0.198.122:7000`
+       // url: `http://localhost:8000`
       }
     ],
   },
@@ -62,5 +71,51 @@ const option = {
 const swaggerDocs = swaggerJSDoc(option)
 app.use('/Swagger', swaggerUI.serve, swaggerUI.setup(swaggerDocs))
 
+<<<<<<< HEAD
+=======
+// let cperiod = require('./morefunction/getcurrentperiod')
+// let isonline = require('./morefunction/isonline')
+
+// isonline.isonline();
+// cperiod.getcurrentperiod();
+// console.log(cperiod.getcurrentperiod())
+const db = require('./config-db/connection');
+// let user = {}
+// db.connect((err, cleint, done) => {
+//   if (!err) {
+
+//     cleint.query(`SELECT * FROM tbl_user_seller WHERE device_code = '1111111'`, "", (error, results) => {
+//       if (!error && results.rowCount > 0) {
+//         user = results.rows[0]
+       
+//       }
+//       console.log(user)
+//       done()
+//     });
+//   }
+  
+// })
+// const userList = []
+// db.connect((err, cleint, done) => {
+//   if (!err) {
+// for(let i = 0; i < 100000; i++) {
+//   userList.push([i, "Firstname"+i, "LastName"+i])
+// }
+//     cleint.query(format("INSERT INTO demo (id, fname, lname) VALUES %L", userList), [], (error, results) => {
+//      if(error) throw error.stack
+//      else {
+//        console.log("Success")
+//      }
+      
+//       done()
+//     });
+//    }
+//   console.log(userList)
+// })
+
+// const a = require('./controllers/salemanagement.controller')
+
+// a.
+>>>>>>> 66e64b3f8dc078109393fd56385efd9d7a1ffe8f
 app.listen(PORT, console.log(`Server Running on port ${PORT}`))
 module.exports = app;

@@ -62,7 +62,5 @@ const option = {
 const swaggerDocs = swaggerJSDoc(option)
 app.use('/Swagger', swaggerUI.serve, swaggerUI.setup(swaggerDocs))
 
-
-
 app.listen(PORT, console.log(`Server Running on port ${PORT}`))
 module.exports = app;

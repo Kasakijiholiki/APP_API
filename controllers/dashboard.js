@@ -242,23 +242,38 @@ exports.get = (req, res) => {
                     for (let i = 0; i < results.rowCount; i++) {
                         totalPrice += results.rows[i].price;
                     }
-                    let level = []
+                    let billlnumberlist = []
                     for(let j  = 0 ; j < results.rowCount; j++) {
-                     level.push(j, results.rows[j].bill_number)
+                     billlnumberlist.push(j, results.rows[j].bill_number)
                     }
 
-                    console.log(results.rows.bill_number)
-                   
+                    // let mybilllist;
+                    // for (let j = 0; j < results.rowCount; j++) {
+                    //     mybilllist[j] = results.rows[j].bill_number;
+                    // }
+
+
+                    
                     res.json({
-                        drawNumber: results.rows.drawnumber,
+                        drawNumber: results.rows[0].drawnumber,
                         totalSale: results.rowCount,
                         totalCancel: 0,
-                        billDetailList:{
-                           
+                        billDetailList:
+                            [
+                                {
+                                    key: results.rows[0].key,
+                                    digit: 5,
+                                    price: results.rows[0].price,
+                                    billNumber: [
+                                        billlnumberlist
+                                    ]
+                                }
+                            ]
 
-                        }  
-                
-                        
+
+
+
+
                     });
                 }
             }

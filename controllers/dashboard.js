@@ -62,6 +62,7 @@ exports.billlist = (req, res) => {
     })
 
 }
+
 exports.cancelbilllist = (req, res) => {
     totalPrice = 0;
     totalSale = 0;
@@ -117,6 +118,7 @@ exports.cancelbilllist = (req, res) => {
 
     })
 }
+
 exports.billdetaillist = (req, res) => {
     totalReords = 0;
     totalPrice = 0;
@@ -167,6 +169,7 @@ exports.billdetaillist = (req, res) => {
 
     })
 }
+
 exports.cancelbilldetaillist = (req, res) => {
     totalPrice = 0;
     bill_id = req.params.bill_id;
@@ -265,7 +268,7 @@ exports.get = (req, res) => {
                                     digit: 5,
                                     price: results.rows[0].price,
                                     billNumber: [
-                                        billlnumberlist
+                                    billlnumberlist
                                     ]
                                 }
                             ]

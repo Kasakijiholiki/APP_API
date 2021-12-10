@@ -11,7 +11,6 @@ app.use(cors())
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-var format = require('pg-format');
 
 
 //routes
@@ -29,6 +28,7 @@ app.use('/api/', account)
 app.use('/api/', period)
 app.use('/api/', dashboard);
 app.use('/api/', His)
+
 
 //Swagger
 const PORT = process.env.port || 8000
@@ -57,8 +57,8 @@ const option = {
     swagger: "3.0",
     servers: [
       {
-         url: `http://49.0.198.122:7000`
-       // url: `http://localhost:8000`
+        // url: `http://49.0.198.122:7000`
+       url: `http://localhost:8000`
       }
     ],
   },
@@ -67,7 +67,6 @@ const option = {
 }
 const swaggerDocs = swaggerJSDoc(option)
 app.use('/Swagger', swaggerUI.serve, swaggerUI.setup(swaggerDocs))
-
 
 
 app.listen(PORT, console.log(`Server Running on port ${PORT}`))

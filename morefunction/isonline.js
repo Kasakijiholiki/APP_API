@@ -1,23 +1,21 @@
 
 const db = require('../config-db/connection')
 
-exports.isonline = async () => {
+const isonline =  async () => {
     let online = false
-    await db.connect(async (err, cleint, done) =>{
+    await db.connect( async (err, cleint, done) => {
+        if(!err) {
+            const data = db.query("SELECT * FROM tbl_online")
 
-        if (!err) {
-           await cleint.query("SELECT * FROM tbl_online WHERE online_status = 1", "",  (error, results) => {
-
-                if (error) {
-                    return res.status(403).send({ message: error.stack })
-                } if (results.rowCount > 0) {
-                    online = true
-                } 
-              
-            })
-            done()
+            if ((await data).rowCount > 0) {
+        
+                online = true
+        
+            }
         }
+        online = true
     })
 
     return online
 }
+module.exports = {isonline}

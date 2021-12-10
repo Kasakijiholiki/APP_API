@@ -15,8 +15,6 @@ route.get("/dashboard/get/:device_code/:drawnumber", dashboard.get);
 
 
 
-
-
 module.exports = route;
 
 

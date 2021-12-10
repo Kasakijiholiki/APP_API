@@ -1,4 +1,6 @@
 
+const { bodyBlacklist } = require('express-winston')
+const { cli } = require('winston/lib/winston/config')
 const db = require('../config-db/connection')
 
 
@@ -20,14 +22,18 @@ exports.get = async (req, res) => {
                 }
                 //#endregion    
 
-
                 //#region totalBill
                 let totalBill = 0;
+                let bill = ""
                 const _billlist = cleint.query(`SELECT * 
                                               FROM  tbl_bill
                                               WHERE device_code = $1
                                               AND   period_number = $2`, [deviceCode, periodNumber])
-                totalBill = (await _billlist).rowCount
+                if ((await _billlist).rowCount > 0) {
+                    totalBill = (await _billlist).rowCount
+                    bill = (await _billlist).rows[0]
+                }
+                console.log('Hi ' + bill)
                 //#endregion
 
 
@@ -71,7 +77,7 @@ exports.get = async (req, res) => {
                 `, [deviceCode, periodNumber])
                 totalDigitSell = (await _billlist).rows
                 //#endregion
-                    
+
 
                 //#region totalCancel
                 let totalCancel = 0
@@ -79,26 +85,79 @@ exports.get = async (req, res) => {
                 totalCancel = (await _totalCancel).rowCount
                 //#endregion
 
-               
 
                 //#region billDetailList
-                      //#region get bill
-                        const _bill = cleint.query(`SELECT * FROM tbl_bill, tbl_bill_cancel `)
-                       
-                      //#endregion
+                let billDetailList = ""
+                let lj_cancel = null
+                //#region lastbill 
+                let lastBill = null
+
 
 
                 //#endregion
 
 
+
+
+
+                //#region get bill
+                const _bill = cleint.query(`    
+                        SELECT  tbl_bill.bill_id AS key, 
+                                tbl_bill_cancel.cancel_id,
+                                tbl_bill_cancel.cancel_by,
+                                tbl_bill.bill_number,
+                                CONCAT(
+                                    to_char("date_bill",'DD/MM/YYYY'), ' ',
+                                    tbl_bill.time_bill
+                                    ) AS dateTime
+                         FROM    tbl_bill, tbl_bill_cancel 
+                         WHERE tbl_bill.bill_number = tbl_bill_cancel.bill_number
+                        `)
+                if ((await _bill).rowCount > 0) {
+                    lj_cancel = (await _bill).rows
+                }
+
+
+                //#region LastBill
+                const _lastBill = cleint.query(`SELECT bill_number
+                                                FROM  tbl_bill
+                                                WHERE device_code = $1
+                                                AND   period_number = $2
+                                                ORDER BY bill_number DESC `, [deviceCode, periodNumber])
+                if ((await _lastBill).rowCount > 0) {
+                    lastBill = (await _lastBill).rows
+                }
+                //#endregion 
+
+
+
+
+                billDetailList = {
+                    key: (lj_cancel != null && lj_cancel.cancel_by == 0) ? lj_cancel.cancel_id : bill == "" ? bill.bill_id : "",
+                    billNumber: bill != ""? bill.bill_number:"",
+                    dateTime: lj_cancel.dateTime,
+                    billPrice: bill == "" ? bill.bill_price : "",
+                    billStatus: lj_cancel == null ? "ປົກກະຕິ" : (lj_cancel.cancel_by == 0 ? `${deviceCode} (ຍົກເລິກ)` : "ແອັບມິນຍົກເລີກ"),
+                    isLast: bill != ""? (lastBill.bill_number == bill.bill_number) && (lj_cancel == null):"",
+                    isCancel: lj_cancel != null && (lj_cancel.cancel_by == 0 || lj_cancel.cancel_by == 1)
+                }
+                //#endregion
+
+
+                //#endregion
+
+
+
+
+
                 return res.send({
-                    maxsell: maxsell ,
+                    maxsell: maxsell,
                     startPeriod: startPeriod,
                     totalSell: totalSell,
                     totalBill: totalBill,
                     totalCancel: totalCancel,
                     totalDigitSell: totalDigitSell,
-                    billDetailList: {}
+                    billDetailList: billDetailList
                 })
 
             } catch (error) {

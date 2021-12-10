@@ -71,7 +71,7 @@ const sale = require('../controllers/salemanagement.controller')
  *    500:
  *       description: Some server error
  */
-route.post('/SaleManagement/addv2/sale/:deviceCode/:deviceNumber', sale.createsale)
+route.post('/salemanagement/addv2/sale/:deviceCode/:deviceNumber', sale.createsale)
 /**
  * @swagger
  * /api/salemanagement/getconfigdata:
@@ -110,4 +110,5 @@ route.post('/SaleManagement/addv2/sale/:deviceCode/:deviceNumber', sale.createsa
  *       description: Some server error
  */
   route.get('/salemanagement/getdrawnumber', sale.getCurrentperiodnumber)
+
 module.exports = route

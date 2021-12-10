@@ -272,10 +272,6 @@ exports.get = (req, res) => {
 
         }
     })
-
-
-
-
 };
 
 

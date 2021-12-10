@@ -9,65 +9,62 @@ const process = require('../tasks')
 
 //.............Login......................//
 exports.login = async (req, res) => {
+    const cleint = await connection.connect()
     account = req.params
     logger.info(`POST/api/login/${account.device_code}/${account.us_pwd}`)
 
     SQL = `SELECT * FROM  public.tbl_user_seller WHERE  device_code = $1 AND us_pwd = $2`
 
+    try {
+        cleint.query(SQL, [account.device_code, account.us_pwd], (error, results) => {
+            if (error) {
+                logger.error(error)
+                return res.status(403).send({ error: error })
+            }
+            if (results.rowCount == 0) {
+                return res.status(404).send({ message: 'User not found' })
+            }
+            else {
+                SQL = `SELECT * FROM public.tbl_set_number`
+                cleint.query(SQL, async (err, rs) => {
+                    if (err) {
+                        return res.status(403).send({ error: err.stack })
+                    } else {
 
-    await connection.connect((err, cleint, done) => {
+                        //Query date offline from tbl_online
+                        let date_offline = ""
+                        const _date = cleint.query(`SELECT date_offline FROM tbl_online WHERE online_status = 1 DESC`)
+                        if ((await _date).rowCount > 0) date_offline = (await _date).rows[0].date_offline
 
-        if (!err) {
-            cleint.query(SQL, [account.device_code, account.us_pwd], (error, results) => {
-                if (error) {
-                    logger.error(error)
-                    return res.status(403).send({ error: error })
-                }
-                if (results.rowCount == 0) {
+                        jwt.sign({ account }, 'secretkey', (err, accessToken) => {
+                            if (!err) {
+                                res.json({
+                                    online: true,
+                                    deviceCode: account.device_code,
+                                    offlineDate: date_offline,
+                                    isOverMaxSell: false,
+                                    accessToken: accessToken,
+                                    setNumberList: rs.rows
+                                });
+                            } else {
+                                return res.status(403).send({ error: err.stack })
+                            }
+                        });
+                    }
 
-                    return res.status(404).send({ message: 'password incorrect' })
-                }
-                else {
+                })
 
-                    SQL = `SELECT * FROM public.tbl_set_number`
+            }
 
-                    connection.query(SQL, (err, rs) => {
-                        if(err){
-                          return res.status(403).send({error: err.stack})
-                        } else {
-                            
-                            jwt.sign({ account }, 'secretkey', (err, accessToken) => {
-                                if(!err){
-                                    res.json({
-                                        online: true,
-                                        deviceCode: account.device_code,
-                                        offlineDate: '05/11/2021',
-                                        isOverMaxSell: false,
-                                        accessToken: accessToken,
-                                        setNumberList: rs.rows
-                                    });
-                                } else {
-                                    return res.status(403).send({error: err.stack})
+        });
+    } catch (error) {
 
-                                }
-                               
-                           });
-                        }
-                        
-                    })
+    } finally {
+        cleint.release()
+    }
 
-                }
 
-            });
-            done();
-        }
-        else {
-            return res.status(500).send({ message: "Server error" })
-        }
-    })
 }
-
-
 //.....................PasswordChange..............//
 exports.PasswordChage = async (req, res) => {
     account = req.params
@@ -81,7 +78,6 @@ exports.PasswordChage = async (req, res) => {
         [account.us_newpwd, account.device_code, account.us_pwd]
     )
 }
-
 //..................CheckVersion..................//
 exports.checkversion = async (req, res) => {
 
@@ -146,9 +142,6 @@ exports.CheckVersionV2 = async (req, res) => {
         }
 
     })
-
-
-
     logger.info(`GET/api/account/CheckVersionV2/${account.version_name}/${account.device_imei}`)
 
     //Check device imei of devive

@@ -39,7 +39,7 @@ exports.get = async (req, res) => {
 
                 if (billData != "" && cancelData == "") {
                     billDetailList = ((await (cleint.query(`SELECT * FROM tbl_bill_detail WHERE bill_id = $1`, [bill.billId]))).rows)
-                }   else if (billData != "" && cancelData != "") {
+                } else if (billData != "" && cancelData != "") {
                     const cancelDetailList = ((await (cleint.query(`SELECT * FROM tbl_bill_cancel_detail WHERE cancel_id = $1`, [cancelData.rows[0].cancel_id]))).rows)
                     if ((await cancelDetailList).rowCount > 0) {
                         let billDetail = []
@@ -48,9 +48,8 @@ exports.get = async (req, res) => {
                         }
                         billDetailList = billDetail
                     }
-                  
                 }
-                          
+
                 return res.send({
                     Status: true,
                     StausCode: 200,
@@ -58,9 +57,9 @@ exports.get = async (req, res) => {
                     Data: {
                         deviceCode: bill.deviceCode,
                         hasCancel: cancelData != null,
-                        billId: billData != "" ? billData[0].bill_id: uuidv4(),
-                        billNumber: billData.bill_number!= "" ? billData[0].bill_number: "",
-                        billTotal: billData.bill_price != "" ? billData[0].bill_price: 0,
+                        billId: billData != "" ? billData[0].bill_id : uuidv4(),
+                        billNumber: billData.bill_number != "" ? billData[0].bill_number : "",
+                        billTotal: billData.bill_price != "" ? billData[0].bill_price : 0,
                         billDetailList: billDetailList
                     }
                 })
@@ -91,64 +90,63 @@ exports.billCancel = async (req, res) => {
                     }
                     else {
                         SQL = `INSERT INTO tbl_bill_cancel VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`
-                        //Second case query (Insert into bill cancel)
-                        await cleint.query(SQL, [cancel_id, results.rows[0].bill_number,
-                            results.rows[0].period_number, results.rows[0].device_code,
-                            results.rows[0].bill_price, bill.reasonCancel,
-                            bill.cancel_by, date.getdate(), date.gettime(),
-                            results.rows[0].ref_code], async (erro) => {
+                        // (Insert into bill cancel)
+                        await cleint.query(SQL, 
+                            [cancel_id,
+                             results.rows[0].bill_number,
+                             results.rows[0].period_number,
+                             results.rows[0].device_code,
+                             results.rows[0].bill_price,
+                             bill.reasonCancel,
+                             bill.cancel_by, 
+                             date.getdate(), 
+                             date.gettime(),
+                             results.rows[0].ref_code],
+                             async (erro, resu) => {
 
                                 if (erro) {
                                     logger.error(erro.stack)
                                     return res.status(403).send({ message: 'Error for create bill cancel', error: erro.stack })
                                 }
-                                else {
-                                    SQL = `DELETE FROM tbl_bill WHERE bill_id = $1`
-
-                                    //Third case query (Delete bill after cancel)
-                                    cleint.query(SQL, [bill.billId], (r) => {
-                                        if (r) {
-                                            logger.error(r.stack)
-                                            return res.status(403).send({ message: "Error for delete bill", error: r.stack })
+                                if (resu.rowCount > 0) {
+                                    
+                                    SQL = `SELECT * FROM tbl_bill_detail WHERE bill_id = $1`
+                                    //Query data from bill detail
+                                    cleint.query(SQL, [bill.billId], (er, rs) => {
+                                        if (er) {
+                                            logger.error(er.stack)
+                                            return res.status(403).send({ err: er.stack })
                                         }
-                                        else {
-                                            SQL = `SELECT * FROM tbl_bill_detail WHERE bill_id = $1`
-                                            //Query data from bill detail
-                                            cleint.query(SQL, [bill.billId], (er, rs) => {
-                                                if (er) {
-                                                    logger.error(er.stack)
-                                                    return res.status(403).send({ err: er.stack })
-                                                }
-                                                if (rs.rowCount <= 0) {
-                                                    return res.status(404).send({ message: 'Not found data from bill_detail' })
-                                                } else {
-                                                    //push bill detail into array for add to cancel detail
-                                                    let billcanceldetail = []
-                                                    for (let i = 0; i < rs.rows.length; i++) {
-                                                        billcanceldetail.push([cancel_id, rs.rows[i].bill_number, rs.rows[i].lottery_number, rs.rows[i].lottery_price, date.getdate()])
-                                                    }
+                                        if (rs.rowCount <= 0) {
+                                            return res.status(404).send({ message: 'Not found data from bill_detail' })
+                                        } else {
+                                            //push bill detail into array for add to cancel detail
+                                            let billcanceldetail = []
+                                            for (let i = 0; i < rs.rows.length; i++) {
+                                                billcanceldetail.push([cancel_id, rs.rows[i].bill_number, rs.rows[i].lottery_number, rs.rows[i].lottery_price, date.getdate()])
+                                            }
 
-                                                    SQL = `INSERT INTO tbl_bill_cancel_detail(cancel_id, bill_number, lottery_number,
-                                                      lottery_price, date_bill_cancel_detail) VALUES %L`
-                                                    //Create data to bill cancel detail
-                                                    cleint.query(format(SQL, billcanceldetail), [], (error1) => {
-                                                        if (error1) {
-                                                            return res.status(403).send({ message: 'Error for create bill cancel detail', error: error1.stack })
+                                            SQL = `INSERT INTO tbl_bill_cancel_detail(cancel_id, bill_number, lottery_number,
+                                              lottery_price, date_bill_cancel_detail) VALUES %L`
+                                            //Create data to bill cancel detail
+                                            cleint.query(format(SQL, billcanceldetail), [], (error1, resu1) => {
+                                                if (error1) {
+                                                    return res.status(403).send({ message: 'Error for create bill cancel detail', error: error1.stack })
+                                                }
+                                                if (resu1.rowCount > 0) {
+                                                    SQL = `DELETE FROM tbl_bill_detail WHERE bill_id = $1`
+                                                    // Delete data from bill detail
+                                                    cleint.query(SQL, [bill.billId], (r1) => {
+                                                        if (r1) {
+                                                            return res.status(403).send({ message: "Error for delete bill detail", error: r1.stack })
                                                         } else {
-                                                            SQL = `DELETE FROM tbl_bill_detail WHERE bill_id = $1`
-                                                            // Delete data from bill detail
-                                                            cleint.query(SQL, [bill.billId], (r1) => {
-                                                                if (r1) {
-                                                                    return res.status(403).send({ message: "Error for delete bill detail", error: r1.stack })
-                                                                } else {
-                                                                    return res.status(201).send({ message: "created" })
-                                                                }
-
-                                                            })
-
+                                                            return res.status(201).send({ message: "created" })
                                                         }
+
                                                     })
+
                                                 }
+
                                             })
                                         }
                                     })

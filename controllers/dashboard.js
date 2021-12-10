@@ -1,6 +1,6 @@
 
 const db = require("../config-db/connection");
-let bill_id, device_code, drawnumber, totalPrice, totalSale, sql, totalReords;
+let bill_id, device_code, drawnumber, totalPrice, totalSale, sql, totalReords, totalCancel;
 const logger = require('../config-log/logger')
 const task = require('../tasks')
 
@@ -62,6 +62,7 @@ exports.billlist = (req, res) => {
     })
 
 }
+
 exports.cancelbilllist = (req, res) => {
     totalPrice = 0;
     totalSale = 0;
@@ -117,6 +118,7 @@ exports.cancelbilllist = (req, res) => {
 
     })
 }
+
 exports.billdetaillist = (req, res) => {
     totalReords = 0;
     totalPrice = 0;
@@ -167,6 +169,7 @@ exports.billdetaillist = (req, res) => {
 
     })
 }
+
 exports.cancelbilldetaillist = (req, res) => {
     totalPrice = 0;
     bill_id = req.params.bill_id;
@@ -215,57 +218,80 @@ exports.cancelbilldetaillist = (req, res) => {
     })
 };
 
-exports.get = (req, res) => {
-    totalPrice = 0;
+exports.get = async (req, res) => {
+
+    totalPrice = 0
+    totalCancel = 0
+    totalSale = 0
     device_code = req.params.device_code;
     drawnumber = req.params.drawnumber;
 
-    sql = `SELECT tbl_bill.bill_price AS price,
-                  tbl_bill.bill_id AS key,
-                  tbl_bill.period_number AS drawnumber,
-                  tbl_bill.bill_number
-           FROM   tbl_bill, tbl_bill_detail
-           WHERE  tbl_bill.bill_number = tbl_bill_detail.bill_number
-           AND    device_code = $1 AND period_number = $2`;
+    const client = await db.connect();
 
-    db.connect((err, client, done) => {
-        if (!err) {
-            client.query(sql, [device_code, drawnumber], (error, results) => {
-                if (error) {
-                    logger.error(error)
-                    return res.status(403).send(error);
-                }
-                if (results.rowCount == 0) {
-                    return res.status(404).send('not found');
-                }
-                else {
-                    for (let i = 0; i < results.rowCount; i++) {
-                        totalPrice += results.rows[i].price;
-                    }
-                    let level = []
-                    for(let j  = 0 ; j < results.rowCount; j++) {
-                     level.push(j, results.rows[j].bill_number)
-                    }
+    try {
+        //         sql = `SELECT tbl_bill.bill_price AS price,
+        //                         tbl_bill.bill_id AS key,
+        //               tbl_bill.period_number AS drawnumber,
+        //               tbl_bill.bill_number
+        // FROM   tbl_bill, tbl_bill_detail
+        // WHERE  tbl_bill.bill_number = tbl_bill_detail.bill_number
+        // AND    device_code = $1 AND period_number = $2`;
 
-                    console.log(results.rows.bill_number)
-                   
-                    res.json({
-                        drawNumber: results.rows.drawnumber,
-                        totalSale: results.rowCount,
-                        totalCancel: 0,
-                        billDetailList:{
-                           
 
-                        }  
-                
-                        
-                    });
-                }
-            }
-            )
-            done()
+        const _totalSale = client.query(`SELECT COUNT(*)
+                           FROM tbl_bill
+                           WHERE bill_number NOT IN (SELECT bill_number FROM tbl_bill_cancel)
+                           AND device_code = $1 
+                           AND period_number = $2`, [device_code, drawnumber])
+        totalSale = (await _totalSale).rows[0].count
+
+
+
+        const _cancelList = client.query(`SELECT COUNT(*) 
+                                          FROM   tbl_bill_cancel
+                                          WHERE  device_code = $1
+                                          AND    period_number = $2`, [device_code, drawnumber])
+        totalCancel = (await _cancelList).rows[0].count
+
+
+
+
+        let billDetailList = null
+        const _billDetailList = client.query(`	  
+        SELECT           tbl_bill.bill_id AS key,
+                         tbl_bill_detail.lottery_number,
+                         LENGTH(   tbl_bill_detail.lottery_number) AS digit,	 
+                         SUM      (tbl_bill_detail.lottery_price) AS price
+        FROM             tbl_bill, tbl_bill_detail
+        WHERE            tbl_bill.bill_number = tbl_bill_detail.bill_number
+        AND              tbl_bill.device_code = $1 
+        AND              tbl_bill.period_number = $2
+        GROUP BY         tbl_bill_detail.lottery_number,  tbl_bill.bill_id
+        ORDER BY LENGTH(tbl_bill_detail.lottery_number) `, [device_code, drawnumber])
+       
+        billDetailList = (await _billDetailList).rows
+
+         
+
+
+        let billNumberList
+        const _billNumberList = client.query(`	  
+        SELECT           tbl_bill_detail.bill_number
+        FROM             tbl_bill, tbl_bill_detail
+        WHERE            tbl_bill.bill_number = tbl_bill_detail.bill_number
+        AND              tbl_bill.device_code = $1`, [device_code])
+        
+        billNumberList = (await _billNumberList).rows.bill_number
+
+        const a = {
+            key: billDetailList.key,
+            lottery_number: billDetailList.lottery_number,
+            digit: billDetailList.digit,
+            price: billDetailList.price,
+            billNumberList
         }
 
+<<<<<<< HEAD
         else {
             logger.error(err);
             return res.status(500).send('Server error');
@@ -289,7 +315,23 @@ exports.get = (req, res) => {
 
 
 
+=======
+        return res.send({
+            drawNumber: drawnumber,
+            totalSale: parseInt(totalSale),
+            totalCancel: parseInt(totalCancel),
+            billDetailList: [
+                a
+            ]
+        })
+>>>>>>> 5d359cfd056ef5d246152f0fa29207b77e9548ce
 
 
+    } catch (error) {
+        throw error
+    } finally {
+        client.release();
+    }
 
+}
 

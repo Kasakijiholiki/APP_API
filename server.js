@@ -19,7 +19,10 @@ const period = require('./routes/period.route')
 const sale = require('./routes/salemanagement.route')
 const billcancel = require('./routes/billcancel.route')
 const dashboard = require('./routes/dashboard')
+<<<<<<< HEAD
 
+=======
+>>>>>>> b778f0b6100fb30fdd363155dc282aeeca1fbdf2
 const His = require('./routes/HistorySalePeriod')
 //use routes
 app.use('/api/', account)
@@ -79,6 +82,7 @@ app.post('/',async (req, res) => {
 
 })
 
+<<<<<<< HEAD
 const a = [1,2,3,4]
 let b = []
 for (let i= 0; i<a.length;i++) {
@@ -86,5 +90,7 @@ for (let i= 0; i<a.length;i++) {
 }
 console.log(b)
 
+=======
+>>>>>>> b778f0b6100fb30fdd363155dc282aeeca1fbdf2
 app.listen(PORT, console.log(`Server Running on port ${PORT}`))
 module.exports = app;

@@ -289,6 +289,9 @@ exports.cancelbilldetaillist = (req, res) => {
 //             price: billDetailList.price,
 //             billNumberList
 //         }
+// }
+// }
+
 
 //         return res.send({
 //             drawNumber: drawnumber,
@@ -334,12 +337,6 @@ exports.cancelbilldetaillist = (req, res) => {
 
 
 
-
-
-
-
-
-
 //         return res.send({
 //             drawNumber: drawnumber,
 //             totalSale: parseInt(totalSale),
@@ -349,6 +346,21 @@ exports.cancelbilldetaillist = (req, res) => {
 //             ]
 //         })
 
+
+//     } catch (error) {
+//         throw error
+//     } finally {
+//         client.release();
+//     }
+
+//         return res.send({
+//             drawNumber: drawnumber,
+//             totalSale: parseInt(totalSale),
+//             totalCancel: parseInt(totalCancel),
+//             billDetailList: [
+//                 a
+//             ]
+//         })
 
 //     } catch (error) {
 //         throw error

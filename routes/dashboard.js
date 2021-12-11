@@ -54,6 +54,7 @@ route.get("/dashboard/get/cancelbilldetaillist/:bill_id", dashboard.cancelbillde
  *      description: drawnumber
  *      example: 21059
 
+<<<<<<< HEAD
  *   responses:
  *    200:
  *       description: OK
@@ -92,6 +93,9 @@ route.get("/dashboard/get/cancelbilllist/:device_code/:drawnumber", dashboard.ca
  */
 
 route.get("/dashboard/get/billdetaillist/:bill_id", dashboard.billdetaillist);
+=======
+//route.get("/dashboard/get/:device_code/:drawnumber", dashboard.get);
+>>>>>>> b778f0b6100fb30fdd363155dc282aeeca1fbdf2
 
 
 

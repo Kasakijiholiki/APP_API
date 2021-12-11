@@ -281,6 +281,7 @@ exports.cancelbilldetaillist = (req, res) => {
 //         WHERE            tbl_bill.bill_number = tbl_bill_detail.bill_number
 //         AND              tbl_bill.device_code = $1`, [device_code])
         
+<<<<<<< HEAD
 //         billNumberList = (await _billNumberList).rows.bill_number
 
 //         const a = {
@@ -308,4 +309,59 @@ exports.cancelbilldetaillist = (req, res) => {
 //     }
 
 // }
+=======
+        billNumberList = (await _billNumberList).rows.bill_number
+
+        const a = {
+            key: billDetailList.key,
+            lottery_number: billDetailList.lottery_number,
+            digit: billDetailList.digit,
+            price: billDetailList.price,
+            billNumberList
+        }
+
+<<<<<<< HEAD
+        else {
+            logger.error(err);
+            return res.status(500).send('Server error');
+
+        }
+    })
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+=======
+        return res.send({
+            drawNumber: drawnumber,
+            totalSale: parseInt(totalSale),
+            totalCancel: parseInt(totalCancel),
+            billDetailList: [
+                a
+            ]
+        })
+>>>>>>> 5d359cfd056ef5d246152f0fa29207b77e9548ce
+
+
+    } catch (error) {
+        throw error
+    } finally {
+        client.release();
+    }
+
+}
+>>>>>>> 3c40d9333027d7bb056acba037f7c8605a5c6db8
 

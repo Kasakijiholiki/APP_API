@@ -37,4 +37,30 @@ const period_number = require('../controllers/peiod.controller')
  */
 router.get('/period/get/:deviceCode', period_number.getperiod)
 
+/**
+ * @swagger
+ * /api/period/getv2/{deviceCode}:
+ *  get:
+ *   summary: Return a list of period
+ *   tags: [Period]
+ *   parameters:
+ *    - in: path
+ *      name: deviceCode
+ *      schema:
+ *       type: string
+ *      required: true
+ *      description: Device code
+ *      example: 317643
+ *   responses:
+ *    200:
+ *       description: OK
+ *    403:
+ *       description: Forbiden
+ *    404:
+ *       description: Not found
+ *    500:
+ *       description: Some server error
+ * 
+ */
+ router.get('/period/getv2/:deviceCode', period_number.getperiodv2)
 module.exports = router

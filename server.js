@@ -17,18 +17,24 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const account = require('./routes/account.route')
 const period = require('./routes/period.route')
 const sale = require('./routes/salemanagement.route')
+const billcancel = require('./routes/billcancel.route')
+const dashboard = require('./routes/dashboard')
+<<<<<<< HEAD
+
+=======
+const His = require('./routes/HistorySalePeriod')
+>>>>>>> 5d359cfd056ef5d246152f0fa29207b77e9548ce
 //use routes
 app.use('/api/', account)
 app.use('/api/', period)
 app.use('/api/', sale)
-const dashboard = require('./routes/dashboard')
-const His = require('./routes/HistorySalePeriod')
-//use routes
-app.use('/api/', account)
-app.use('/api/', period)
 app.use('/api/', dashboard);
+<<<<<<< HEAD
+app.use('/api/', billcancel)
+=======
 app.use('/api/', His)
 
+>>>>>>> 5d359cfd056ef5d246152f0fa29207b77e9548ce
 
 //Swagger
 const PORT = process.env.port || 8000
@@ -57,7 +63,7 @@ const option = {
     swagger: "3.0",
     servers: [
       {
-        // url: `http://49.0.198.122:7000`
+         //url: `http://49.0.198.122:7000`
        url: `http://localhost:8000`
       }
     ],
@@ -68,6 +74,26 @@ const option = {
 const swaggerDocs = swaggerJSDoc(option)
 app.use('/Swagger', swaggerUI.serve, swaggerUI.setup(swaggerDocs))
 
+<<<<<<< HEAD
+const db = require('./config-db/connection')
 
+
+app.post('/',async (req, res) => {
+  const cleint = await db.connect()
+  cleint.query('INSERT INTO demo VALUES ($1, $2, $3)', [12, "aa", "bb"], (error, data) => {
+    return res.status(201).send(data)
+  })
+
+})
+
+const a = [1,2,3,4]
+let b = []
+for (let i= 0; i<a.length;i++) {
+  b.push(a[i])
+}
+console.log(b)
+=======
+
+>>>>>>> 5d359cfd056ef5d246152f0fa29207b77e9548ce
 app.listen(PORT, console.log(`Server Running on port ${PORT}`))
 module.exports = app;

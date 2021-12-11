@@ -11,7 +11,7 @@ route.get("/dashboard/get/billdetaillist/:bill_id", dashboard.billdetaillist);
 
 route.get("/dashboard/get/billlist/:device_code/:drawnumber", dashboard.billlist);
 
-route.get("/dashboard/get/:device_code/:drawnumber", dashboard.get);
+//route.get("/dashboard/get/:device_code/:drawnumber", dashboard.get);
 
 
 

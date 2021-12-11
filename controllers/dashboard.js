@@ -39,11 +39,11 @@ exports.billlist = (req, res) => {
                         status: true,
                         statusCode: 200,
                         message: "OK",
-                        totalReords: 0,
+                        totalRecords: 0,
                         data: {
                             totalSale: results.rowCount,
                             totalPrice: totalPrice,
-                            billlist: results.rows
+                            billList: results.rows
                         }
                     });
 
@@ -56,7 +56,6 @@ exports.billlist = (req, res) => {
         else {
             logger.error(err);
             return res.status(500).send('Server error');
-
         }
 
     })
@@ -97,11 +96,11 @@ exports.cancelbilllist = (req, res) => {
                         status: true,
                         statusCode: 200,
                         message: "OK",
-                        totalReords: 0,
+                        totalRecords: 0,
                         data: {
                             totalSale: results.rowCount,
                             totalPrice: totalPrice,
-                            billlist: results.rows
+                            billList: results.rows
                         }
                     });
                 }
@@ -148,7 +147,7 @@ exports.billdetaillist = (req, res) => {
                         status: true,
                         statusCode: 200,
                         message: "OK",
-                        totalReords: 0,
+                        totalRecords: 0,
                         data: {
                             billNumber: results.rows[0].bill_number,
                             totalPrice: totalPrice,
@@ -294,11 +293,40 @@ exports.cancelbilldetaillist = (req, res) => {
 // }
 
 
+//         return res.send({
+//             drawNumber: drawnumber,
+//             totalSale: parseInt(totalSale),
+//             totalCancel: parseInt(totalCancel),
+//             billDetailList: [
+//                 a
+//             ]
+//         })
 
 
+//     } catch (error) {
+//         throw error
+//     } finally {
+//         client.release();
+//     }
 
+// // }
+//         billNumberList = (await _billNumberList).rows.bill_number
 
+//         const a = {
+//             key: billDetailList.key,
+//             lottery_number: billDetailList.lottery_number,
+//             digit: billDetailList.digit,
+//             price: billDetailList.price,
+//             billNumberList
+//         }
 
+//         else {
+//             logger.error(err);
+//             return res.status(500).send('Server error');
+
+//         }
+//     })
+// };
 
 
 
@@ -318,6 +346,21 @@ exports.cancelbilldetaillist = (req, res) => {
 //             ]
 //         })
 
+
+//     } catch (error) {
+//         throw error
+//     } finally {
+//         client.release();
+//     }
+
+//         return res.send({
+//             drawNumber: drawnumber,
+//             totalSale: parseInt(totalSale),
+//             totalCancel: parseInt(totalCancel),
+//             billDetailList: [
+//                 a
+//             ]
+//         })
 
 //     } catch (error) {
 //         throw error

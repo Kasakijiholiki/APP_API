@@ -39,11 +39,11 @@ exports.billlist = (req, res) => {
                         status: true,
                         statusCode: 200,
                         message: "OK",
-                        totalReords: 0,
+                        totalRecords: 0,
                         data: {
                             totalSale: results.rowCount,
                             totalPrice: totalPrice,
-                            billlist: results.rows
+                            billList: results.rows
                         }
                     });
 
@@ -97,11 +97,11 @@ exports.cancelbilllist = (req, res) => {
                         status: true,
                         statusCode: 200,
                         message: "OK",
-                        totalReords: 0,
+                        totalRecords: 0,
                         data: {
                             totalSale: results.rowCount,
                             totalPrice: totalPrice,
-                            billlist: results.rows
+                            billList: results.rows
                         }
                     });
                 }
@@ -148,7 +148,7 @@ exports.billdetaillist = (req, res) => {
                         status: true,
                         statusCode: 200,
                         message: "OK",
-                        totalReords: 0,
+                        totalRecords: 0,
                         data: {
                             billNumber: results.rows[0].bill_number,
                             totalPrice: totalPrice,
@@ -218,94 +218,94 @@ exports.cancelbilldetaillist = (req, res) => {
     })
 };
 
-exports.get = async (req, res) => {
+// exports.get = async (req, res) => {
 
-    totalPrice = 0
-    totalCancel = 0
-    totalSale = 0
-    device_code = req.params.device_code;
-    drawnumber = req.params.drawnumber;
+//     totalPrice = 0
+//     totalCancel = 0
+//     totalSale = 0
+//     device_code = req.params.device_code;
+//     drawnumber = req.params.drawnumber;
 
-    const client = await db.connect();
+//     const client = await db.connect();
 
-    try {
-        //         sql = `SELECT tbl_bill.bill_price AS price,
-        //                         tbl_bill.bill_id AS key,
-        //               tbl_bill.period_number AS drawnumber,
-        //               tbl_bill.bill_number
-        // FROM   tbl_bill, tbl_bill_detail
-        // WHERE  tbl_bill.bill_number = tbl_bill_detail.bill_number
-        // AND    device_code = $1 AND period_number = $2`;
-
-
-        const _totalSale = client.query(`SELECT COUNT(*)
-                           FROM tbl_bill
-                           WHERE bill_number NOT IN (SELECT bill_number FROM tbl_bill_cancel)
-                           AND device_code = $1 
-                           AND period_number = $2`, [device_code, drawnumber])
-        totalSale = (await _totalSale).rows[0].count
+//     try {
+//         //         sql = `SELECT tbl_bill.bill_price AS price,
+//         //                         tbl_bill.bill_id AS key,
+//         //               tbl_bill.period_number AS drawnumber,
+//         //               tbl_bill.bill_number
+//         // FROM   tbl_bill, tbl_bill_detail
+//         // WHERE  tbl_bill.bill_number = tbl_bill_detail.bill_number
+//         // AND    device_code = $1 AND period_number = $2`;
 
 
-
-        const _cancelList = client.query(`SELECT COUNT(*) 
-                                          FROM   tbl_bill_cancel
-                                          WHERE  device_code = $1
-                                          AND    period_number = $2`, [device_code, drawnumber])
-        totalCancel = (await _cancelList).rows[0].count
+//         const _totalSale = client.query(`SELECT COUNT(*)
+//                            FROM tbl_bill
+//                            WHERE bill_number NOT IN (SELECT bill_number FROM tbl_bill_cancel)
+//                            AND device_code = $1 
+//                            AND period_number = $2`, [device_code, drawnumber])
+//         totalSale = (await _totalSale).rows[0].count
 
 
 
+//         const _cancelList = client.query(`SELECT COUNT(*) 
+//                                           FROM   tbl_bill_cancel
+//                                           WHERE  device_code = $1
+//                                           AND    period_number = $2`, [device_code, drawnumber])
+//         totalCancel = (await _cancelList).rows[0].count
 
-        let billDetailList = null
-        const _billDetailList = client.query(`	  
-        SELECT           tbl_bill.bill_id AS key,
-                         tbl_bill_detail.lottery_number,
-                         LENGTH(   tbl_bill_detail.lottery_number) AS digit,	 
-                         SUM      (tbl_bill_detail.lottery_price) AS price
-        FROM             tbl_bill, tbl_bill_detail
-        WHERE            tbl_bill.bill_number = tbl_bill_detail.bill_number
-        AND              tbl_bill.device_code = $1 
-        AND              tbl_bill.period_number = $2
-        GROUP BY         tbl_bill_detail.lottery_number,  tbl_bill.bill_id
-        ORDER BY LENGTH(tbl_bill_detail.lottery_number) `, [device_code, drawnumber])
+
+
+
+//         let billDetailList = null
+//         const _billDetailList = client.query(`	  
+//         SELECT           tbl_bill.bill_id AS key,
+//                          tbl_bill_detail.lottery_number,
+//                          LENGTH(   tbl_bill_detail.lottery_number) AS digit,	 
+//                          SUM      (tbl_bill_detail.lottery_price) AS price
+//         FROM             tbl_bill, tbl_bill_detail
+//         WHERE            tbl_bill.bill_number = tbl_bill_detail.bill_number
+//         AND              tbl_bill.device_code = $1 
+//         AND              tbl_bill.period_number = $2
+//         GROUP BY         tbl_bill_detail.lottery_number,  tbl_bill.bill_id
+//         ORDER BY LENGTH(tbl_bill_detail.lottery_number) `, [device_code, drawnumber])
        
-        billDetailList = (await _billDetailList).rows
+//         billDetailList = (await _billDetailList).rows
 
          
 
 
-        let billNumberList
-        const _billNumberList = client.query(`	  
-        SELECT           tbl_bill_detail.bill_number
-        FROM             tbl_bill, tbl_bill_detail
-        WHERE            tbl_bill.bill_number = tbl_bill_detail.bill_number
-        AND              tbl_bill.device_code = $1`, [device_code])
+//         let billNumberList
+//         const _billNumberList = client.query(`	  
+//         SELECT           tbl_bill_detail.bill_number
+//         FROM             tbl_bill, tbl_bill_detail
+//         WHERE            tbl_bill.bill_number = tbl_bill_detail.bill_number
+//         AND              tbl_bill.device_code = $1`, [device_code])
         
-        billNumberList = (await _billNumberList).rows.bill_number
+//         billNumberList = (await _billNumberList).rows.bill_number
 
-        const a = {
-            key: billDetailList.key,
-            lottery_number: billDetailList.lottery_number,
-            digit: billDetailList.digit,
-            price: billDetailList.price,
-            billNumberList
-        }
+//         const a = {
+//             key: billDetailList.key,
+//             lottery_number: billDetailList.lottery_number,
+//             digit: billDetailList.digit,
+//             price: billDetailList.price,
+//             billNumberList
+//         }
 
-        return res.send({
-            drawNumber: drawnumber,
-            totalSale: parseInt(totalSale),
-            totalCancel: parseInt(totalCancel),
-            billDetailList: [
-                a
-            ]
-        })
+//         return res.send({
+//             drawNumber: drawnumber,
+//             totalSale: parseInt(totalSale),
+//             totalCancel: parseInt(totalCancel),
+//             billDetailList: [
+//                 a
+//             ]
+//         })
 
 
-    } catch (error) {
-        throw error
-    } finally {
-        client.release();
-    }
+//     } catch (error) {
+//         throw error
+//     } finally {
+//         client.release();
+//     }
 
-}
+// }
 

@@ -19,22 +19,15 @@ const period = require('./routes/period.route')
 const sale = require('./routes/salemanagement.route')
 const billcancel = require('./routes/billcancel.route')
 const dashboard = require('./routes/dashboard')
-<<<<<<< HEAD
-
-=======
 const His = require('./routes/HistorySalePeriod')
->>>>>>> 5d359cfd056ef5d246152f0fa29207b77e9548ce
 //use routes
 app.use('/api/', account)
 app.use('/api/', period)
 app.use('/api/', sale)
 app.use('/api/', dashboard);
-<<<<<<< HEAD
 app.use('/api/', billcancel)
-=======
 app.use('/api/', His)
 
->>>>>>> 5d359cfd056ef5d246152f0fa29207b77e9548ce
 
 //Swagger
 const PORT = process.env.port || 8000
@@ -74,7 +67,6 @@ const option = {
 const swaggerDocs = swaggerJSDoc(option)
 app.use('/Swagger', swaggerUI.serve, swaggerUI.setup(swaggerDocs))
 
-<<<<<<< HEAD
 const db = require('./config-db/connection')
 
 
@@ -86,14 +78,5 @@ app.post('/',async (req, res) => {
 
 })
 
-const a = [1,2,3,4]
-let b = []
-for (let i= 0; i<a.length;i++) {
-  b.push(a[i])
-}
-console.log(b)
-=======
-
->>>>>>> 5d359cfd056ef5d246152f0fa29207b77e9548ce
 app.listen(PORT, console.log(`Server Running on port ${PORT}`))
 module.exports = app;

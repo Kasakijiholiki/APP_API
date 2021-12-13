@@ -1,8 +1,10 @@
 
-const db = require("../config-db/connection");
-let bill_id, device_code, drawnumber, totalPrice, totalSale, sql, totalReords, totalCancel;
+const db     = require("../config-db/connection");
+let  bill_id, totalPrice, totalSale, sql, totalReords, totalCance, device_code, drawNumber
+let par  = {device_code: 'Tong',
+           drawNumber: 'Yang'}
 const logger = require('../config-log/logger')
-const task = require('../tasks')
+const task   = require('../tasks')
 
 
 exports.billlist = (req, res) => {
@@ -65,10 +67,11 @@ exports.billlist = (req, res) => {
 exports.cancelbilllist = (req, res) => {
     totalPrice = 0;
     totalSale = 0;
-    device_code = req.params.device_code;
-    drawnumber = req.params.drawnumber;
+    device_code = req.params.device_code
+    drawnumber = req.params.drawnumber
+
     sql = `SELECT   tbl_bill_cancel.cancel_id AS key,
-                    to_char("date_cancel", 'DD/MM/YYYY') AS date ,
+                     to_char("date_cancel", 'DD/MM/YYYY') AS date ,
                     tbl_bill_cancel.time_cancel AS time,
                     tbl_bill_cancel.bill_number AS billNumber,
                     tbl_bill_cancel_detail.lottery_price AS billPrice
@@ -217,8 +220,83 @@ exports.cancelbilldetaillist = (req, res) => {
     })
 };
 
-// exports.get = async (req, res) => {
+exports.get = async (req, res) => {
+totalCancel = '0'
+totalPrice  = '0'
+totalSale   = '0'
+//let {device_code, drawNumber} = req.params
+const device_code = req.params.device_code
+const drawNumber  = req.params.drawNumber
 
+await db.connect(async(err, client, done) => {
+    if (!err) {
+
+    //#region  Get totalsale
+            const _totalSale = client.query(` SELECT bill_id
+                                              FROM   tbl_bill
+                                              WHERE  bill_number NOT IN (SELECT bill_number FROM tbl_bill_cancel)
+                                              AND    device_code = $1 
+                                              AND    period_number = $2`, [device_code, drawNumber])
+        totalSale = (await _totalSale).rowCount
+       console.log(totalSale)
+    //#endregion
+
+    //#region Get total cancel
+             const _cancelList = client.query(`SELECT bill_number
+                                               FROM   tbl_bill_cancel
+                                               WHERE  device_code = $1
+                                               AND    period_number = $2`, [device_code, drawNumber])
+            totalCancel = (await _cancelList).rowCount
+           
+    //#endregion
+
+    //#region Get bill detail list
+        let billDetailList = null
+        const _billDetailList = client.query(`	  
+        SELECT           tbl_bill.bill_id AS key,
+                         LENGTH   (tbl_bill_detail.lottery_number) AS digit,	 
+                         SUM      (tbl_bill_detail.lottery_price) AS price
+        FROM             tbl_bill, tbl_bill_detail
+        WHERE            tbl_bill.bill_number = tbl_bill_detail.bill_number
+        AND              tbl_bill.bill_number NOT IN (SELECT bill_number FROM tbl_bill_cancel)
+        AND              tbl_bill.device_code = $1 
+        AND              tbl_bill.period_number = $2
+        GROUP BY         tbl_bill.bill_id , tbl_bill_detail.lottery_number, tbl_bill_detail.lottery_price `, [device_code, drawNumber])
+        billDetailList = (await _billDetailList).rows
+   //#endregion
+    
+
+    //#region Get bill detail list
+    let billNumberList = null
+    const _billNumberList = client.query(`	  
+    SELECT           tbl_bill.bill_number AS billNumber
+    FROM             tbl_bill, tbl_bill_detail
+    WHERE            tbl_bill.bill_number = tbl_bill_detail.bill_number
+    AND              tbl_bill.device_code = $1 
+    AND              tbl_bill.period_number = $2
+    GROUP BY         tbl_bill.bill_number, tbl_bill_detail.lottery_number
+    ORDER BY LENGTH(tbl_bill_detail.lottery_number) `, [device_code, drawNumber])
+    billNumberList = (await _billNumberList).rows
+//#endregion
+
+
+    return res.send({
+            drawNumber: drawNumber,
+            totalSale: totalSale,
+            totalCancel: totalSale,
+            billDetailList: billDetailList            
+        })  
+    }
+    else {
+        logger.error(err);
+        return res.status(500).send('Server error');
+    }
+})
+}
+
+
+
+// exports.get = async (req, res) => {
 //     totalPrice = 0
 //     totalCancel = 0
 //     totalSale = 0
@@ -347,11 +425,7 @@ exports.cancelbilldetaillist = (req, res) => {
 //         })
 
 
-//     } catch (error) {
 //         throw error
-//     } finally {
-//         client.release();
-//     }
 
 //         return res.send({
 //             drawNumber: drawnumber,

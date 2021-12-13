@@ -3,7 +3,6 @@ const route = express.Router();
 const dashboard = require("../controllers/dashboard");
 
 
-
 /**
  * @swagger
  * /api/dashboard/get/cancelbilldetaillist/{bill_id}:
@@ -17,7 +16,6 @@ const dashboard = require("../controllers/dashboard");
  *      required: true
  *      description: bill_id
  *      example: 2f6d9ff4-15a1-4bf9-bf99-abba9f40d049
-
  *   responses:
  *    200:
  *       description: OK
@@ -53,8 +51,6 @@ route.get("/dashboard/get/cancelbilldetaillist/:bill_id", dashboard.cancelbillde
  *      required: true
  *      description: drawnumber
  *      example: 21059
-
-<<<<<<< HEAD
  *   responses:
  *    200:
  *       description: OK
@@ -132,4 +128,37 @@ route.get("/dashboard/get/billlist/:device_code/:drawnumber", dashboard.billlist
 
 // route.get("/dashboard/get/:device_code/:drawnumber", dashboard.get);
 
-module.exports = route;
+/**
+ * @swagger
+ * /api/dashboard/get/{device_code}/{drawNumber}:
+ *  get:
+ *   tags: [Dasboard]
+ *   parameters:
+ *    - in: path
+ *      name: device_code
+ *      schema:
+ *       type: string
+ *      required: true
+ *      description: device_code
+ *      example: 21818673
+ *    - in: path
+ *      name: drawNumber
+ *      schema:
+ *       type: string
+ *      required: true
+ *      description: drawNumber
+ *      example: 21057
+ *   responses:
+ *    200:
+ *       description: OK
+ *    403:
+ *       description: Forbiden
+ *    404:
+ *       description: Not found
+ *    500:
+ *       description: Some server error
+ */
+
+ route.get("/dashboard/get/:device_code/:drawNumber", dashboard.get);
+
+ module.exports = route;

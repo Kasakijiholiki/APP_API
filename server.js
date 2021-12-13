@@ -66,21 +66,13 @@ const option = {
 const swaggerDocs = swaggerJSDoc(option)
 app.use('/Swagger', swaggerUI.serve, swaggerUI.setup(swaggerDocs))
 
-const db = require('./config-db/connection')
 
-app.post('/',async (req, res) => {
-  const cleint = await db.connect()
-  cleint.query('INSERT INTO demo VALUES ($1, $2, $3)', [12, "aa", "bb"], (error, data) => {
-    return res.status(201).send(data)
-  })
+app.get('/', (req, res) => {
+
+  let ab = req.params
+
+  return res.send(ab)
 })
-
-const a = [1,2,3,4]
-let b = []
-for (let i= 0; i<a.length;i++) {
-  b.push(a[i])
-}
-console.log(b)
 
 app.listen(PORT, console.log(`Server Running on port ${PORT}`))
 module.exports = app;

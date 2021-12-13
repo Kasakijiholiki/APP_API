@@ -11,18 +11,13 @@ app.use(cors())
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
-
 //routes
 const account = require('./routes/account.route')
 const period = require('./routes/period.route')
 const sale = require('./routes/salemanagement.route')
 const billcancel = require('./routes/billcancel.route')
 const dashboard = require('./routes/dashboard')
-<<<<<<< HEAD
 
-=======
->>>>>>> b778f0b6100fb30fdd363155dc282aeeca1fbdf2
 const His = require('./routes/HistorySalePeriod')
 //use routes
 app.use('/api/', account)
@@ -73,16 +68,13 @@ app.use('/Swagger', swaggerUI.serve, swaggerUI.setup(swaggerDocs))
 
 const db = require('./config-db/connection')
 
-
 app.post('/',async (req, res) => {
   const cleint = await db.connect()
   cleint.query('INSERT INTO demo VALUES ($1, $2, $3)', [12, "aa", "bb"], (error, data) => {
     return res.status(201).send(data)
   })
-
 })
 
-<<<<<<< HEAD
 const a = [1,2,3,4]
 let b = []
 for (let i= 0; i<a.length;i++) {
@@ -90,7 +82,5 @@ for (let i= 0; i<a.length;i++) {
 }
 console.log(b)
 
-=======
->>>>>>> b778f0b6100fb30fdd363155dc282aeeca1fbdf2
 app.listen(PORT, console.log(`Server Running on port ${PORT}`))
 module.exports = app;

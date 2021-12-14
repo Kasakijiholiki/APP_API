@@ -88,10 +88,7 @@ route.get("/dashboard/get/cancelbilllist/:device_code/:drawnumber", dashboard.ca
  */
 
 route.get("/dashboard/get/billdetaillist/:bill_id", dashboard.billdetaillist);
-<<<<<<< HEAD
 
-=======
->>>>>>> 6cd75bdaea8fb283170e38876b8460f64f60a528
 //route.get("/dashboard/get/:device_code/:drawnumber", dashboard.get);
 
 

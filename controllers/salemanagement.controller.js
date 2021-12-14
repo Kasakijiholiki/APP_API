@@ -52,25 +52,32 @@ let num1 = 0, num2 = 0, num3 = 0, num4 = 0, num5 = 0, num6 = 0, price1 = 0, pric
            
             //_______________________GET QUOATA LIST___________________________________// 
             const quotaList = (await (cleint.query(`SELECT digit_length AS num, price_per_number AS price FROM tbl_quota`))).rows
+         
+            //______________________GET DIGIT LENGHT AND PRICE PER NUMBER FOM QUOATA__//
             for(let k = 0; k < quotaList.length; k++) {
                 if(quotaList[k].num == 1) {
                     num1 = 1
-                   // price1 = quotaList[k]
+                    price1 = quotaList[k].price
                    }
                    else if(quotaList[k].num == 2) {
                     num2 = 2
+                    price2 = quotaList[k].price
                    }
                    else if(quotaList[k].num == 3) {
                     num3 = 3
+                    price3 = quotaList[k].price
                    }
                    else if(quotaList[k].num == 4) {
-                    num2 = 4
+                    num4 = 4
+                    price4 = quotaList[k].price
                    }
                    else if(quotaList[k].num == 5) {
-                    num3 = 5
+                    num5 = 5
+                    price5 = quotaList[k].price
                    }
                    else if(quotaList[k].num == 6) {
                     num6 = 6
+                    price6 = quotaList[k].price
                    }
             }
              

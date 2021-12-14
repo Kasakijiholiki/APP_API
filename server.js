@@ -11,8 +11,6 @@ app.use(cors())
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
-
 //routes
 const account = require('./routes/account.route')
 const period = require('./routes/period.route')
@@ -68,8 +66,8 @@ const option = {
 const swaggerDocs = swaggerJSDoc(option)
 app.use('/Swagger', swaggerUI.serve, swaggerUI.setup(swaggerDocs))
 
-const db = require('./config-db/connection')
 
+<<<<<<< HEAD
 app.get('/', async (req,res) => {
   const cleint  = await db.connect()
   const curentPeriod = (await cleint.query(`SELECT period_number FROM tbl_online WHERE  online_status = 1`)).rows[0].period_number
@@ -132,5 +130,14 @@ for(let i = 0; i < quotaList.length; i++){
 
 
 
+=======
+app.get('/', (req, res) => {
+
+  let ab = req.params
+
+  return res.send(ab)
+})
+
+>>>>>>> 6cd75bdaea8fb283170e38876b8460f64f60a528
 app.listen(PORT, console.log(`Server Running on port ${PORT}`))
 module.exports = app;

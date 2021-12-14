@@ -250,6 +250,7 @@ await db.connect(async(err, client, done) => {
            
     //#endregion
 
+
     //#region Get bill detail list
         let billDetailList = null
         const _billDetailList = client.query(`	  
@@ -261,12 +262,15 @@ await db.connect(async(err, client, done) => {
         AND              tbl_bill.bill_number NOT IN (SELECT bill_number FROM tbl_bill_cancel)
         AND              tbl_bill.device_code = $1 
         AND              tbl_bill.period_number = $2
-        GROUP BY         tbl_bill.bill_id , tbl_bill_detail.lottery_number, tbl_bill_detail.lottery_price `, [device_code, drawNumber])
+        GROUP BY         tbl_bill.bill_id, LENGTH (tbl_bill_detail.lottery_number)
+        ORDER BY         LENGTH (tbl_bill_detail.lottery_number)
+        `, [device_code, drawNumber])
         billDetailList = (await _billDetailList).rows
    //#endregion
     
 
-    //#region Get bill detail list
+
+  //#region Get bill detail list
     let billNumberList = null
     const _billNumberList = client.query(`	  
     SELECT           tbl_bill.bill_number AS billNumber
@@ -274,7 +278,6 @@ await db.connect(async(err, client, done) => {
     WHERE            tbl_bill.bill_number = tbl_bill_detail.bill_number
     AND              tbl_bill.device_code = $1 
     AND              tbl_bill.period_number = $2
-    GROUP BY         tbl_bill.bill_number, tbl_bill_detail.lottery_number
     ORDER BY LENGTH(tbl_bill_detail.lottery_number) `, [device_code, drawNumber])
     billNumberList = (await _billNumberList).rows
 //#endregion

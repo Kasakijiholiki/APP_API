@@ -278,7 +278,7 @@ await db.connect(async(err, client, done) => {
     ORDER BY LENGTH(tbl_bill_detail.lottery_number) `, [device_code, drawNumber])
     billNumberList = (await _billNumberList).rows
 //#endregion
-
+done()
 
     return res.send({
             drawNumber: drawNumber,
@@ -286,6 +286,7 @@ await db.connect(async(err, client, done) => {
             totalCancel: totalSale,
             billDetailList: billDetailList            
         })  
+ 
     }
     else {
         logger.error(err);

@@ -6,65 +6,82 @@ let account = require('../models/account.model')
 let SQL = ``
 const logger = require('../config-log/logger')
 const process = require('../tasks')
-
+const bcrypt = require('bcrypt')
+require('dotenv').config()
 //.............Login......................//
 exports.login = async (req, res) => {
-    const cleint = await connection.connect()
-    account = req.params
-    logger.info(`POST/api/login/${account.device_code}/${account.us_pwd}`)
 
-    SQL = `SELECT * FROM  public.tbl_user_seller WHERE  device_code = $1 AND us_pwd = $2`
+    const { device_code, us_pwd } = req.params
 
-    try {
-        cleint.query(SQL, [account.device_code, account.us_pwd], (error, results) => {
-            if (error) {
-                logger.error(error)
-                return res.status(403).send({ error: error })
-            }
-            if (results.rowCount == 0) {
-                return res.status(404).send({ message: 'User not found' })
-            }
-            else {
-                SQL = `SELECT * FROM public.tbl_set_number`
-                cleint.query(SQL, async (err, rs) => {
-                    if (err) {
-                        return res.status(403).send({ error: err.stack })
-                    } else {
+    // account = req.params
+    logger.info(`POST/api/login/${device_code}/${us_pwd}`)
 
-                        //Query date offline from tbl_online
-                        let date_offline = ""
-                        const _date = cleint.query(`SELECT date_offline FROM tbl_online WHERE online_status = 1 DESC`)
-                        if ((await _date).rowCount > 0) date_offline = (await _date).rows[0].date_offline
+    await connection.connect(async (err, cleint, done) => {
+        if (!err) {
+            let date_offline = ""
+            const isonline =  cleint.query(`SELECT to_char("date_offline", 'DD/MM/YYYY') AS date_offline FROM tbl_online WHERE online_status = 1`)
 
-                        jwt.sign({ account }, 'secretkey', (err, accessToken) => {
-                            if (!err) {
-                                res.json({
-                                    online: true,
-                                    deviceCode: account.device_code,
-                                    offlineDate: date_offline,
-                                    isOverMaxSell: false,
-                                    accessToken: accessToken,
-                                    setNumberList: rs.rows
-                                });
-                            } else {
-                                return res.status(403).send({ error: err.stack })
-                            }
-                        });
+            if ((await isonline).rowCount > 0) {
+                date_offline = (await isonline).rows[0].date_offline
+
+                 SQL = `SELECT * FROM  public.tbl_user_seller WHERE  device_code = $1`
+                await cleint.query(SQL, [device_code], async (error, results) => {
+
+                    if (error) {
+                        logger.error(error.stack)
+                        return res.status(403).send({ error: error })
                     }
+                    if (results.rowCount == 0) {
+                        return res.status(404).send({ message: 'User not found' })
+                    }
+                    else {
+                        if (results.rows[0].us_status == 1) {
+                            const userId = results.rows[0].usid
+                            const setnumberList = (await cleint.query(`SELECT * FROM public.tbl_set_number`)).rows
 
-                })
+                            bcrypt.compare(us_pwd, results.rows[0].us_pwd, (error, response) => {
 
+                                if (response) {
+                                    const token = jwt.sign({ userId }, 'SCRET_KEY', {
+                                        expiresIn: "24h"
+                                    })
+                                    return res.json({
+                                        online: true,
+                                        deviceCode: device_code,
+                                        offlineDate: date_offline,
+                                        isOverMaxSell: false,
+                                        accessToken: token,
+                                        setNumberList: setnumberList
+                                    });
+                                } else {
+                                    return res.status(404).send({
+                                        auth: false,
+                                        message: "Password incorrect!"
+                                    })
+
+                                }
+                            })
+                        }
+                        else if (results.rows[0].us_status == 2) {
+                            return res.status(501).send("Unauthorise")
+                        }
+                        else if (results.rows[0].us_status == 3) {
+                            return res.status(502).send("Was blocked")
+                        }
+                    }
+                });
+            } else {
+                return res.status(503).send("server offline")
             }
-
-        });
-    } catch (error) {
-
-    } finally {
-        cleint.release()
-    }
-
+            done();
+        } else {
+            logger.error(err)
+            return res.status(500).send("Server error")
+        }
+    })
 
 }
+
 //.....................PasswordChange..............//
 exports.PasswordChage = async (req, res) => {
     account = req.params
@@ -109,11 +126,9 @@ exports.checkversion = async (req, res) => {
         } else {
             return res.status(500).send({ message: "Server error" })
         }
-
     })
-
-
 }
+
 
 //...........Check device imei..............//
 exports.CheckVersionV2 = async (req, res) => {
@@ -162,10 +177,10 @@ exports.CheckVersionV2 = async (req, res) => {
 
                 }
                 if (results.rowCount == 0) {
-                    return res.status(404).send({ message: 'Not found' })
+                    return res.status(404).send(false)
                 }
                 else {
-                    res.json({
+                    return res.json({
                         device_number: results.rows[0].device_number,
                         device_code: results.rows[0].device_code,
                         branch_id: results.rows[0].device_branch_id,

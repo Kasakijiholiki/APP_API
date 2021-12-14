@@ -19,10 +19,7 @@ const period = require('./routes/period.route')
 const sale = require('./routes/salemanagement.route')
 const billcancel = require('./routes/billcancel.route')
 const dashboard = require('./routes/dashboard')
-<<<<<<< HEAD
 
-=======
->>>>>>> b778f0b6100fb30fdd363155dc282aeeca1fbdf2
 const His = require('./routes/HistorySalePeriod')
 //use routes
 app.use('/api/', account)
@@ -73,24 +70,67 @@ app.use('/Swagger', swaggerUI.serve, swaggerUI.setup(swaggerDocs))
 
 const db = require('./config-db/connection')
 
+app.get('/', async (req,res) => {
+  const cleint  = await db.connect()
+  const curentPeriod = (await cleint.query(`SELECT period_number FROM tbl_online WHERE  online_status = 1`)).rows[0].period_number
+// if(curentPeriod != 0 || curentPeriod != null || curentPeriod != "") {
+//   return res.send(curentPeriod)
+// } else {
+//   return res.send("Offline")
+// }
+// console.log("OK")
+// const lotteryList = (await cleint.query(`SELECT lottery_number, lottery_price FROM tbl_bill_detail`)).rows
+// return res.send(lotteryList)
+let num1 = 0, num2 = 0, num3 = 0, num4 = 0, num5 = 0, num6 = 0
 
-app.post('/',async (req, res) => {
-  const cleint = await db.connect()
-  cleint.query('INSERT INTO demo VALUES ($1, $2, $3)', [12, "aa", "bb"], (error, data) => {
-    return res.status(201).send(data)
-  })
+const quotaList = (await (cleint.query(`SELECT digit_lenght, price_per_number FROM tbl_quota`))).rows
+for(let i = 0; i < quotaList.length; i++){
+ if(quotaList[i].digit_lenght == 1) {
+  num1 = 1
+  console.log("number1 "+num1)
+ }
+ else if(quotaList[i].digit_lenght == 2) {
+  num2 = 2
+  console.log("number3 "+num2)
+ }
+ else if(quotaList[i].digit_lenght == 3) {
+  num3 = 3
+  console.log("number4 "+num3)
+ }
 
+ 
+
+
+
+
+}
 })
 
-<<<<<<< HEAD
-const a = [1,2,3,4]
-let b = []
-for (let i= 0; i<a.length;i++) {
-  b.push(a[i])
-}
-console.log(b)
+// const i = [
+//   [922852,1000], 
+//   [922852, 1000], 
+//   [922852, 1000], 
+//   [ 922852,1000]]
 
-=======
->>>>>>> b778f0b6100fb30fdd363155dc282aeeca1fbdf2
+//   const saleViewModelList = {
+//     "periodNumber": 1010,
+//     "SaleList":
+//     [{"lotteryNumber": 922852, "lotteryPrice": 1000}, 
+//     {"lotteryNumber": 922852, "lotteryPrice": 2000}, 
+//     {"lotteryNumber": 922852, "lotteryPrice": 3000}, 
+//     {"lotteryNumber": 922852, "lotteryPrice": 4000}, 
+//     {"lotteryNumber": 922852, "lotteryPrice": 5000}
+//     ]
+//     }
+
+//   let SaleList = []
+//   for (let i = 0; i < saleViewModelList.SaleList.length; i++) {
+//     SaleList.push([1, 2, saleViewModelList.SaleList[i].lotteryNumber, saleViewModelList.SaleList[i].lotteryPrice])
+// }
+
+// SaleList.splice(2, 1)
+
+
+
 app.listen(PORT, console.log(`Server Running on port ${PORT}`))
 module.exports = app;

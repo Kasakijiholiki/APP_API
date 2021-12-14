@@ -18,175 +18,166 @@ exports.createsale = async (req, res) => {
     saleViewModelList = req.body
     let SaleList = []
     const bill_id = uuidv4();
-
+let num1 = 0, num2 = 0, num3 = 0, num4 = 0, num5 = 0, num6 = 0, price1 = 0, price2 = 0, price3 = 0, price4 = 0, price5 = 0, price6 = 0
     SQL = `INSERT INTO tbl_bill VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`
     const cleint = await db.connect()
     try {
 
-
-        for (let i = 0; i < saleViewModelList.SaleList.length; i++) {
-            SaleList.push([bill_id, bill.billNumber, saleViewModelList.SaleList[i].lotteryNumber, saleViewModelList.SaleList[i].lotteryPrice, date.getdate()])
-        }
-
         let removeBillNumberList = []
-        let errorType = 0
-        let message = ""
-        let period_number = ""
+      
         //Check period online
-        const _period = cleint.query(`SELECT period_number FROM tbl_online WHERE period_number = $1 AND online_status = 1`, [bill.periodNumber])
-
-        //______________________________CHECK LOTTERY NUMBER____________________________________//
-        // if ((await _period).rowCount > 0) {
-
-        //     //Get lottery number from list of sale to contain intio lotteryNumberArray
-        //     let lotteryNumberArray = []
-        //     for (let i = 0; i < SaleList; i++) {
-        //         lotteryNumberArray.push(SaleList[i].lotteryNumber)
-        //     }
-        //     //Get max_length
-        //     const max_lenght = (await cleint.query(`SELECT max_length FROM tbl_digit_length`)).rows[0].max_lenght
-
-        //     //Get quoata list 
-        //     const quotaList = (await cleint.query(`SELECT * FROM tbl_quota`)).rows
-
-        //     for (const item of SaleList) {
-        //         let flag = false
-        //         const quoataFunction = (await cleint.query(`SELECT * FROM fn_quota('${periodNumber}', '${item.lotteryNumber}')`)).rows
-
-        //         if (quoataFunction != null) {
-        //             if (quoataFunction.bal_stat == "true" && quoataFunction.lot_stat == "true") {
-        //                 if (item.lotteryPrice > quoataFunction.lot_bal) {
-        //                     SaleList.slice(item)
-        //                     removeBillNumberList.push(item.lotteryNumber)
-        //                     flag = true
-        //                 }
-        //             } else {
-        //                 SaleList.slice(item)
-        //                 removeBillNumberList.push(item.lotteryNumber)
-        //                 flag = true
-        //             }
-        //         } else {
-        //             let quoataData = (await cleint.query(`SELECT * FROM tbl_quota WHERE digit_length = ${item.lotteryNumber.length}`)).rows
-        //             if (quoataData != null && item.lotteryPrice > quoataData.price_per_number) {
-        //                 SaleList.slice(item)
-        //                 removeBillNumberList.push(item.lotteryNumber)
-        //                 flag = true
-        //             }
-
-        //         }
-        //         //______________________CHECK LOTTERY LENGTH AND PRICE_______________________//
-        //         if (!flag) {
-        //             if (item.lotteryNumber.length > max_lenght) {
-        //                 message = `ເລກສ່ຽງສາມາດຂາຍໄດ້ ${max_lenght} ເທົ່ານັ້ນ`
-        //             }
-        //             if (item.lotteryPrice < 1000) {
-        //                 message = `ລາຄາບໍ່ສາມາດຂາຍຕໍ່າກວ່າ 1000 ກີບ`
-        //             }
-        //             if (item.lotteryPrice % 1000 != 0) {
-        //                 message = `ລາຄາຕ້ອງຫານຂາດໃຫ້ 1000 ກີບ`
-        //             }
-
-        //             const ln_Data = (await cleint.query(`SELECT * FROM tbl_lottery_number WHERE lottery_number IN (${lotteryNumberArray}) AND lottery_number = ${item.lotteryNumber}`)).rows
-
-        //             if (ln_Data != null) {
-        //                 if (ln_Data.ln_status != 1) {
-        //                     message = `ເລກສ່ຽງ ${item.lotteryNumber} ເຕັມ`
-        //                 }
-        //                 const db_lottery_price = (await cleint.query(`SELECT lottery_price FROM tbl_bill_detail WHERE lotterry_number IN (${lotteryNumberArray}) AND period_number = ${periodNumber}`)).rows
-
-        //             }
-        //         }
+        const curentPeriod = (await cleint.query(`SELECT period_number FROM tbl_online WHERE  online_status = 1`)).rows[0].period_number
 
 
-        //     }
+        //______________________server online_________________________________//
+        if (curentPeriod != 0 || curentPeriod != null || curentPeriod != "") {
 
+            let lotteryNumberList = []
+            let lotteryPriceList = []
 
+            for (let i = 0; i < saleViewModelList.SaleList.length; i++) {
+                SaleList.push([bill_id, bill.billNumber, saleViewModelList.SaleList[i].lotteryNumber, saleViewModelList.SaleList[i].lotteryPrice, date.getdate()])
+            }
 
+           for(let i = 0; i < saleViewModelList.SaleList.length; i++) {
+                  lotteryNumberList.push(saleViewModelList.SaleList.lotteryNumber[i])
+                  lotteryPriceList.push(saleViewModelList.SaleList.lotteryPrice[i])
+               } 
+            SQL = ` SELECT tbl_bill_detail.lottery_number AS number, sum(tbl_bill_detail.lottery_price) AS priceFROM tbl_bill_detail, tbl_bill
+                    WHERE tbl_bill_detail.bill_number IN (SELECT bill_number FROM tbl_bill)
+                    AND   tbl_bill.period_number = $1
+                    GROUP BY lottery_number`
 
-        // }
+            const lotteryList = (await (cleint.query(SQL, [bill.periodNumber]))).rows
+           
+            //_______________________GET QUOATA LIST___________________________________// 
+            const quotaList = (await (cleint.query(`SELECT digit_length AS num, price_per_number AS price FROM tbl_quota`))).rows
+            for(let k = 0; k < quotaList.length; k++) {
+                if(quotaList[k].num == 1) {
+                    num1 = 1
+                   // price1 = quotaList[k]
+                   }
+                   else if(quotaList[k].num == 2) {
+                    num2 = 2
+                   }
+                   else if(quotaList[k].num == 3) {
+                    num3 = 3
+                   }
+                   else if(quotaList[k].num == 4) {
+                    num2 = 4
+                   }
+                   else if(quotaList[k].num == 5) {
+                    num3 = 5
+                   }
+                   else if(quotaList[k].num == 6) {
+                    num6 = 6
+                   }
+            }
+             
 
+            for(let j = 0; j < lotteryPriceList.length; j++) {
 
+                if(lotteryNumberList[j] == lotteryList.rows[j].number && lotteryNumberList[j].length == 1) {
+                 
+                    const price = parseInt(lotteryPriceList[j] + lotteryList.rows[j].number)
 
+                    // if(quotaList.rows.) {
 
-        //______________________________BEGIN Transation_____________________________//
+                    // }
+                    
+                    if(price > quotaList.rows[j].digit_length) {
 
-        await cleint.query(`BEGIN`)
-        //_________GET BRANCH_ID AND UNIT ID FROM USER_______//
-        let user = {}
-        const _user = cleint.query(`SELECT branch_id, unit_id FROM tbl_user_seller WHERE device_code = $1`, [deviceCode])
-        if ((await _user).rowCount > 0) {
-            user = ((await _user).rows[0])
-        }
+                        removeBillNumberList.push(lotteryNumberList[j])
+                        SaleList.splice(j, 1)
 
-        //__________GET TOTAL PRICE FROM SALE LIST-__________//
-        let bill_price = 0
-        for (let i = 0; i < saleViewModelList.SaleList.length; i++) {
-            bill_price += parseInt(saleViewModelList.SaleList[i].lotteryPrice)
-        }
-
-        //_________GET DEVICE_REF FROM DEVICE_______________//
-        let device_ref = ""
-        const _device = cleint.query(`SELECT device_ref, device_number FROM tbl_device WHERE device_code = $1`, [deviceCode])
-        if ((await _device).rowCount > 0) {
-            device_ref = ((await _device).rows[0].device_ref)
-        }
-
-        //_________GENERAT BILL ID_________________________//
-        bill.billNumber = periodNumber + "" + deviceCode
-
-        //_________INSERT DATA TO DATABASE TO BILL________//
-        await cleint.query(SQL,
-            [
-                bill_id,
-                bill.billNumber,
-                periodNumber,
-                deviceCode,
-                device_ref,
-                bill_price,
-                date.getdate(),
-                date.gettime(),
-                user.branch_id,
-                user.unit_id,
-                deviceNumber], (error, results) => {
-                    if (error) {
-                        logger.error(error)
-                        return res.status(400).send({ error: error.stack })
                     }
-                    if (results.rowCount > 0) {
+                }
+                
+            }
 
-                        //________________INSERT DATA TO DATABASE TO BILL DETAIL_________________//
-                        SQL = `INSERT  INTO tbl_bill_detail (bill_id, bill_number, lottery_number, lottery_price, date_bill_detail) VALUES %L`
-                        cleint.query(format(SQL, SaleList), [], async (er, rs) => {
-                            if (er) {
-                                logger.error(er)
-                                return res.status(401).send({ error: er.stack })
-                            }
-                            //____________WHEN SUCESS FOR SALE WILL COMMIT AND RETURN DATA FOR TO SHOW ON BILL_______//
-                            if (rs.rowCount > 0) {
-                                await cleint.query(`COMMIT`)
-                                return res.status(201).send({
-                                    status: true,
-                                    statusCode: 200,
-                                    message: "OK",
-                                    data: {
-                                        newbillId: bill.billNumber,
-                                        saleViewModelList: saleViewModelList.SaleList,
-                                        totalPrice: bill_price,
-                                        removeBillNumberList: removeBillNumberList
-                                    }
-                                })
 
+
+            await cleint.query(`BEGIN`)
+            //_________GET BRANCH_ID AND UNIT_ID FROM USER_______//
+            let user = {}
+            const _user = cleint.query(`SELECT branch_id, unit_id FROM tbl_user_seller WHERE device_code = $1`, [deviceCode])
+            if ((await _user).rowCount > 0) {
+                user = ((await _user).rows[0])
+            }
+            //__________GET TOTAL PRICE FROM SALE LIST-__________//
+            let bill_price = 0
+            for (let i = 0; i < saleViewModelList.SaleList.length; i++) {
+                bill_price += parseInt(saleViewModelList.SaleList[i].lotteryPrice)
+            }
+            //_________GET DEVICE_REF FROM DEVICE_______________//
+            let device_ref = ""
+            const _device = cleint.query(`SELECT device_ref, device_number FROM tbl_device WHERE device_code = $1`, [deviceCode])
+            if ((await _device).rowCount > 0) {
+                device_ref = ((await _device).rows[0].device_ref)
+            }
+            //_________GENERAT BILL ID___________________________//
+            bill.billNumber = periodNumber + "" + deviceCode
+
+            //_________INSERT DATA TO DATABASE TO BILL___________//
+            await cleint.query(SQL,
+                [
+                    bill_id,
+                    bill.billNumber,
+                    periodNumber,
+                    deviceCode,
+                    device_ref,
+                    bill_price,
+                    date.getdate(),
+                    date.gettime(),
+                    user.branch_id,
+                    user.unit_id,
+                    deviceNumber], (error, results) => {
+                        if (error) {
+                            logger.error(error)
+                            return res.status(400).send({ error: error.stack })
+                        }
+                        if (results.rowCount > 0) {
+                            for (let i = 0; i < saleViewModelList.SaleList.length; i++) {
+                                SaleList.push([bill_id, bill.billNumber, saleViewModelList.SaleList[i].lotteryNumber, saleViewModelList.SaleList[i].lotteryPrice, date.getdate()])
                             }
-                            //__________WHEN NOT SUCESS SOME DATA ROLLBACK_________
-                            else {
-                                await cleint.query(`ROLLBACK`)
-                                return res.status(500)
-                            }
-                        })
-                    } else {
-                        return res.status(500)
-                    }
-                })
+                            //________________INSERT DATA TO DATABASE TO BILL DETAIL_________________//
+                            SQL = `INSERT  INTO tbl_bill_detail (bill_id, bill_number, lottery_number, lottery_price, date_bill_detail) VALUES %L`
+                            cleint.query(format(SQL, SaleList), [], async (er, rs) => {
+                                if (er) {
+                                    logger.error(er)
+                                    return res.status(401).send({ error: er.stack })
+                                }
+                                //____________WHEN SUCESS FOR SALE WILL COMMIT AND RETURN DATA FOR TO SHOW ON BILL_______//
+                                if (rs.rowCount > 0) {
+                                    await cleint.query(`COMMIT`)
+                                    return res.status(201).send({
+                                        status: true,
+                                        statusCode: 200,
+                                        message: "OK",
+                                        data: {
+                                            newbillId: bill.billNumber,
+                                            saleViewModelList: saleViewModelList.SaleList,
+                                            totalPrice: bill_price,
+                                            removeBillNumberList: removeBillNumberList
+                                        }
+                                    })
+
+                                }
+                                //__________WHEN NOT SUCESS SOME DATA ROLLBACK_________
+                                else {
+                                    await cleint.query(`ROLLBACK`)
+                                    return res.status(500)
+                                }
+                            })
+                        } else {
+                            return res.status(500)
+                        }
+                    })
+        } 
+        //____________________server offline______________________//
+        else {
+            return res.status(501).send({message: "server offline"})
+        }
     } catch (error) {
         await cleint.query(`ROLLBACK`)
         logger.error(error.stack)
@@ -194,7 +185,11 @@ exports.createsale = async (req, res) => {
     } finally {
         cleint.release()
     }
+    // else {
+    //     return res.status(501).send({message: "Server offline"})
+    // }
 }
+
 
 
 //Get config data.

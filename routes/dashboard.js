@@ -30,7 +30,6 @@ const dashboard = require("../controllers/dashboard");
 route.get("/dashboard/get/cancelbilldetaillist/:bill_id", dashboard.cancelbilldetaillist);
 
 
-
 /**
  * @swagger
  * /api/dashboard/get/cancelbilllist/{device_code}/{drawnumber}:
@@ -89,29 +88,33 @@ route.get("/dashboard/get/cancelbilllist/:device_code/:drawnumber", dashboard.ca
  */
 
 route.get("/dashboard/get/billdetaillist/:bill_id", dashboard.billdetaillist);
+<<<<<<< HEAD
+
+=======
+>>>>>>> 6cd75bdaea8fb283170e38876b8460f64f60a528
 //route.get("/dashboard/get/:device_code/:drawnumber", dashboard.get);
 
 
 
 /**
  * @swagger
- * /api/dashboard/get/billlist/{device_code}/{drawnumber}:
+ * /api/dashboard/get/billlist/{deviceCode}/{drawNumber}:
  *  get:
  *   tags: [Dasboard]
  *   parameters:
  *    - in: path
- *      name: device_code
+ *      name: deviceCode
  *      schema:
  *       type: string
  *      required: true
- *      description: device_code
+ *      description: deviceCode
  *      example: 21818673
  *    - in: path
- *      name: drawnumber
+ *      name: drawNumber
  *      schema:
  *       type: string
  *      required: true
- *      description: drawnumber
+ *      description: drawNumber
  *      example: 21057
  *   responses:
  *    200:
@@ -124,7 +127,7 @@ route.get("/dashboard/get/billdetaillist/:bill_id", dashboard.billdetaillist);
  *       description: Some server error
  */
 
-route.get("/dashboard/get/billlist/:device_code/:drawnumber", dashboard.billlist);
+route.get("/dashboard/get/billlist/:deviceCode/:drawNumber", dashboard.billlist);
 
 // route.get("/dashboard/get/:device_code/:drawnumber", dashboard.get);
 

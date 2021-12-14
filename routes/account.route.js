@@ -57,24 +57,19 @@ const account = require('../controllers/account.controller')
  *  post:
  *   summary: Logined
  *   tags: [Account]
- *   requestBody:
- *    content:
- *     application/json:
- *      schema:
- *       $ref: '#/components/schemas/login'
  *   parameters:
  *    - in: path
- *      name: deviceCode
+ *      name: device_code
  *      schema:
  *       type: string
  *      required: true
  *      description: Device code
  *    - in: path
- *      name: deviceNumber
+ *      name: us_pwd
  *      schema:
  *       type: string
  *      required: true
- *      description: Device number
+ *      description: user password
  *   responses:
  *    200:
  *       description: OK
@@ -87,6 +82,7 @@ const account = require('../controllers/account.controller')
  *    500:
  *       description: Some server error
  */
+
 router.post('/account/login/:device_code/:us_pwd', account.login)
 
 /**

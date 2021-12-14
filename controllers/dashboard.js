@@ -19,6 +19,7 @@ exports.billlist = (req, res) => {
                   tbl_bill.bill_price AS billprice
            FROM   tbl_bill, tbl_bill_detail
            WHERE  tbl_bill.bill_id = tbl_bill_detail.bill_id
+           AND    tbl_bill.bill_number NOT IN (SELECT bill_number FROM tbl_bill_cancel)
            AND    tbl_bill.device_code = $1
            AND    tbl_bill.period_number = $2`;
     db.connect((err, client, done) => {
@@ -69,7 +70,7 @@ exports.cancelbilllist = (req, res) => {
     drawnumber = req.params.drawnumber
 
     sql = `SELECT   tbl_bill_cancel.cancel_id AS key,
-                     to_char("date_cancel", 'DD/MM/YYYY') AS date ,
+                    to_char("date_cancel", 'DD/MM/YYYY') AS date ,
                     tbl_bill_cancel.time_cancel AS time,
                     tbl_bill_cancel.bill_number AS billNumber,
                     tbl_bill_cancel_detail.lottery_price AS billPrice
@@ -265,7 +266,6 @@ await db.connect(async(err, client, done) => {
         billDetailList = (await _billDetailList).rows
    //#endregion
     
-
 
   //#region Get bill detail list
     let billNumberList = null

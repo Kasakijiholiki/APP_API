@@ -55,14 +55,10 @@ const option = {
     swagger: "3.0",
     servers: [
       {
-<<<<<<< HEAD
          url: `http://49.0.198.122:7000`
       // url: `http://localhost:8000`
-=======
-         //url: `http://49.0.198.122:7000`
-       url: `http://49.0.198.122:8000`
->>>>>>> 0dfa62a3bc2dc1f26b106a89ba78e8dceb3d8c3a
-      }
+         //url: `http://49.0.198.122:7000`    
+          }
     ],
   },
 
@@ -71,10 +67,7 @@ const option = {
 const swaggerDocs = swaggerJSDoc(option)
 app.use('/Swagger', swaggerUI.serve, swaggerUI.setup(swaggerDocs))
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 89e457ccfad9d8cd8592541c0c862e9ed1e0dcf4
 app.get('/', async (req,res) => {
   const cleint  = await db.connect()
   const curentPeriod = (await cleint.query(`SELECT period_number FROM tbl_online WHERE  online_status = 1`)).rows[0].period_number
@@ -132,11 +125,6 @@ for(let i = 0; i < quotaList.length; i++){
 // SaleList.splice(2, 1)
 
 
-
-<<<<<<< HEAD
-
-=======
->>>>>>> 89e457ccfad9d8cd8592541c0c862e9ed1e0dcf4
 app.get('/', (req, res) => {
 
   let ab = req.params

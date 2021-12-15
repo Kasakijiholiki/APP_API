@@ -6,7 +6,7 @@ const date = require('../getdate/datenow')
 const { v4: uuidv4 } = require('uuid');
 const logger = require('../config-log/logger')
 const format = require('pg-format');
-const { Pool } = require('pg')
+const { Pool } = require('pg');
 const pool = new Pool()
 //Create sale
 exports.createsale = async (req, res) => {
@@ -18,173 +18,374 @@ exports.createsale = async (req, res) => {
     saleViewModelList = req.body
     let SaleList = []
     const bill_id = uuidv4();
-let num1 = 0, num2 = 0, num3 = 0, num4 = 0, num5 = 0, num6 = 0, price1 = 0, price2 = 0, price3 = 0, price4 = 0, price5 = 0, price6 = 0
+    let num1 = 0, num2 = 0, num3 = 0, num4 = 0, num5 = 0, num6 = 0, price1 = 0, price2 = 0, price3 = 0, price4 = 0, price5 = 0, price6 = 0
     SQL = `INSERT INTO tbl_bill VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`
     const cleint = await db.connect()
     try {
 
         let removeBillNumberList = []
-      
+
         //Check period online
         const curentPeriod = (await cleint.query(`SELECT period_number FROM tbl_online WHERE  online_status = 1`)).rows[0].period_number
-
 
         //______________________server online_________________________________//
         if (curentPeriod != 0 || curentPeriod != null || curentPeriod != "") {
 
             let lotteryNumberList = []
             let lotteryPriceList = []
-
-            for (let i = 0; i < saleViewModelList.SaleList.length; i++) {
-                SaleList.push([bill_id, bill.billNumber, saleViewModelList.SaleList[i].lotteryNumber, saleViewModelList.SaleList[i].lotteryPrice, date.getdate()])
-            }
-
-           for(let i = 0; i < saleViewModelList.SaleList.length; i++) {
-                  lotteryNumberList.push(saleViewModelList.SaleList.lotteryNumber[i])
-                  lotteryPriceList.push(saleViewModelList.SaleList.lotteryPrice[i])
-               } 
-            SQL = ` SELECT tbl_bill_detail.lottery_number AS number, sum(tbl_bill_detail.lottery_price) AS priceFROM tbl_bill_detail, tbl_bill
-                    WHERE tbl_bill_detail.bill_number IN (SELECT bill_number FROM tbl_bill)
-                    AND   tbl_bill.period_number = $1
-                    GROUP BY lottery_number`
-
-            const lotteryList = (await (cleint.query(SQL, [bill.periodNumber]))).rows
-           
-            //_______________________GET QUOATA LIST___________________________________// 
-            const quotaList = (await (cleint.query(`SELECT digit_length AS num, price_per_number AS price FROM tbl_quota`))).rows
-         
-            //______________________GET DIGIT LENGHT AND PRICE PER NUMBER FOM QUOATA__//
-            for(let k = 0; k < quotaList.length; k++) {
-                if(quotaList[k].num == 1) {
-                    num1 = 1
-                    price1 = quotaList[k].price
-                   }
-                   else if(quotaList[k].num == 2) {
-                    num2 = 2
-                    price2 = quotaList[k].price
-                   }
-                   else if(quotaList[k].num == 3) {
-                    num3 = 3
-                    price3 = quotaList[k].price
-                   }
-                   else if(quotaList[k].num == 4) {
-                    num4 = 4
-                    price4 = quotaList[k].price
-                   }
-                   else if(quotaList[k].num == 5) {
-                    num5 = 5
-                    price5 = quotaList[k].price
-                   }
-                   else if(quotaList[k].num == 6) {
-                    num6 = 6
-                    price6 = quotaList[k].price
-                   }
-            }
-             
-
-            for(let j = 0; j < lotteryPriceList.length; j++) {
-
-                if(lotteryNumberList[j] == lotteryList.rows[j].number && lotteryNumberList[j].length == 1) {
-                 
-                    const price = parseInt(lotteryPriceList[j] + lotteryList.rows[j].number)
-
-                    // if(quotaList.rows.) {
-
-                    // }
-                    
-                    if(price > quotaList.rows[j].digit_length) {
-
-                        removeBillNumberList.push(lotteryNumberList[j])
-                        SaleList.splice(j, 1)
-
-                    }
-                }
-                
-            }
-
-
-
-            await cleint.query(`BEGIN`)
-            //_________GET BRANCH_ID AND UNIT_ID FROM USER_______//
-            let user = {}
-            const _user = cleint.query(`SELECT branch_id, unit_id FROM tbl_user_seller WHERE device_code = $1`, [deviceCode])
-            if ((await _user).rowCount > 0) {
-                user = ((await _user).rows[0])
-            }
-            //__________GET TOTAL PRICE FROM SALE LIST-__________//
-            let bill_price = 0
-            for (let i = 0; i < saleViewModelList.SaleList.length; i++) {
-                bill_price += parseInt(saleViewModelList.SaleList[i].lotteryPrice)
-            }
-            //_________GET DEVICE_REF FROM DEVICE_______________//
-            let device_ref = ""
-            const _device = cleint.query(`SELECT device_ref, device_number FROM tbl_device WHERE device_code = $1`, [deviceCode])
-            if ((await _device).rowCount > 0) {
-                device_ref = ((await _device).rows[0].device_ref)
-            }
+            let numList = []
             //_________GENERAT BILL ID___________________________//
             bill.billNumber = periodNumber + "" + deviceCode
 
-            //_________INSERT DATA TO DATABASE TO BILL___________//
-            await cleint.query(SQL,
-                [
-                    bill_id,
-                    bill.billNumber,
-                    periodNumber,
-                    deviceCode,
-                    device_ref,
-                    bill_price,
-                    date.getdate(),
-                    date.gettime(),
-                    user.branch_id,
-                    user.unit_id,
-                    deviceNumber], (error, results) => {
-                        if (error) {
-                            logger.error(error)
-                            return res.status(400).send({ error: error.stack })
-                        }
-                        if (results.rowCount > 0) {
-                            for (let i = 0; i < saleViewModelList.SaleList.length; i++) {
-                                SaleList.push([bill_id, bill.billNumber, saleViewModelList.SaleList[i].lotteryNumber, saleViewModelList.SaleList[i].lotteryPrice, date.getdate()])
-                            }
-                            //________________INSERT DATA TO DATABASE TO BILL DETAIL_________________//
-                            SQL = `INSERT  INTO tbl_bill_detail (bill_id, bill_number, lottery_number, lottery_price, date_bill_detail) VALUES %L`
-                            cleint.query(format(SQL, SaleList), [], async (er, rs) => {
-                                if (er) {
-                                    logger.error(er)
-                                    return res.status(401).send({ error: er.stack })
+            for (let i = 0; i < saleViewModelList.SaleList.length; i++) {
+                lotteryNumberList.push(saleViewModelList.SaleList[i].lotteryNumber)
+                lotteryPriceList.push(saleViewModelList.SaleList[i].lotteryPrice)
+                numList.push("'" + saleViewModelList.SaleList[i].lotteryNumber + "'")
+            }
+
+            const numberList = numList.toString()
+
+            SQL = ` SELECT tbl_bill_detail.lottery_number AS number, sum(tbl_bill_detail.lottery_price) AS price FROM tbl_bill_detail, tbl_bill
+                    WHERE tbl_bill_detail.bill_number = tbl_bill.bill_number
+                    AND   tbl_bill.period_number = $1 AND tbl_bill_detail.lottery_number IN (${numberList})
+                    GROUP BY lottery_number`
+
+            let lotteryList = {}
+            const _lotteryList = cleint.query(SQL, [periodNumber])
+
+            if ((await _lotteryList).rowCount > 0) {
+                lotteryList = (await _lotteryList).rows
+            }
+            //_______________________GET QUOATA LIST___________________________________// 
+            const quotaList = (await (cleint.query(`SELECT digit_lenght as num, price_per_number AS price FROM tbl_quota`))).rows
+            //console.log(quotaList)
+            //______________________GET DIGIT LENGHT AND PRICE PER NUMBER FOM QUOATA__//
+            for (let k = 0; k < quotaList.length; k++) {
+                if (quotaList[k].num == 1) {
+                    num1 = 1
+                    price1 = parseInt(quotaList[k].price)
+                }
+                else if (quotaList[k].num == 2) {
+                    num2 = 2
+                    price2 = parseInt(quotaList[k].price)
+                }
+                else if (quotaList[k].num == 3) {
+                    num3 = 3
+                    price3 = parseInt(quotaList[k].price)
+                }
+                else if (quotaList[k].num == 4) {
+                    num4 = 4
+                    price4 = parseInt(quotaList[k].price)
+                }
+                else if (quotaList[k].num == 5) {
+                    num5 = 5
+                    price5 = parseInt(quotaList[k].price)
+                }
+                else if (quotaList[k].num == 6) {
+                    num6 = 6
+                    price6 = parseInt(quotaList[k].price)
+                }
+            }
+            //_________________CHECK PRICE PER NUMBER____________________________//
+            let price = 0
+            let num_P = 0
+
+
+            for (let j = 0; j < lotteryNumberList.length; j++) {
+
+                let number_L = lotteryNumberList[j].toString()
+
+                // LOTTERY NUMBER ALREADY HAVE IN BILL
+                if (lotteryList.length != "" || lotteryList.length != 0 || lotteryList.length != "undefined") {
+
+                    for (let x = 0; x < lotteryList.length; x++) {
+           
+                        if (lotteryList[x].number == number_L) {
+
+                            num_P = parseInt(lotteryList[x].price)
+
+                            if (number_L.length === 1) {
+                                price = parseInt(lotteryPriceList[j] + num_P)
+
+                                if (price > price1) {
+                                    removeBillNumberList.push(lotteryNumberList[j])
+                                    saleViewModelList.SaleList.splice(j, 1)
                                 }
-                                //____________WHEN SUCESS FOR SALE WILL COMMIT AND RETURN DATA FOR TO SHOW ON BILL_______//
-                                if (rs.rowCount > 0) {
-                                    await cleint.query(`COMMIT`)
-                                    return res.status(201).send({
-                                        status: true,
-                                        statusCode: 200,
-                                        message: "OK",
-                                        data: {
-                                            newbillId: bill.billNumber,
-                                            saleViewModelList: saleViewModelList.SaleList,
-                                            totalPrice: bill_price,
-                                            removeBillNumberList: removeBillNumberList
-                                        }
-                                    })
+                            }
+                            else if (number_L.length === 2) {
+                              
+                                price = parseInt(lotteryPriceList[j] + num_P)
+                                if (price > price2) {
+                                    removeBillNumberList.push(lotteryNumberList[j])
+                                    saleViewModelList.SaleList.splice(j, 1)
+                                }
+                            }
+                            else if (number_L.length === 3) {
+                                price = parseInt(lotteryPriceList[j] + num_P)
+                                if (price > price3) {
+                                    removeBillNumberList.push(lotteryNumberList[j])
+                                    saleViewModelList.SaleList.splice(j, 1)
 
                                 }
-                                //__________WHEN NOT SUCESS SOME DATA ROLLBACK_________
-                                else {
-                                    await cleint.query(`ROLLBACK`)
-                                    return res.status(500)
+                            }
+                            else if (number_L.length === 4) {
+                                price = parseInt(lotteryPriceList[j] + num_P)
+                                if (price > price4) {
+                                    removeBillNumberList.push(lotteryNumberList[j])
+                                    saleViewModelList.SaleList.splice(j, 1)
                                 }
-                            })
-                        } else {
-                            return res.status(500)
+                            }
+                            else if (number_L.length === 5) {
+                                price = parseInt(lotteryPriceList[j] + num_P)
+                                if (price > price5) {
+                                    removeBillNumberList.push(lotteryNumberList[j])
+                                    saleViewModelList.SaleList.splice(j, 1)
+                                }
+
+                            }
+                            else if (number_L.length === 6) {
+                                price = parseInt(lotteryPriceList[j] + num_P)
+                                if (price > price6) {
+                                    removeBillNumberList.push(lotteryNumberList[j])
+                                    saleViewModelList.SaleList.splice(j, 1)
+                                }
+                            }
+
                         }
-                    })
-        } 
+                        else {
+                            let new_P = parseInt(lotteryPriceList[j])
+                            if (number_L.length === 1) {
+
+                                if (new_P > price1) {
+                                    removeBillNumberList.push(lotteryNumberList[j])
+                                    saleViewModelList.SaleList.splice(j, 1)
+                                }
+                            }
+                            else if (number_L.length === 2) {
+
+                                if (new_P > price2) {
+                                    removeBillNumberList.push(lotteryNumberList[j])
+                                    saleViewModelList.SaleList.splice(j, 1)
+                                }
+                            }
+                            else if (number_L.length === 3) {
+                                if (new_P > price3) {
+                                    removeBillNumberList.push(lotteryNumberList[j])
+                                    saleViewModelList.SaleList.splice(j, 1)
+                                }
+                            }
+                            else if (number_L.length === 4) {
+                                if (new_P > price4) {
+                                    removeBillNumberList.push(lotteryNumberList[j])
+                                    saleViewModelList.SaleList.splice(j, 1)
+                                }
+                            }
+                            else if (number_L.length === 5) {
+                                if (new_P > price5) {
+                                    removeBillNumberList.push(lotteryNumberList[j])
+                                    saleViewModelList.SaleList.splice(j, 1)
+                                }
+
+                            }
+                            else if (number_L.length === 6) {
+                                if (new_P > price6) {
+                                    removeBillNumberList.push(lotteryNumberList[j])
+                                    saleViewModelList.SaleList.splice(j, 1)
+                                }
+                            }
+                        }
+                    }
+                }
+                else {
+                    let new_P = parseInt(lotteryPriceList[j])
+                    if (number_L.length == 1) {
+
+                        if (new_P > price1) {
+                            removeBillNumberList.push(lotteryNumberList[j])
+                            saleViewModelList.SaleList.splice(j, 1)
+                        }
+                    }
+                    else if (number_L.length == 2) {
+                        if (new_P > price2) {
+                            removeBillNumberList.push(lotteryNumberList[j])
+                            saleViewModelList.SaleList.splice(j, 1)
+                        }
+                    }
+                    else if (number_L.length == 3) {
+                        if (new_P > price3) {
+                            removeBillNumberList.push(lotteryNumberList[j])
+                            saleViewModelList.SaleList.splice(j, 1)
+                        }
+                    }
+                    else if (number_L.length == 4) {
+                        if (new_P > price4) {
+                            removeBillNumberList.push(lotteryNumberList[j])
+                            saleViewModelList.SaleList.splice(j, 1)
+                        }
+                    }
+                    else if (number_L.length == 5) {
+                        if (new_P > price5) {
+                            removeBillNumberList.push(lotteryNumberList[j])
+                            saleViewModelList.SaleList.splice(j, 1)
+                        }
+
+                    }
+                    else if (number_L.length == 6) {
+                        if (new_P > price6) {
+                            removeBillNumberList.push(lotteryNumberList[j])
+                            saleViewModelList.SaleList.splice(j, 1)
+                        }
+                    }
+                }
+                price = 0
+                num_P = 0
+            }
+            //_____________________CHECK PRICE AND LOTTERY NUMBER LENGHT FOR SELL ____________________//
+            for (let l = 0; l < saleViewModelList.SaleList.length; l++) {
+                let length = '' + saleViewModelList.SaleList[l].lotteryNumber
+                if (length.length > 6) {
+                    return res.status(300).send({ message: "can not sell lottery length more than 6" })
+                }
+                else if (saleViewModelList.SaleList[l].lotteryPrice < 1000) {
+
+                    return res.status(301).send({ message: "can not sell price less than 1000 kip" })
+                }
+                else if (saleViewModelList.SaleList[l].lotteryPrice % 1000 != 0) {
+                    return res.status(302).send({ message: "price should be multi 1000 kip" })
+                }
+            }
+           
+            //________________________CHECK PRICE BALANCH PER DEVICE________________//
+            let maxsell = 0
+            const _maxsell = cleint.query(`SELECT max_sell FROM tbl_device_max_sell WHERE device_code = $1`, [deviceCode])
+            if ((await _maxsell).rowCount > 0) {
+                maxsell = (await _maxsell).rows[0].max_sell
+            }
+            let Sale = 0
+            const saled = cleint.query(`SELECT sum(tbl_bill.bill_price) AS total FROM tbl_bill, tbl_bill_detail 
+                                        WHERE tbl_bill.bill_number = tbl_bill_detail.bill_number
+                                        AND tbl_bill.period_number = $1
+                                        AND tbl_bill.device_code   = $2`, [periodNumber, deviceCode])
+
+            if ((await saled).rows[0].total != null || (await saled).rows[0].total != 0 || (await saled).rows[0].total != "") {
+                Sale = (await saled).rows[0].total
+            }
+           
+
+             let flag = true
+            if (maxsell != null || maxsell > 0 || maxsell != "") {
+                let totalPrice = 0
+                let cansell = 0
+                for (price = 0; price < saleViewModelList.SaleList.length; price++) {
+                    totalPrice += parseInt(saleViewModelList.SaleList[price].lotteryPrice)
+                }
+                totalPrice += parseInt(Sale)
+                
+                if (totalPrice > maxsell) {
+
+                    cansell = parseInt(totalPrice - maxsell)
+
+                    flag = false
+                    return res.status(405).send({ message: `You can can sell price ${cansell} only` })
+                }
+            }
+            //___________________BEGING TO PROCESS SALE_____________________//
+            if (flag && saleViewModelList.SaleList.length > 0) {
+
+                await cleint.query(`BEGIN`)
+
+                //_________GET BRANCH_ID AND UNIT_ID FROM USER_______//
+                let user = {}
+                const _user = cleint.query(`SELECT branch_id, unit_id FROM tbl_user_seller WHERE device_code = $1`, [deviceCode])
+                if ((await _user).rowCount > 0) {
+                    user = ((await _user).rows[0])
+                }
+
+                //__________GET TOTAL PRICE FROM SALE LIST-__________//
+                let bill_price = 0
+                for (let i = 0; i < saleViewModelList.SaleList.length; i++) {
+                    bill_price += parseInt(saleViewModelList.SaleList[i].lotteryPrice)
+                }
+
+                //_________GET DEVICE_REF FROM DEVICE_______________//
+                let device_ref = ""
+                const _device = cleint.query(`SELECT device_ref, device_number FROM tbl_device WHERE device_code = $1`, [deviceCode])
+                if ((await _device).rowCount > 0) {
+                    device_ref = ((await _device).rows[0].device_ref)
+                }
+
+
+                //_________INSERT DATA TO DATABASE TO BILL___________//
+                SQL = `INSERT INTO tbl_bill VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`
+                await cleint.query(SQL,
+                    [
+                        bill_id,
+                        bill.billNumber,
+                        periodNumber,
+                        deviceCode,
+                        device_ref,
+                        bill_price,
+                        date.getdate(),
+                        date.gettime(),
+                        user.branch_id,
+                        user.unit_id,
+                        deviceNumber], (error, results) => {
+                            if (error) {
+                                logger.error(error)
+                                return res.status(400).send({ error: error.stack })
+                            }
+                            if (results.rowCount > 0) {
+
+                                for (let i = 0; i < saleViewModelList.SaleList.length; i++) {
+                                    SaleList.push([bill_id, bill.billNumber, saleViewModelList.SaleList[i].lotteryNumber, saleViewModelList.SaleList[i].lotteryPrice, date.getdate()])
+                                }
+
+                                //________________INSERT DATA TO DATABASE TO BILL DETAIL_________________//
+                                SQL = `INSERT  INTO tbl_bill_detail (bill_id, bill_number, lottery_number, lottery_price, date_bill_detail) VALUES %L`
+                                cleint.query(format(SQL, SaleList), [], async (er, rs) => {
+                                    if (er) {
+                                        logger.error(er)
+                                        return res.status(401).send({ error: er.stack })
+                                    }
+
+                                    //____________WHEN SUCESS FOR SALE WILL COMMIT AND RETURN DATA FOR TO SHOW ON BILL_______//
+                                    if (rs.rowCount > 0) {
+                                        await cleint.query(`COMMIT`)
+                                        return res.status(201).send({
+                                            status: true,
+                                            statusCode: 200,
+                                            message: "OK",
+                                            data: {
+                                                newbillId: bill.billNumber,
+                                                saleViewModelList: saleViewModelList.SaleList,
+                                                totalPrice: bill_price,
+                                                removeBillNumberList: removeBillNumberList
+                                            }
+                                        })
+
+                                    }
+                                    //__________WHEN NOT SUCESS SOME DATA ROLLBACK_________
+                                    else {
+                                        await cleint.query(`ROLLBACK`)
+                                        return res.status(500)
+                                    }
+                                })
+                            } else {
+                                return res.status(500)
+                            }
+                        })
+            }
+
+
+            else {
+                return res.status(400).send({ message: "can not sell any lottert number" })
+            }
+        }
         //____________________server offline______________________//
         else {
-            return res.status(501).send({message: "server offline"})
+            return res.status(501).send({ message: "server offline" })
         }
+
     } catch (error) {
         await cleint.query(`ROLLBACK`)
         logger.error(error.stack)
@@ -192,9 +393,7 @@ let num1 = 0, num2 = 0, num3 = 0, num4 = 0, num5 = 0, num6 = 0, price1 = 0, pric
     } finally {
         cleint.release()
     }
-    // else {
-    //     return res.status(501).send({message: "Server offline"})
-    // }
+
 }
 
 
@@ -211,13 +410,11 @@ exports.getconfigdata = async (req, res) => {
                 if ((await _period_number).rowCount > 0) {
                     period_number = ((await _period_number).rows[0].period_number)
                 }
-
                 //Get max digit length
                 const _maxdg = cleint.query(`SELECT max_lenght FROM tbl_digit_lenght`)
                 if ((await _maxdg).rowCount > 0) {
                     maxDigitLength = ((await _maxdg).rows[0].max_lenght)
                 }
-
                 cleint.query(`SELECT * FROM tbl_random`, [], (error, results) => {
                     if (!error) {
                         return res.send({

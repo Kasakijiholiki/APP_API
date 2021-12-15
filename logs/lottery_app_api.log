@@ -80,6 +80,7 @@
 {"level":"info","message":"GET/api/account/CheckVersionV2/45/869319044980765","timestamp":"2021-12-14T07:23:17.493Z"}
 {"level":"info","message":"GET/api/account/CheckVersionV2/45/869319044980765","timestamp":"2021-12-14T07:49:26.266Z"}
 {"level":"info","message":"GET/api/account/CheckVersionV2/45/869319044980765","timestamp":"2021-12-14T07:49:27.835Z"}
+<<<<<<< HEAD
 {"level":"error","message":"TypeError: Cannot read properties of undefined (reading '0')\n    at exports.createsale (/home/vaxeng/Documents/App_LTT_API/controllers/salemanagement.controller.js:44:80)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)","timestamp":"2021-12-14T09:44:39.828Z"}
 {"level":"error","message":"TypeError: Cannot read properties of undefined (reading '0')\n    at exports.createsale (/home/vaxeng/Documents/App_LTT_API/controllers/salemanagement.controller.js:44:80)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)","timestamp":"2021-12-14T09:44:52.018Z"}
 {"level":"error","message":"TypeError: Cannot read properties of undefined (reading '0')\n    at exports.createsale (/home/vaxeng/Documents/App_LTT_API/controllers/salemanagement.controller.js:44:80)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)","timestamp":"2021-12-14T09:45:33.038Z"}
@@ -175,3 +176,6 @@
 {"level":"error","message":"ReferenceError: flag is not defined\n    at exports.createsale (/home/vaxeng/Documents/App_LTT_API/controllers/salemanagement.controller.js:297:13)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)","timestamp":"2021-12-15T08:58:13.095Z"}
 {"level":"error","message":"ReferenceError: flag is not defined\n    at exports.createsale (/home/vaxeng/Documents/App_LTT_API/controllers/salemanagement.controller.js:295:13)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)","timestamp":"2021-12-15T09:15:27.180Z"}
 {"level":"error","message":"ReferenceError: Cannot access 'cansell' before initialization\n    at exports.createsale (/home/vaxeng/Documents/App_LTT_API/controllers/salemanagement.controller.js:280:82)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)","timestamp":"2021-12-15T09:20:59.846Z"}
+=======
+{"code":"42803","file":"parse_agg.c","length":191,"level":"error","line":"1396","name":"error","position":"166","routine":"check_ungrouped_columns_walker","severity":"ERROR","timestamp":"2021-12-15T07:53:39.193Z"}
+>>>>>>> e3e4efca02e69d54fd2d28eadec419b8bc7e4e48

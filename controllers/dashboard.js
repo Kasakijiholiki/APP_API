@@ -21,7 +21,10 @@ exports.billlist = (req, res) => {
            WHERE  tbl_bill.bill_id = tbl_bill_detail.bill_id
            AND    tbl_bill.bill_number NOT IN (SELECT bill_number FROM tbl_bill_cancel)
            AND    tbl_bill.device_code = $1
-           AND    tbl_bill.period_number = $2`;
+           AND    tbl_bill.period_number = $2
+           GROUP BY tbl_bill.bill_id, date_bill, tbl_bill.time_bill, tbl_bill_detail.bill_number, tbl_bill.bill_price
+           
+           `;
     db.connect((err, client, done) => {
         if (!err) {
             client.query(sql, [deviceCode, drawNumber], (error, results) => {
@@ -268,22 +271,22 @@ await db.connect(async(err, client, done) => {
     
 
   //#region Get bill detail list
-    let billNumberList = null
-    const _billNumberList = client.query(`	  
-    SELECT           tbl_bill.bill_number AS billNumber
-    FROM             tbl_bill, tbl_bill_detail
-    WHERE            tbl_bill.bill_number = tbl_bill_detail.bill_number
-    AND              tbl_bill.device_code = $1 
-    AND              tbl_bill.period_number = $2
-    ORDER BY LENGTH(tbl_bill_detail.lottery_number) `, [device_code, drawNumber])
-    billNumberList = (await _billNumberList).rows
+    // let billNumberList = null
+    // const _billNumberList = client.query(`	  
+    // SELECT           tbl_bill.bill_number AS billNumber
+    // FROM             tbl_bill, tbl_bill_detail
+    // WHERE            tbl_bill.bill_number = tbl_bill_detail.bill_number
+    // AND              tbl_bill.device_code = $1 
+    // AND              tbl_bill.period_number = $2
+    // ORDER BY LENGTH(tbl_bill_detail.lottery_number) `, [device_code, drawNumber])
+    // billNumberList = (await _billNumberList).rows
 //#endregion
 done()
 
     return res.send({
             drawNumber: drawNumber,
             totalSale: totalSale,
-            totalCancel: totalSale,
+            totalCancel: totalCancel,
             billDetailList: billDetailList            
         })  
  
@@ -295,7 +298,41 @@ done()
 })
 }
 
+exports.billdetaillistbydigit = (req, res) => {
+    totalReords = 0;
+    totalPrice = 0;
+    bill_id = req.params.bill_id;
+    sql = ``;
 
+    db.connect((err, client, done) => {
+        if (!err) {
+            client.query(sql, [bill_id], (error, results) => {
+                if (error) {
+                    logger.error(error)
+                    return res.status(403).send(error);
+                }
+                if (results.rowCount == 0) {
+                    return res.status(404).send('not found');
+                }
+                else {
+                    
+
+                }
+            }
+            )
+            done()
+        }
+
+        else {
+            logger.error(err);
+            return res.status(500).send('Server error');
+
+        }
+
+    })
+}
+
+//billdetaillistbydigit
 
 // exports.get = async (req, res) => {
 //     totalPrice = 0

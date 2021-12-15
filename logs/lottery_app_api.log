@@ -80,3 +80,4 @@
 {"level":"info","message":"GET/api/account/CheckVersionV2/45/869319044980765","timestamp":"2021-12-14T07:23:17.493Z"}
 {"level":"info","message":"GET/api/account/CheckVersionV2/45/869319044980765","timestamp":"2021-12-14T07:49:26.266Z"}
 {"level":"info","message":"GET/api/account/CheckVersionV2/45/869319044980765","timestamp":"2021-12-14T07:49:27.835Z"}
+{"code":"42803","file":"parse_agg.c","length":191,"level":"error","line":"1396","name":"error","position":"166","routine":"check_ungrouped_columns_walker","severity":"ERROR","timestamp":"2021-12-15T07:53:39.193Z"}

@@ -42,14 +42,14 @@ route.get("/dashboard/get/cancelbilldetaillist/:bill_id", dashboard.cancelbillde
  *       type: string
  *      required: true
  *      description: device_code
- *      example: 21818673
+ *      example: 10
  *    - in: path
  *      name: drawnumber
  *      schema:
  *       type: string
  *      required: true
  *      description: drawnumber
- *      example: 21059
+ *      example: 1010
  *   responses:
  *    200:
  *       description: OK
@@ -105,14 +105,14 @@ route.get("/dashboard/get/billdetaillist/:bill_id", dashboard.billdetaillist);
  *       type: string
  *      required: true
  *      description: deviceCode
- *      example: 21818673
+ *      example: 10
  *    - in: path
  *      name: drawNumber
  *      schema:
  *       type: string
  *      required: true
  *      description: drawNumber
- *      example: 21057
+ *      example: 1010
  *   responses:
  *    200:
  *       description: OK
@@ -140,14 +140,14 @@ route.get("/dashboard/get/billlist/:deviceCode/:drawNumber", dashboard.billlist)
  *       type: string
  *      required: true
  *      description: device_code
- *      example: 21818673
+ *      example: 10
  *    - in: path
  *      name: drawNumber
  *      schema:
  *       type: string
  *      required: true
  *      description: drawNumber
- *      example: 21057
+ *      example: 1010
  *   responses:
  *    200:
  *       description: OK
@@ -160,5 +160,50 @@ route.get("/dashboard/get/billlist/:deviceCode/:drawNumber", dashboard.billlist)
  */
 
  route.get("/dashboard/get/:device_code/:drawNumber", dashboard.get);
+
+
+// route.get("/dashboard/get/:device_code/:drawnumber", dashboard.get);
+
+
+
+/**
+ * @swagger
+ * /api/dashboard/get/billdetaillistbydigit/{device_code}/{drawNumber}/{digit}:
+ *  get:
+ *   tags: [Dasboard]
+ *   parameters:
+ *    - in: path
+ *      name: device_code
+ *      schema:
+ *       type: string
+ *      required: true
+ *      description: device_code
+ *      example: 10
+ *    - in: path
+ *      name: drawNumber
+ *      schema:
+ *       type: string
+ *      required: true
+ *      description: drawNumber
+ *      example: 1010
+ *    - in: path
+ *      name: digit
+ *      schema:
+ *       type: string
+ *      required: true
+ *      description: Digit
+ *      example: 5
+ *   responses:
+ *    200:
+ *       description: OK
+ *    403:
+ *       description: Forbiden
+ *    404:
+ *       description: Not found
+ *    500:
+ *       description: Some server error
+ */
+ route.get("/dashboard/get/billdetaillistbydigit/:device_code/:drawNumber/:digit", dashboard.billdetaillistbydigit);
+
 
  module.exports = route;

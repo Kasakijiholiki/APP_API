@@ -11,11 +11,11 @@ require('dotenv').config()
 //.............Login......................//
 exports.login = async (req, res) => {
 
-    const { device_code, us_pwd } = req.params
+   // const { device_code, us_pwd } = req.params
 
-    // account = req.params
-    logger.info(`POST/api/login/${device_code}/${us_pwd}`)
-
+     account = req.params
+    logger.info(`POST/api/login/${account.device_code}/${account.us_pwd}`)
+try{
     await connection.connect(async (err, cleint, done) => {
         if (!err) {
             let date_offline = ""
@@ -24,9 +24,10 @@ exports.login = async (req, res) => {
             if ((await isonline).rowCount > 0) {
                 date_offline = (await isonline).rows[0].date_offline
 
-                 SQL = `SELECT * FROM  public.tbl_user_seller WHERE  device_code = $1`
-                await cleint.query(SQL, [device_code], async (error, results) => {
+                 SQL = `SELECT * FROM  public.tbl_user_seller WHERE  device_code = $1 AND us_dlst = true`
 
+                await cleint.query(SQL, [account.device_code], async (error, results) => {
+                  
                     if (error) {
                         logger.error(error.stack)
                         return res.status(403).send({ error: error })
@@ -39,7 +40,7 @@ exports.login = async (req, res) => {
                             const userId = results.rows[0].usid
                             const setnumberList = (await cleint.query(`SELECT * FROM public.tbl_set_number`)).rows
 
-                            bcrypt.compare(us_pwd, results.rows[0].us_pwd, (error, response) => {
+                            bcrypt.compare(account.us_pwd.toString(), results.rows[0].us_pwd, (error, response) => {
 
                                 if (response) {
                                     const token = jwt.sign({ userId }, 'SCRET_KEY', {
@@ -47,7 +48,7 @@ exports.login = async (req, res) => {
                                     })
                                     return res.json({
                                         online: true,
-                                        deviceCode: device_code,
+                                        deviceCode: account.device_code,
                                         offlineDate: date_offline,
                                         isOverMaxSell: false,
                                         accessToken: token,
@@ -63,13 +64,14 @@ exports.login = async (req, res) => {
                             })
                         }
                         else if (results.rows[0].us_status == 2) {
-                            return res.status(501).send("Unauthorise")
+                            return res.status(405).send("Unauthorise")
                         }
                         else if (results.rows[0].us_status == 3) {
-                            return res.status(502).send("Was blocked")
+                            return res.status(406).send("Was blocked")
                         }
                     }
                 });
+                done();
             } else {
                 return res.status(503).send("server offline")
             }
@@ -79,7 +81,11 @@ exports.login = async (req, res) => {
             return res.status(500).send("Server error")
         }
     })
-
+}catch(error) {
+    
+}finally{
+    done()
+}
 }
 
 //.....................PasswordChange..............//

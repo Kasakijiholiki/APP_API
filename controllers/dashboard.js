@@ -1,9 +1,10 @@
 
 const db     = require("../config-db/connection");
-let  bill_id, totalPrice, totalSale, sql, totalReords, totalCance, device_code, drawNumber
+let  bill_id, totalPrice, totalSale, sql, totalReords, totalCance, device_code, drawNumber, digit
 let par  = {device_code: 'Tong',
            drawNumber: 'Yang'}
-const logger = require('../config-log/logger')
+const logger = require('../config-log/logger');
+const { periodNumber } = require("../models/bill.model");
 const task   = require('../tasks')
 
 
@@ -22,8 +23,7 @@ exports.billlist = (req, res) => {
            AND    tbl_bill.bill_number NOT IN (SELECT bill_number FROM tbl_bill_cancel)
            AND    tbl_bill.device_code = $1
            AND    tbl_bill.period_number = $2
-           GROUP BY tbl_bill.bill_id, date_bill, tbl_bill.time_bill, tbl_bill_detail.bill_number, tbl_bill.bill_price
-           
+           GROUP BY tbl_bill.bill_id, date_bill, tbl_bill.time_bill, tbl_bill_detail.bill_number, tbl_bill.bill_price 
            `;
     db.connect((err, client, done) => {
         if (!err) {
@@ -137,6 +137,9 @@ exports.billdetaillist = (req, res) => {
     db.connect((err, client, done) => {
         if (!err) {
             client.query(sql, [bill_id], (error, results) => {
+
+                done()
+
                 if (error) {
                     logger.error(error)
                     return res.status(403).send(error);
@@ -148,7 +151,7 @@ exports.billdetaillist = (req, res) => {
                     for (let i = 0; i < results.rowCount; i++) {
                         totalPrice += results.rows[i].price;
                     }
-                    res.json({
+                  return  res.json({
                         status: true,
                         statusCode: 200,
                         message: "OK",
@@ -162,7 +165,6 @@ exports.billdetaillist = (req, res) => {
                 }
             }
             )
-            done()
         }
 
         else {
@@ -187,6 +189,9 @@ exports.cancelbilldetaillist = (req, res) => {
     db.connect((err, client, done) => {
         if (!err) {
             client.query(sql, [bill_id], (error, results) => {
+
+                done()
+
                 if (error) {
                     logger.error(error)
                     return res.status(403).send(error);
@@ -211,7 +216,6 @@ exports.cancelbilldetaillist = (req, res) => {
                 }
             }
             )
-            done()
         }
 
         else {
@@ -299,14 +303,27 @@ done()
 }
 
 exports.billdetaillistbydigit = (req, res) => {
-    totalReords = 0;
-    totalPrice = 0;
-    bill_id = req.params.bill_id;
-    sql = ``;
+    
+    totalSale   = 0
+    totalPrice  = 0
+    digit       = req.params.digit
+    device_code = req.params.device_code
+    drawNumber  = req.params.drawNumber
+
+    sql = `SELECT     to_char("date_bill", 'DD/MM/YYYY') AS date,
+                      tbl_bill.time_bill AS time,       
+                      tbl_bill_detail.bill_number AS billNumber,
+                      tbl_bill_detail.lottery_price AS billPrice
+           FROM       tbl_bill, tbl_bill_detail
+           WHERE      tbl_bill.bill_id = tbl_bill_detail.bill_id
+           AND        tbl_bill.device_code = $1
+           AND        tbl_bill.period_number = $2
+           AND        tbl_bill.date_bill = tbl_bill_detail.date_bill_detail
+           AND        LENGTH(tbl_bill_detail.lottery_number) = $3`
 
     db.connect((err, client, done) => {
         if (!err) {
-            client.query(sql, [bill_id], (error, results) => {
+            client.query(sql, [device_code, drawNumber, digit], (error, results) => {
                 if (error) {
                     logger.error(error)
                     return res.status(403).send(error);
@@ -315,6 +332,19 @@ exports.billdetaillistbydigit = (req, res) => {
                     return res.status(404).send('not found');
                 }
                 else {
+                    console.log(results.rows[0].billprice)
+                     totalSale = results.rowCount
+                     for (let i = 0; i < results.rowCount; i++) {
+                        totalPrice += parseInt(results.rows[i].billprice);
+                    }
+                    res.json({
+                        data:{
+                            totalSale: totalSale,
+                            totalPrice: totalPrice,
+                            List: results.rows
+                        }
+                      
+                    });
                     
 
                 }

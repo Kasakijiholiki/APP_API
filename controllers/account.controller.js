@@ -165,7 +165,10 @@ exports.CheckVersionV2 = async (req, res) => {
            FROM    tbl_branch_code, tbl_province, tbl_device
            WHERE   tbl_branch_code.province_id = tbl_province.provice_id
              AND   tbl_branch_code.branch_id   = tbl_device.branch_id 
-             AND   tbl_device.device_imei      = $1`
+             AND   tbl_device.device_imei      = $1
+             AND   tbl_device.device_dlst      = true
+             AND   tbl_branch_code.branch_dlst = true
+             `
 
     await connection.connect((err, cleint, done) => {
         if (!err) {

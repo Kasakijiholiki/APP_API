@@ -55,10 +55,22 @@ const option = {
     swagger: "3.0",
     servers: [
       {
+<<<<<<< HEAD
         url: `http://49.0.198.122:7000`
        // url: `http://localhost:8000`
+=======
+<<<<<<< HEAD
+         url: `http://49.0.198.122:7000`
+      // url: `http://localhost:8000`
+       
+      }
+=======
+       //  url: `http://49.0.198.122:7000`
+      url: `http://localhost:8000`
+>>>>>>> f671cc389f405fb9c61c61ac80d47182a3b5d01b
          //url: `http://49.0.198.122:7000`    
           }
+>>>>>>> e3e4efca02e69d54fd2d28eadec419b8bc7e4e48
     ],
   },
 
@@ -125,6 +137,11 @@ for(let i = 0; i < quotaList.length; i++){
 // SaleList.splice(2, 1)
 
 
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> e3e4efca02e69d54fd2d28eadec419b8bc7e4e48
 app.get('/', (req, res) => {
 
   let ab = req.params

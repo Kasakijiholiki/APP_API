@@ -55,35 +55,15 @@ const option = {
     swagger: "3.0",
     servers: [
       {
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
+
         // url: `http://49.0.198.122:7000`
        url: `http://localhost:8000`
-       
-      }
 
-=======
-<<<<<<< HEAD
->>>>>>> ce51b3b872568ed4cdc4d6519adb68a7bdcc7a25
-        url: `http://49.0.198.122:7000`
-       
       }
-<<<<<<< HEAD
-=======
-=======
-       //  url: `http://49.0.198.122:7000`
-      url: `http://localhost:8000`
->>>>>>> f671cc389f405fb9c61c61ac80d47182a3b5d01b
-         //url: `http://49.0.198.122:7000`    
-          }
->>>>>>> e3e4efca02e69d54fd2d28eadec419b8bc7e4e48
->>>>>>> 65ca53a37b8c59491d75519e0f567605f9a91839
->>>>>>> ce51b3b872568ed4cdc4d6519adb68a7bdcc7a25
     ],
   },
 
-  apis: ['./routes/*.js']
+apis: ['./routes/*.js']
 }
 const swaggerDocs = swaggerJSDoc(option)
 app.use('/Swagger', swaggerUI.serve, swaggerUI.setup(swaggerDocs))
@@ -91,14 +71,7 @@ app.use('/Swagger', swaggerUI.serve, swaggerUI.setup(swaggerDocs))
 
 
 
-<<<<<<< HEAD
-app.get('/', (req, res) => {
-
-  let ab = req.params
-=======
-
->>>>>>> ce51b3b872568ed4cdc4d6519adb68a7bdcc7a25
 
 
-app.listen(PORT, console.log(`Server Running on port ${PORT}`))
-module.exports = app;
+  app.listen(PORT, console.log(`Server Running on port ${PORT}`))
+  module.exports = app;

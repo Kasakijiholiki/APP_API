@@ -19,33 +19,33 @@ exports.createsale = async (req, res) => {
     let SaleList = []
     const bill_id = uuidv4();
     let num1 = 0, num2 = 0, num3 = 0, num4 = 0, num5 = 0, num6 = 0, price1 = 0, price2 = 0, price3 = 0, price4 = 0, price5 = 0, price6 = 0
- 
+
     try {
 
-        db.connect( async (err, cleint, done) => {
-            if(!err) {
+        db.connect(async (err, cleint, done) => {
+            if (!err) {
 
                 let removeBillNumberList = []
-
+                let period_number = ""
                 //Check period online
-                const curentPeriod = (await cleint.query(`SELECT period_number FROM tbl_online WHERE  online_status = 1`)).rows[0].period_number
-        
+                const curentPeriod = (await cleint.query(`SELECT period_number FROM tbl_online WHERE  online_status = 1`))
+                if (curentPeriod.rowCount > 0) period_number = curentPeriod.rows[0].period_number
                 //______________________server online_________________________________//
-                if (curentPeriod != 0 || curentPeriod != null || curentPeriod != "") {
-        
+                if (period_number != 0 || period_number != null || period_number != "") {
+
                     let lotteryNumberList = []
                     let lotteryPriceList = []
                     let numList = []
                     //_________GENERAT BILL ID___________________________//
-                    let today = new Date();                       
-                    bill.billNumber = periodNumber + "" + deviceCode+""+today.getDate()+""+today.getHours()+""+ today.getMinutes()+""+today.getSeconds()
+                    let today = new Date();
+                    bill.billNumber = periodNumber + "" + deviceCode + "" + today.getDate() + "" + today.getHours() + "" + today.getMinutes() + "" + today.getSeconds()
 
                     for (let i = 0; i < saleViewModelList.SaleList.length; i++) {
                         lotteryNumberList.push(saleViewModelList.SaleList[i].lotteryNumber)
                         lotteryPriceList.push(saleViewModelList.SaleList[i].lotteryPrice)
                         numList.push("'" + saleViewModelList.SaleList[i].lotteryNumber + "'")
                     }
-        
+
                     const numberList = numList.toString()
 
                     //return console.log(numberList)
@@ -53,10 +53,10 @@ exports.createsale = async (req, res) => {
                             WHERE tbl_bill_detail.bill_number = tbl_bill.bill_number
                             AND   tbl_bill.period_number = $1 AND tbl_bill_detail.lottery_number IN (${numberList})
                             GROUP BY lottery_number`
-        
-                    let lotteryList = {}
+
+                    let lotteryList = ""
                     const _lotteryList = cleint.query(SQL, [periodNumber])
-        
+
                     if ((await _lotteryList).rowCount > 0) {
                         lotteryList = (await _lotteryList).rows
                     }
@@ -92,86 +92,82 @@ exports.createsale = async (req, res) => {
                     //_________________CHECK PRICE PER NUMBER____________________________//
                     let price = 0
                     let num_P = 0
-        
-        
-                    for (let j = 0; j < lotteryNumberList.length; j++) {
-                        console.log("J"+j)
-        
-                        let number_L = lotteryNumberList[j].toString()
-        
-                        // LOTTERY NUMBER ALREADY HAVE IN BILL
-                        if (lotteryList.length != "" || lotteryList.length != 0 || lotteryList.length != "undefined") {
-        
+                    let number_L = ""
+                   // return console.log(lotteryList.length)
+                    // LOTTERY NUMBER ALREADY HAVE IN BILL
+                    if (lotteryList.length != "") {
+
+                        for (let j = 0; j < lotteryNumberList.length; j++) {
+                          
+                            number_L = lotteryNumberList[j].toString()
+                          
                             for (let x = 0; x < lotteryList.length; x++) {
 
-                                console.log(lotteryList[x].number +" "+ number_L)
-
-                                if (lotteryList[x].number == number_L) {
-        
+                                if (lotteryList[x].number == number_L && number_L.length === 1) {
                                     num_P = parseInt(lotteryList[x].price)
-        
-                                    if (number_L.length === 1) {
-
                                         price = parseInt(lotteryPriceList[j] + num_P)
-        
                                         if (price > price1) {
                                             removeBillNumberList.push(lotteryNumberList[j])
                                             saleViewModelList.SaleList.splice(j, 1)
                                         }
-                                    }
-                                    else if (number_L.length === 2) {
-                                      
+                                    
+                                }
+                                else if (lotteryList[x].number == number_L && number_L.length === 2) {
+                                    num_P = parseInt(lotteryList[x].price)
                                         price = parseInt(lotteryPriceList[j] + num_P)
                                         if (price > price2) {
                                             removeBillNumberList.push(lotteryNumberList[j])
                                             saleViewModelList.SaleList.splice(j, 1)
                                         }
-                                    }
-                                    else if (number_L.length === 3) {
+                                    
+                                }
+                                else  if (lotteryList[x].number == number_L && number_L.length === 3) {
+                                    num_P = parseInt(lotteryList[x].price)
                                         price = parseInt(lotteryPriceList[j] + num_P)
                                         if (price > price3) {
-
                                             removeBillNumberList.push(lotteryNumberList[j])
                                             saleViewModelList.SaleList.splice(j, 1)
-        
                                         }
-                                    }
-                                    else if (number_L.length === 4) {
+                                    
+                                }
+                                else  if (lotteryList[x].number == number_L && number_L.length === 4) {
+                                    num_P = parseInt(lotteryList[x].price)
                                         price = parseInt(lotteryPriceList[j] + num_P)
                                         if (price > price4) {
                                             removeBillNumberList.push(lotteryNumberList[j])
                                             saleViewModelList.SaleList.splice(j, 1)
                                         }
-                                    }
-                                    else if (number_L.length === 5) {
+                                    
+                                }
+                                else if (lotteryList[x].number == number_L && number_L.length === 5) {
+                                    num_P = parseInt(lotteryList[x].price)
                                         price = parseInt(lotteryPriceList[j] + num_P)
                                         if (price > price5) {
                                             removeBillNumberList.push(lotteryNumberList[j])
                                             saleViewModelList.SaleList.splice(j, 1)
                                         }
-        
-                                    }
-                                    else if (number_L.length === 6) {
+                                    
+                                }
+                                else  if (lotteryList[x].number == number_L && number_L.length === 6) {
+                                    num_P = parseInt(lotteryList[x].price)
                                         price = parseInt(lotteryPriceList[j] + num_P)
                                         if (price > price6) {
                                             removeBillNumberList.push(lotteryNumberList[j])
                                             saleViewModelList.SaleList.splice(j, 1)
                                         }
-
-                                       
-                                    }
+                                    
                                 }
                                 else {
-                                    let new_P = parseInt(lotteryPriceList[j])
+                                    new_P = parseInt(lotteryPriceList[j])
                                     if (number_L.length === 1) {
-        
+
                                         if (new_P > price1) {
                                             removeBillNumberList.push(lotteryNumberList[j])
                                             saleViewModelList.SaleList.splice(j, 1)
                                         }
                                     }
                                     else if (number_L.length === 2) {
-        
+
                                         if (new_P > price2) {
                                             removeBillNumberList.push(lotteryNumberList[j])
                                             saleViewModelList.SaleList.splice(j, 1)
@@ -194,7 +190,7 @@ exports.createsale = async (req, res) => {
                                             removeBillNumberList.push(lotteryNumberList[j])
                                             saleViewModelList.SaleList.splice(j, 1)
                                         }
-        
+
                                     }
                                     else if (number_L.length === 6) {
                                         if (new_P > price6) {
@@ -203,13 +199,25 @@ exports.createsale = async (req, res) => {
                                         }
                                     }
                                 }
-                                //lotteryList.splice(x, 1)
-                            }
+
+                            } 
+
+                            price = 0
+                            new_P = 0
+                            number_L = ""
                         }
-                        else {
-                            let new_P = parseInt(lotteryPriceList[j])
+                    }
+                    //These lottery number do not exit in DB    
+                    else {
+
+                        for (let j = 0; j < lotteryNumberList.length; j++) {
+
+                            new_P = parseInt(lotteryPriceList[j])
+
+                            number_L = lotteryNumberList[j].toString()
+
                             if (number_L.length == 1) {
-        
+
                                 if (new_P > price1) {
                                     removeBillNumberList.push(lotteryNumberList[j])
                                     saleViewModelList.SaleList.splice(j, 1)
@@ -238,19 +246,23 @@ exports.createsale = async (req, res) => {
                                     removeBillNumberList.push(lotteryNumberList[j])
                                     saleViewModelList.SaleList.splice(j, 1)
                                 }
-        
+
                             }
                             else if (number_L.length == 6) {
+                              
                                 if (new_P > price6) {
-                                   
+
                                     removeBillNumberList.push(lotteryNumberList[j])
                                     saleViewModelList.SaleList.splice(j, 1)
                                 }
                             }
                         }
+                      
                         price = 0
-                        num_P = 0
+                        new_P = 0
+                        number_L = ""
                     }
+                 
                     //_____________________CHECK PRICE AND LOTTERY NUMBER LENGHT FOR SELL ____________________//
                     for (let l = 0; l < saleViewModelList.SaleList.length; l++) {
                         let length = '' + saleViewModelList.SaleList[l].lotteryNumber
@@ -258,14 +270,14 @@ exports.createsale = async (req, res) => {
                             return res.status(300).send({ message: "can not sell lottery length more than 6" })
                         }
                         else if (saleViewModelList.SaleList[l].lotteryPrice < 1000) {
-        
+
                             return res.status(301).send({ message: "can not sell price less than 1000 kip" })
                         }
                         else if (saleViewModelList.SaleList[l].lotteryPrice % 1000 != 0) {
                             return res.status(302).send({ message: "price should be multi 1000 kip" })
                         }
                     }
-                   
+
                     //________________________CHECK PRICE BALANCH PER DEVICE________________//
                     let maxsell = 0
                     const _maxsell = cleint.query(`SELECT max_sell FROM tbl_device_max_sell WHERE device_code = $1`, [deviceCode])
@@ -273,17 +285,17 @@ exports.createsale = async (req, res) => {
                         maxsell = (await _maxsell).rows[0].max_sell
                     }
                     let Sale = 0
-                    const saled = cleint.query(`SELECT sum(tbl_bill.bill_price) AS total FROM tbl_bill, tbl_bill_detail 
+                    const saled = cleint.query(`SELECT sum(tbl_bill_detail.lottery_price) AS total FROM tbl_bill, tbl_bill_detail 
                                                 WHERE tbl_bill.bill_number = tbl_bill_detail.bill_number
                                                 AND tbl_bill.period_number = $1
                                                 AND tbl_bill.device_code   = $2`, [periodNumber, deviceCode])
-        
+
                     if ((await saled).rows[0].total != null || (await saled).rows[0].total != 0 || (await saled).rows[0].total != "") {
                         Sale = (await saled).rows[0].total
                     }
-                   
-        
-                     let flag = true
+
+
+                    let flag = true
                     if (maxsell != null || maxsell > 0 || maxsell != "") {
                         let totalPrice = 0
                         let cansell = 0
@@ -291,41 +303,41 @@ exports.createsale = async (req, res) => {
                             totalPrice += parseInt(saleViewModelList.SaleList[price].lotteryPrice)
                         }
                         totalPrice += parseInt(Sale)
-                        
+
                         if (totalPrice > maxsell) {
-        
+
                             cansell = parseInt(totalPrice - maxsell)
-        
+
                             flag = false
                             return res.status(405).send({ message: `You can can sell price ${maxsell} only. But now is:  ${cansell}` })
                         }
                     }
                     //___________________BEGING TO PROCESS SALE_____________________//
                     if (flag && saleViewModelList.SaleList.length > 0) {
-        
+
                         await cleint.query(`BEGIN`)
-        
+
                         //_________GET BRANCH_ID AND UNIT_ID FROM USER_______//
                         let user = {}
                         const _user = cleint.query(`SELECT branch_id, unit_id FROM tbl_user_seller WHERE device_code = $1`, [deviceCode])
                         if ((await _user).rowCount > 0) {
                             user = ((await _user).rows[0])
                         }
-        
+
                         //__________GET TOTAL PRICE FROM SALE LIST-__________//
                         let bill_price = 0
                         for (let i = 0; i < saleViewModelList.SaleList.length; i++) {
                             bill_price += parseInt(saleViewModelList.SaleList[i].lotteryPrice)
                         }
-        
+
                         //_________GET DEVICE_REF FROM DEVICE_______________//
                         let device_ref = ""
                         const _device = cleint.query(`SELECT device_ref, device_number FROM tbl_device WHERE device_code = $1`, [deviceCode])
                         if ((await _device).rowCount > 0) {
                             device_ref = ((await _device).rows[0].device_ref)
                         }
-        
-        
+
+
                         //_________INSERT DATA TO DATABASE TO BILL___________//
                         // SQL = `INSERT INTO tbl_bill VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`
 
@@ -348,14 +360,14 @@ exports.createsale = async (req, res) => {
                                         return res.status(403).send({ error: error.stack })
                                     }
                                     if (results.rowCount > 0) {
-        
+
                                         for (let i = 0; i < saleViewModelList.SaleList.length; i++) {
                                             SaleList.push([bill_id, bill.billNumber, saleViewModelList.SaleList[i].lotteryNumber, saleViewModelList.SaleList[i].lotteryPrice, date.getdate()])
                                         }
-        
+
                                         //________________INSERT DATA TO DATABASE TO BILL DETAIL_________________//
                                         SQL = `INSERT  INTO tbl_bill_detail (bill_id, bill_number, lottery_number, lottery_price, date_bill_detail) VALUES %L`
-                                      await  cleint.query(format(SQL, SaleList), [], async (er, rs) => {
+                                        await cleint.query(format(SQL, SaleList), [], async (er, rs) => {
                                             if (er) {
                                                 logger.error(er)
                                                 return res.status(403).send({ error: er.stack })
@@ -372,10 +384,10 @@ exports.createsale = async (req, res) => {
                                                         saleViewModelList: saleViewModelList.SaleList,
                                                         totalPrice: bill_price,
                                                         maxsell: maxsell,
-                                                        removeBillNumberList: removeBillNumberList
+                                                        removeBillNumberList:  removeDups(removeBillNumberList)
                                                     }
                                                 })
-        
+
                                             }
                                             //__________WHEN NOT SUCESS SOME DATA ROLLBACK_________
                                             else {
@@ -400,19 +412,17 @@ exports.createsale = async (req, res) => {
             } else {
                 return res.status(500).send({ message: "server error", error: err })
             }
-            
+
         })
 
-     
+
     } catch (error) {
         await cleint.query(`ROLLBACK`)
         logger.error(error.stack)
         return res.status(500).send(error.stack)
-    } 
+    }
 
 }
-
-
 
 //Get config data.
 exports.getconfigdata = async (req, res) => {
@@ -446,6 +456,9 @@ exports.getconfigdata = async (req, res) => {
                                 ]
                             }
                         })
+                    } else {
+                        logger.error(error.stack)
+                        return res.status(403).send(error.stack)
                     }
                 })
             } catch (error) {
@@ -549,3 +562,14 @@ exports.checknumberprice = async (req, res) => {
         }
     })
 }
+
+function removeDups(number) {
+  let unique = {};
+  number.forEach(function(i) {
+    if(!unique[i]) {
+      unique[i] = true;
+    }
+  });
+  return Object.keys(unique);
+}
+

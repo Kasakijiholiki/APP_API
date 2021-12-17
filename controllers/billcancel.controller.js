@@ -64,7 +64,12 @@ exports.get = async (req, res) => {
                     }
                 })
             } catch (error) {
+                logger.error(error)
             }
+            done()
+        } else {
+            logger.error(err)
+            return res.status(500).send("Connect DB failed")
         }
     })
 }
@@ -155,10 +160,11 @@ exports.billCancel = async (req, res) => {
                     }
                 })
             } catch (error) {
-
+                logger.error(error)
             }
             done();
         } else {
+            logger.error(err)
             return res.status(500).send({ message: "Server error" })
         }
     })

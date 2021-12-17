@@ -35,7 +35,7 @@ const billcancel = require('../controllers/billcancel.controller')
  *    500:
  *       description: Some server error
  */
-route.get('/CancelBill/get/:deviceCode', billcancel.get)
+////route.get('/CancelBill/get/:deviceCode', billcancel.get)
 /**
  * @swagger
  * /api/CancelBill/cancel/add/{deviceCode}/{deviceNumber}/{billId}/{reasonCancel}:
@@ -80,7 +80,7 @@ route.get('/CancelBill/get/:deviceCode', billcancel.get)
  *       description: Some server error
  */
 
-route.post('/CancelBill/cancel/add/:deviceCode/:deviceNumber/:billId/:reasonCancel', billcancel.billCancel)
+//route.post('/CancelBill/cancel/add/:deviceCode/:deviceNumber/:billId/:reasonCancel', billcancel.billCancel)
 
 
 module.exports  = route

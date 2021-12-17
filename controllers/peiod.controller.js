@@ -75,6 +75,10 @@ connection.connect((err, cleint, done) => {
                 })
             }
         })
+        done();
+    } else {
+        logger.error(err)
+        return res.status(500).send("connect db failed")
     }
 })
 }

@@ -343,10 +343,7 @@ exports.billdetaillistbydigit = (req, res) => {
                             totalPrice: totalPrice,
                             List: results.rows
                         }
-                      
-                    });
-                    
-
+                    });       
                 }
             }
             )

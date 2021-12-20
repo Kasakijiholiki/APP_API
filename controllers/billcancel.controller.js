@@ -17,6 +17,7 @@ exports.get = async (req, res) => {
                 let billDetailList = {}
                 let periodNumber = ""
                 let billNumber = ""
+                let billId = ""
                 //Get period number
                 const _periodNumber = cleint.query(`SELECT period_number FROM tbl_online WHERE online_status = 1`)
                 if ((await _periodNumber).rowCount) {
@@ -24,21 +25,21 @@ exports.get = async (req, res) => {
                 }
                 //Get data from bill
                 let billData = ""
-                const _billData = cleint.query(`SELECT * FROM tbl_bill WHERE period_number = $1 AND device_code = $2 ORDER BY bill_number`, [periodNumber, bill.deviceCode])
+                const _billData = cleint.query(`SELECT * FROM tbl_bill WHERE period_number = $1 AND device_code = $2 ORDER BY bill_number DESC`, [periodNumber, bill.deviceCode])
                 if ((await _billData).rowCount > 0) {
                     billData = (await _billData).rows
                     billNumber = (await _billData).rows[0].bill_number
-                    bill.billId = (await _billData).rows[0].bill_id
+                    billId = (await _billData).rows[0].bill_id
                 }
                 //Get data from bill cancel
-                let cancelData = ""
+                let cancelData = null
                 const _cancelData = cleint.query(`SELECT * FROM tbl_bill_cancel WHERE bill_number = $1 AND period_number = $2 AND device_code = $3`, [billNumber, periodNumber, bill.deviceCode])
                 if ((await _cancelData).rowCount > 0) {
                     cancelData = (await _cancelData).rows
                 }
 
                 if (billData != "" && cancelData == "") {
-                    billDetailList = ((await (cleint.query(`SELECT * FROM tbl_bill_detail WHERE bill_id = $1`, [bill.billId]))).rows)
+                    billDetailList = ((await (cleint.query(`SELECT * FROM tbl_bill_detail WHERE bill_id = $1`, [billId]))).rows)
                 } else if (billData != "" && cancelData != "") {
                     const cancelDetailList = ((await (cleint.query(`SELECT * FROM tbl_bill_cancel_detail WHERE cancel_id = $1`, [cancelData.rows[0].cancel_id]))).rows)
                     if ((await cancelDetailList).rowCount > 0) {
@@ -51,10 +52,10 @@ exports.get = async (req, res) => {
                 }
 
                 return res.send({
-                    Status: true,
-                    StausCode: 200,
-                    Message: "OK",
-                    Data: {
+                    status: true,
+                    stausCode: 200,
+                    message: "OK",
+                    data: {
                         deviceCode: bill.deviceCode,
                         hasCancel: cancelData != null,
                         billId: billData != "" ? billData[0].bill_id : uuidv4(),

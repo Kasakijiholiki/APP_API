@@ -55,19 +55,12 @@ const option = {
     swagger: "3.0",
     servers: [
       {
-<<<<<<< HEAD
          url: `http://49.0.198.122:7000`
         //url: `http://localhost:8000`
        
       }
 
-=======
-
-        // url: `http://49.0.198.122:7000`
-       url: `http://localhost:8000`
-
-      }
->>>>>>> 0ea70b39ccbe35a851b0af4559607ba136fd7b20
+       
     ],
   },
 
@@ -79,12 +72,8 @@ app.use('/Swagger', swaggerUI.serve, swaggerUI.setup(swaggerDocs))
 
 
 
-<<<<<<< HEAD
 app.listen(PORT, console.log(`Server Running on port ${PORT}`))
 module.exports = app;
-=======
 
 
-  app.listen(PORT, console.log(`Server Running on port ${PORT}`))
-  module.exports = app;
->>>>>>> 0ea70b39ccbe35a851b0af4559607ba136fd7b20
+

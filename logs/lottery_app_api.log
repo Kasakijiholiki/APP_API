@@ -195,3 +195,10 @@
 =======
 >>>>>>> f671cc389f405fb9c61c61ac80d47182a3b5d01b
 >>>>>>> 65ca53a37b8c59491d75519e0f567605f9a91839
+{"code":"3D000","file":"postinit.c","length":97,"level":"error","line":"877","name":"error","routine":"InitPostgres","severity":"FATAL","timestamp":"2021-12-20T02:19:11.576Z"}
+{"code":"3D000","file":"postinit.c","length":97,"level":"error","line":"877","name":"error","routine":"InitPostgres","severity":"FATAL","timestamp":"2021-12-20T02:21:02.015Z"}
+{"code":"3D000","file":"postinit.c","length":97,"level":"error","line":"877","name":"error","routine":"InitPostgres","severity":"FATAL","timestamp":"2021-12-20T02:21:09.839Z"}
+{"code":"3D000","file":"postinit.c","length":97,"level":"error","line":"877","name":"error","routine":"InitPostgres","severity":"FATAL","timestamp":"2021-12-20T02:49:41.861Z"}
+{"code":"3D000","file":"postinit.c","length":97,"level":"error","line":"877","name":"error","routine":"InitPostgres","severity":"FATAL","timestamp":"2021-12-20T02:51:37.263Z"}
+{"code":"3D000","file":"postinit.c","length":97,"level":"error","line":"877","name":"error","routine":"InitPostgres","severity":"FATAL","timestamp":"2021-12-20T03:08:37.342Z"}
+{"code":"3D000","file":"postinit.c","length":97,"level":"error","line":"877","name":"error","routine":"InitPostgres","severity":"FATAL","timestamp":"2021-12-20T03:11:17.735Z"}

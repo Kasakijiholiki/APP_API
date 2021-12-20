@@ -17,8 +17,8 @@ const period = require('./routes/period.route')
 const sale = require('./routes/salemanagement.route')
 const billcancel = require('./routes/billcancel.route')
 const dashboard = require('./routes/dashboard')
-
 const His = require('./routes/HistorySalePeriod')
+
 //use routes
 app.use('/api/', account)
 app.use('/api/', period)
@@ -55,8 +55,8 @@ const option = {
     swagger: "3.0",
     servers: [
       {
-         url: `http://49.0.198.122:7000`
-        //url: `http://localhost:8000`
+        // url: `http://49.0.198.122:7000`
+        url: `http://localhost:8000`
        
       }
 

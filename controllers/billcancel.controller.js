@@ -6,7 +6,6 @@ const logger = require('../config-log/logger')
 let SQL = ''
 const { v4: uuidv4 } = require('uuid');
 const format = require('pg-format')
-const { billId, deviceCode } = require('../models/bill.model')
 
 //Get bill cancel
 exports.get = async (req, res) => {
@@ -17,20 +16,22 @@ exports.get = async (req, res) => {
                 let billDetailList = {}
                 let periodNumber = ""
                 let billNumber = ""
-                let billId = ""
+               
                 //Get period number
                 const _periodNumber = cleint.query(`SELECT period_number FROM tbl_online WHERE online_status = 1`)
                 if ((await _periodNumber).rowCount) {
                     periodNumber = (await _periodNumber).rows[0].period_number
                 }
+
                 //Get data from bill
                 let billData = ""
                 const _billData = cleint.query(`SELECT * FROM tbl_bill WHERE period_number = $1 AND device_code = $2 ORDER BY bill_number DESC`, [periodNumber, bill.deviceCode])
                 if ((await _billData).rowCount > 0) {
                     billData = (await _billData).rows
                     billNumber = (await _billData).rows[0].bill_number
-                    billId = (await _billData).rows[0].bill_id
+                    bill.billId = (await _billData).rows[0].bill_id
                 }
+
                 //Get data from bill cancel
                 let cancelData = null
                 const _cancelData = cleint.query(`SELECT * FROM tbl_bill_cancel WHERE bill_number = $1 AND period_number = $2 AND device_code = $3`, [billNumber, periodNumber, bill.deviceCode])
@@ -38,9 +39,9 @@ exports.get = async (req, res) => {
                     cancelData = (await _cancelData).rows
                 }
 
-                if (billData != "" && cancelData == "") {
-                    billDetailList = ((await (cleint.query(`SELECT * FROM tbl_bill_detail WHERE bill_id = $1`, [billId]))).rows)
-                } else if (billData != "" && cancelData != "") {
+                if (billData != "" && cancelData == null) {
+                    billDetailList = ((await (cleint.query(`SELECT * FROM tbl_bill_detail WHERE bill_id = $1`, [ bill.billId]))).rows)
+                } else if (billData != "" && cancelData != null) {
                     const cancelDetailList = ((await (cleint.query(`SELECT * FROM tbl_bill_cancel_detail WHERE cancel_id = $1`, [cancelData.rows[0].cancel_id]))).rows)
                     if ((await cancelDetailList).rowCount > 0) {
                         let billDetail = []
@@ -59,8 +60,8 @@ exports.get = async (req, res) => {
                         deviceCode: bill.deviceCode,
                         hasCancel: cancelData != null,
                         billId: billData != "" ? billData[0].bill_id : uuidv4(),
-                        billNumber: billData.bill_number != "" ? billData[0].bill_number : "",
-                        billTotal: billData.bill_price != "" ? billData[0].bill_price : 0,
+                        billNumber: billNumber,
+                        billTotal: billData != "" ? billData[0].bill_price : 0,
                         billDetailList: billDetailList
                     }
                 })
@@ -95,6 +96,7 @@ exports.billCancel = async (req, res) => {
                         return res.status(404).send({ message: "Bill not found" })
                     }
                     else {
+                        
                         SQL = `INSERT INTO tbl_bill_cancel VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`
                         // (Insert into bill cancel)
                         await cleint.query(SQL, 
@@ -126,6 +128,7 @@ exports.billCancel = async (req, res) => {
                                         if (rs.rowCount <= 0) {
                                             return res.status(404).send({ message: 'Not found data from bill_detail' })
                                         } else {
+
                                             //push bill detail into array for add to cancel detail
                                             let billcanceldetail = []
                                             for (let i = 0; i < rs.rows.length; i++) {
@@ -134,6 +137,7 @@ exports.billCancel = async (req, res) => {
 
                                             SQL = `INSERT INTO tbl_bill_cancel_detail(cancel_id, bill_number, lottery_number,
                                               lottery_price, date_bill_cancel_detail) VALUES %L`
+
                                             //Create data to bill cancel detail
                                             cleint.query(format(SQL, billcanceldetail), [], (error1, resu1) => {
                                                 if (error1) {
@@ -146,7 +150,11 @@ exports.billCancel = async (req, res) => {
                                                         if (r1) {
                                                             return res.status(403).send({ message: "Error for delete bill detail", error: r1.stack })
                                                         } else {
-                                                            return res.status(201).send({ message: "created" })
+                                                            return res.status(200).send({
+                                                                 status: true,
+                                                                 statusCode: 200,
+                                                                 message: "OK"
+                                                                 })
                                                         }
 
                                                     })

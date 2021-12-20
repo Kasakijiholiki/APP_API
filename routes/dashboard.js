@@ -178,7 +178,7 @@ route.get("/dashboard/get/billlist/:deviceCode/:drawNumber", dashboard.billlist)
  *       type: string
  *      required: true
  *      description: device_code
- *      example: 10
+ *      example: 1234567
  *    - in: path
  *      name: drawNumber
  *      schema:

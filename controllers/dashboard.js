@@ -332,13 +332,15 @@ exports.billdetaillistbydigit = (req, res) => {
                     return res.status(404).send('not found');
                 }
                 else {
-                    console.log(results.rows[0].billprice)
                      totalSale = results.rowCount
                      for (let i = 0; i < results.rowCount; i++) {
                         totalPrice += parseInt(results.rows[i].billprice);
                     }
                     res.json({
-                        data:{
+                        status: true,
+                        message: "OK",
+                        statusCode: 200,
+                        data:{  
                             totalSale: totalSale,
                             totalPrice: totalPrice,
                             List: results.rows

@@ -22,6 +22,7 @@ try{
             const isonline =  cleint.query(`SELECT to_char("date_offline", 'DD/MM/YYYY') AS date_offline FROM tbl_online WHERE online_status = 1`)
 
             if ((await isonline).rowCount > 0) {
+
                 date_offline = (await isonline).rows[0].date_offline
 
                  SQL = `SELECT * FROM  public.tbl_user_seller WHERE  device_code = $1 AND us_dlst = true`
@@ -71,7 +72,7 @@ try{
                         }
                     }
                 });
-                done();
+               
             } else {
                 return res.status(503).send("server offline")
             }
@@ -82,25 +83,76 @@ try{
         }
     })
 }catch(error) {
-    
-}finally{
-    done()
+    logger.error(error)
 }
 }
 
 //.....................PasswordChange..............//
-exports.PasswordChage = async (req, res) => {
-    account = req.params
-    SQL = `UPDATE public.tbl_user_seller SET us_pwd = $1 WHERE device_code = $2 AND us_pwd = $3`
-
-    process.PUT(
-        res,
-        `POST/api/userpasswordchange/${account.device_code}/${account.us_pwd}/${account.us_newpwd}`,
-        ``,
-        SQL,
-        [account.us_newpwd, account.device_code, account.us_pwd]
-    )
+//Change password
+exports.changepasswpord = async (req, res) => {
+   account = req.params
+    await connection.connect(async (err, cleint, done) => {
+        if (!err) {
+            SQL = `SELECT * FROM tbl_user_seller WHERE device_code = $1`
+            cleint.query(SQL, [account.device_code], (error, data) => {
+                if(error) {
+                    logger.error(error.stack)
+                    return res.status(403).send({error: error.stack })
+                } 
+                else if(data.rowCount == 0) {
+                    return res.status(404).send("not found")
+                } else {
+                        bcrypt.compare(account.us_pwd.toString(), data.rows[0].us_pwd, (e, response) => { 
+                            if (!e && response) {
+                                bcrypt.hash(account.us_newpwd.toString(), 10, (erro, hash) => {
+                                    if (!erro) {
+                                        SQL = `UPDATE tbl_user_seller SET us_pwd = $1 WHERE device_code = $2`
+                                        cleint.query(SQL, [hash, account.device_code], (e, d) => {
+                                            if(e) {
+                                                  logger.error(e.stack)
+                                                  return res.status(403).send({error: e.stack })
+                                            }
+                                            if (d.rowCount > 0) {
+                                                return res.status(200).send({ message: "Success" })
+                                            } else {
+                                                return res.status(404).send({ message: "Not Update" })
+                                            }
+                                        })    
+                                       
+                                    } else {
+                                        logger.error(erro)
+                                        return res.status(501).send({message: "hash failed", error: erro.stack })
+                                    }
+    
+                                });
+                            } else {
+                                logger.error(e)
+                                return res.status(501).send({messsage: "Old password incorrect"})
+                            }
+                        })
+                }
+            })
+            done();
+        } else {
+            logger.error(err.stack)
+            return res.status(500).send({ message: "Server error", error: err.stack })
+        }
+    })
 }
+
+
+// exports.PasswordChage = async (req, res) => {
+//     account = req.params
+//     SQL = `UPDATE public.tbl_user_seller SET us_pwd = $1 WHERE device_code = $2 AND us_pwd = $3`
+
+//     process.PUT(
+//         res,
+//         `POST/api/userpasswordchange/${account.device_code}/${account.us_pwd}/${account.us_newpwd}`,
+//         ``,
+//         SQL,
+//         [account.us_newpwd, account.device_code, account.us_pwd]
+//     )
+// }
 //..................CheckVersion..................//
 exports.checkversion = async (req, res) => {
 

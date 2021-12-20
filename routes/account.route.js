@@ -123,7 +123,7 @@ router.post('/account/login/:device_code/:us_pwd', account.login)
  *    500:
  *       description: Some server error
  */
-router.post('/account/userpasswordchange/:device_code/:us_pwd/:us_newpwd', account.PasswordChage)
+router.post('/account/userpasswordchange/:device_code/:us_pwd/:us_newpwd', account.changepasswpord)
 
 //.................GET.................................................//
 /**

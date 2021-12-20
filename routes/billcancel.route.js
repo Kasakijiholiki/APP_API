@@ -12,7 +12,7 @@ const billcancel = require('../controllers/billcancel.controller')
 
 /**
  * @swagger
- * /api/CancelBill/get/{deviceCode}:
+ * /api/cancelbill/get/{deviceCode}:
  *  get:
  *   summary: Get a  bill cancel
  *   tags: [BillCancel]
@@ -35,10 +35,10 @@ const billcancel = require('../controllers/billcancel.controller')
  *    500:
  *       description: Some server error
  */
-route.get('/CancelBill/get/:deviceCode', billcancel.get)
+route.get('/cancelbill/get/:deviceCode', billcancel.get)
 /**
  * @swagger
- * /api/CancelBill/cancel/add/{deviceCode}/{deviceNumber}/{billId}/{reasonCancel}:
+ * /api/cancelbill/cancel/add/{deviceCode}/{deviceNumber}/{billId}/{reasonCancel}:
  *  post:
  *   summary: Create a new bill cancel
  *   tags: [BillCancel]
@@ -80,7 +80,7 @@ route.get('/CancelBill/get/:deviceCode', billcancel.get)
  *       description: Some server error
  */
 
-route.post('/CancelBill/cancel/add/:deviceCode/:deviceNumber/:billId/:reasonCancel', billcancel.billCancel)
+route.post('/cancelbill/cancel/add/:deviceCode/:deviceNumber/:billId/:reasonCancel', billcancel.billCancel)
 
 
 module.exports  = route

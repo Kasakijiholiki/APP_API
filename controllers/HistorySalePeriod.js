@@ -5,14 +5,14 @@ const db = require('../config-db/connection')
 
 exports.get = async (req, res) => {
     const { deviceCode, periodNumber } = req.params
-    await db.connect(async (err, cleint, done) => {
+    await db.connect(async (err, client, done) => {
 
         if (!err) {
             try {
 
                 //#region  startPeriod
                 let startPeriod = ""
-                const _startPeriod = cleint.query(`SELECT to_char("date_online",'DD/MM/YYYY') as date_online 
+                const _startPeriod = client.query(`SELECT to_char("date_online",'DD/MM/YYYY') as date_online 
                                    FROM   tbl_online
                                    WHERE period_number = $1`, [periodNumber])
                 if ((await _startPeriod).rowCount > 0) {
@@ -20,31 +20,43 @@ exports.get = async (req, res) => {
                 }
                 //#endregion    
 
+
                 //#region totalBill
                 let totalBill = 0;
                 let bill = ""
-                const _billlist = cleint.query(`SELECT * 
+                const _billlist = client.query(`SELECT * 
                                               FROM  tbl_bill
                                               WHERE device_code = $1
                                               AND   period_number = $2`, [deviceCode, periodNumber])
                 if ((await _billlist).rowCount > 0) {
                     totalBill = (await _billlist).rowCount
-                    bill = (await _billlist).rows[0]
+                    bill = (await _billlist).rows
                 }
+<<<<<<< HEAD
                 console.log('Hi ' + bill)
+=======
+                //#endregion
+
+>>>>>>> fec33c4a93e502fa39ec5595b7eec71716524055
 
                 //#region totalSell
-                let totalSell = 0;
-                const _totalSell = cleint.query(`SELECT SUM(bill_price)  AS total 
+                let totalSell = '';
+                const _totalSell = client.query(`SELECT SUM(bill_price)  AS total 
                                        FROM   tbl_bill
                                        WHERE  bill_number NOT IN (SELECT bill_number FROM tbl_bill_cancel)
                                        AND    device_code = $1 
                                        AND    period_number = $2`, [deviceCode, periodNumber])
                 if ((await _totalSell).rows[0].total != null)
+<<<<<<< HEAD
                     totalSell = (await _totalSell).rows[0].total
+=======
+                    totalSell = (await _totalSell).rows[0].total                 
+                //#endregion
+
+>>>>>>> fec33c4a93e502fa39ec5595b7eec71716524055
                 //#region maxSell
                 let maxsell = 0;
-                const _maxSell = cleint.query(`SELECT max_sell AS maxsell
+                const _maxSell = client.query(`SELECT max_sell AS maxsell
                                                FROM tbl_device_max_sell
                                                WHERE device_code = $1 `, [deviceCode])
                 maxsell = (await _maxSell).rows[0].maxsell
@@ -53,7 +65,7 @@ exports.get = async (req, res) => {
 
                 //#region totalDigitSell
                 let totalDigitSell;
-                const _totalDigitSell = cleint.query(`  SELECT  tbl_bill.bill_id AS key,
+                const _totalDigitSell = client.query(`  SELECT   
                                                                 LENGTH(tbl_bill_detail.lottery_number) AS digit,
 	                                                            SUM(tbl_bill_detail.lottery_price) AS price
                                                         FROM tbl_bill, tbl_bill_detail
@@ -62,9 +74,10 @@ exports.get = async (req, res) => {
                                                         AND tbl_bill.period_number = $2
                                                         AND LENGTH(tbl_bill_detail.lottery_number) <= 6
                                                         AND tbl_bill.date_bill = tbl_bill_detail.date_bill_detail
-                                                        GROUP BY tbl_bill.bill_id, tbl_bill_detail.lottery_number
+                                                        GROUP BY LENGTH(tbl_bill_detail.lottery_number)
                                                         ORDER BY LENGTH(tbl_bill_detail.lottery_number) DESC
                 `, [deviceCode, periodNumber])
+<<<<<<< HEAD
                 totalDigitSell = (await _totalDigitSell).rows
                 //#region totalCancel
                 let totalCancel = 0
@@ -156,6 +169,61 @@ exports.get = async (req, res) => {
                     // totalDigitSell: totalDigitSell,
                     // billDetailList: billDetailList
                 )
+=======
+                if ((await _totalDigitSell).rowCount > 0)
+                totalDigitSell = (await _totalDigitSell).rows
+                //#endregion
+
+
+                //#region totalCancel
+                let totalCancel = 0
+                const _totalCancel = client.query(`SELECT * FROM tbl_bill_cancel WHERE period_number = $1 AND device_code = $2`, [periodNumber, deviceCode])
+                if ((await _totalCancel).rowCount!= 0){
+                    totalCancel = (await _totalCancel).rowCount
+                }
+                //#endregion
+
+                //#region  billDetailList
+
+                const _billDetailList = client.query(`
+                SELECT 
+                      CASE
+                          WHEN  tbl_bill_cancel.cancel_by IS NOT NULL THEN tbl_bill_cancel.cancel_id
+                          WHEN  tbl_bill_cancel.cancel_by IS  NULL THEN tbl_bill.bill_id
+                          END  AS key,
+                      tbl_bill.bill_number AS billNUmber,
+                      CONCAT(TO_CHAR("date_bill", 'DD/MM/YYYY'), ' ',time_bill)  AS dateTime,
+                      tbl_bill.bill_price AS billPrice,
+                      CASE 
+                          WHEN tbl_bill_cancel.cancel_by IS NULL THEN 'ປົກກະຕິ'
+                          WHEN tbl_bill_cancel.cancel_by = '0'   THEN  '${deviceCode}:ຍົກເລີກ' 
+                          ELSE 'ແອັດມິນຍົກເລີກ'
+                          END AS billStatus,
+                     CASE 
+                          WHEN tbl_bill_cancel.cancel_by IS NULL THEN true
+                          ELSE false
+                          END AS isLast,
+                     CASE 
+                          WHEN tbl_bill_cancel.cancel_by IS NOT NULL THEN true
+                          ELSE false
+                          END AS isCancel
+                FROM  tbl_bill
+                LEFT JOIN tbl_bill_cancel
+                ON tbl_bill.bill_number = tbl_bill_cancel.bill_number
+                WHERE tbl_bill.device_code = $1
+                AND   tbl_bill.period_number = $2`, [deviceCode, periodNumber] )
+
+                //#endregion                
+                return res.send({
+                    maxsell: maxsell,
+                    startPeriod: startPeriod,
+                    totalSell: totalSell,
+                    totalBill: totalBill,
+                    totalCancel: totalCancel,
+                    totalDigitSell: totalDigitSell,
+                    billDetailList: (await _billDetailList).rows
+                })
+>>>>>>> fec33c4a93e502fa39ec5595b7eec71716524055
 
             } catch (error) {
                 logger.error(error)

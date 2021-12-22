@@ -17,14 +17,14 @@ const his = require("../controllers/HistorySalePeriod");
  *       type: string
  *      required: true
  *      description: deviceCode
- *      example: 21818673
+ *      example: 1234567
  *    - in: path
  *      name: periodNumber
  *      schema:
  *       type: string
  *      required: true
  *      description: periodNumber
- *      example: 21057
+ *      example: 1010
  *   responses:
  *    200:
  *       description: OK

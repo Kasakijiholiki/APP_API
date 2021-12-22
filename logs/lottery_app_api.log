@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {"level":"info","message":"POST/api/login/10/1234","timestamp":"2021-12-21T06:22:54.307Z"}
 {"level":"info","message":"GET/api/account/CheckVersionV2/{version_name}/355288282022898","timestamp":"2021-12-21T07:15:49.070Z"}
 {"level":"info","message":"POST/api/login/22222/123","timestamp":"2021-12-21T07:16:03.904Z"}
@@ -9,3 +10,14 @@
 {"level":"info","message":"POST/api/login/1234567/123","timestamp":"2021-12-21T09:59:31.637Z"}
 {"level":"info","message":"POST/api/login/21818715/123","timestamp":"2021-12-22T09:41:39.261Z"}
 {"level":"info","message":"POST/api/login/21818715/12300","timestamp":"2021-12-22T09:41:39.444Z"}
+=======
+{"code":"42803","file":"parse_agg.c","length":190,"level":"error","line":"1396","name":"error","position":"72","routine":"check_ungrouped_columns_walker","severity":"ERROR","timestamp":"2021-12-22T04:00:57.977Z"}
+{"level":"info","message":"POST/api/login/21818715/123","timestamp":"2021-12-22T08:49:24.639Z"}
+{"level":"info","message":"POST/api/login/21818715/12300","timestamp":"2021-12-22T08:49:25.174Z"}
+{"level":"info","message":"POST/api/login/21818715/123","timestamp":"2021-12-22T09:21:02.828Z"}
+{"level":"info","message":"POST/api/login/21818715/12300","timestamp":"2021-12-22T09:21:02.974Z"}
+{"level":"info","message":"POST/api/login/21818715/123","timestamp":"2021-12-22T09:22:51.628Z"}
+{"level":"info","message":"POST/api/login/21818715/12300","timestamp":"2021-12-22T09:22:51.774Z"}
+{"level":"info","message":"POST/api/login/21818715/123","timestamp":"2021-12-22T09:41:30.842Z"}
+{"level":"info","message":"POST/api/login/21818715/12300","timestamp":"2021-12-22T09:41:30.989Z"}
+>>>>>>> fec33c4a93e502fa39ec5595b7eec71716524055

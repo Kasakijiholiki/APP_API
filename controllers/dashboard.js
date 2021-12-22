@@ -72,7 +72,14 @@ exports.cancelbilllist = (req, res) => {
            FROM tbl_bill_cancel, tbl_bill_cancel_detail  
            WHERE tbl_bill_cancel.cancel_id = tbl_bill_cancel_detail.cancel_id 
            AND tbl_bill_cancel.device_code = $1 
-           AND tbl_bill_cancel.period_number = $2`;
+           AND tbl_bill_cancel.period_number = $2
+           GROUP BY tbl_bill_cancel.cancel_id,
+                    date_cancel,
+                    tbl_bill_cancel.time_cancel,
+                    tbl_bill_cancel.bill_number,
+                    tbl_bill_cancel_detail.lottery_price
+            ORDER BY tbl_bill_cancel.bill_number   DESC        
+           `;
 
     db.connect((err, client, done) => {
         if (!err) {

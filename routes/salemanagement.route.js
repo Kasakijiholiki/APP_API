@@ -111,4 +111,35 @@ route.post('/salemanagement/addv2/sale/:deviceCode/:deviceNumber', sale.createsa
  */
   route.get('/salemanagement/getdrawnumber', sale.getCurrentperiodnumber)
 
+/**
+ * @swagger
+ * /api/SaleManagement/GetSellSetNumber/{lotteryNumber}/{lotteryPrice}:
+ *  get:
+ *   tags: [SaleManagement]
+ *   parameters:
+ *    - in: path
+ *      name: lotteryNumber
+ *      schema:
+ *       type: string
+ *      required: true
+ *      description: lotteryNumber
+ *      example: 5
+ *    - in: path
+ *      name: lotteryPrice
+ *      schema:
+ *       type: string
+ *      required: true
+ *      description: lotteryPrice
+ *      example: 5
+ *   responses:
+ *    200:
+ *       description: OK
+ *    403:
+ *       description: Forbiden
+ *    404:
+ *       description: Not found
+ *    500:
+ *       description: Some server error
+ */
+ route.get('/salemanagement/GetSellSetNumber/:lotteryNumber/:lotteryPrice', sale.GetSellSetNumber)
 module.exports = route

@@ -55,8 +55,14 @@ const option = {
     swagger: "3.0",
     servers: [
       {
+<<<<<<< HEAD
         // url: `http://49.0.198.122:7000`
         url: `http://localhost:8000`
+=======
+         //url: `http://49.0.198.122:7000`
+        url: `http://localhost:8000`
+       
+>>>>>>> fec33c4a93e502fa39ec5595b7eec71716524055
       }
 
        

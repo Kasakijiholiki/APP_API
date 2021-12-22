@@ -7,6 +7,8 @@ const { v4: uuidv4 } = require('uuid');
 const logger = require('../config-log/logger')
 const format = require('pg-format');
 const { Pool } = require('pg');
+const { string } = require('pg-format');
+const { push } = require('../config-log/logger');
 const pool = new Pool()
 //Create sale
 exports.createsale = async (req, res) => {
@@ -562,6 +564,71 @@ exports.getCurrentperiodnumber = (req, res) => {
 //         }
 //     })
 // }
+
+
+exports.GetSellSetNumber = (req, res) => {
+
+    db.connect(async (err, client, done) => {
+        let saleViewModelList = []
+        let saleViewModel = {}
+        let lotteryNumber = req.params.lotteryNumber
+        let lotteryPrice = req.params.lotteryPrice
+
+        if (!err) {
+            try {
+
+                if ('' + lotteryNumber.length <= 6) {
+
+                    const lotteryData = client.query('SELECT * FROM tbl_set_number WHERE lottery_number = $1', [lotteryNumber])
+                    if ('' + lotteryNumber.length < 3) {
+
+                        if ((await lotteryData).rowCount == 0) {
+                            saleViewModel = {
+                                lotteryNumber: lotteryNumber,
+                                lotteryPrice: lotteryPrice
+                            }
+                            saleViewModelList.push(saleViewModel)
+                        }
+                        else {
+
+                            const lottery_name = (await lotteryData).rows[0].lottery_name                            
+                            const saleNumberList = client.query(`SELECT  *  FROM tbl_set_number 
+                                                                 WHERE      lottery_name = $1 
+                                                                 AND        lottery_digit = $2`,
+                                                                [lottery_name, lotteryNumber.length])
+
+ 
+                                                                
+
+                        }
+
+
+
+                    }
+
+
+
+
+
+
+
+                }
+
+
+                done()
+                return res.send({
+                    saleViewModelList
+                })
+
+            } catch (error) {
+                console.log(error)
+            }
+
+        }
+    })
+
+}
+
 
 function removeDups(number) {
     let unique = {};

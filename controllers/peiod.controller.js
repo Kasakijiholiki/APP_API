@@ -44,13 +44,14 @@ exports.getperiod = async (req, res) => {
 exports.getperiodv2 = async (req, res) => {
 deviceCode = req.params.deviceCode
 SQL = `SELECT 
-             tbl_bill.period_number AS periodNumber,
-             tbl_bill.device_code AS deviceCode, 
-             tbl_online.date_offline AS dateOffline
-      FROM   tbl_bill, tbl_online
-       WHERE tbl_bill.period_number = tbl_online.period_number
-       AND   tbl_bill.device_code = $1
-    ORDER BY tbl_bill.period_number DESC  `
+                tbl_bill.period_number AS periodNumber,
+                tbl_bill.device_code AS deviceCode, 
+                to_char("date_offline", 'DD-MM-YYYY') AS dateOffline
+        FROM    tbl_bill, tbl_online
+        WHERE   tbl_bill.period_number = tbl_online.period_number
+        AND     tbl_bill.device_code = $1
+        GROUP BY tbl_bill.period_number,tbl_bill.device_code,  tbl_online.date_offline
+        ORDER BY tbl_bill.period_number DESC `
 connection.connect((err, cleint, done) => {
     if(!err) {
         cleint.query(SQL, [deviceCode], (error, results) => {
@@ -68,9 +69,7 @@ connection.connect((err, cleint, done) => {
                     message: "OK",
                     totalRecords: 0,
                     data: {
-                        billDetailList: [
-                            results.rows
-                        ]
+                        billDetailList:  results.rows
                     }
                 })
             }

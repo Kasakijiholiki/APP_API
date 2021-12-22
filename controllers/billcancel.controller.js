@@ -41,12 +41,16 @@ exports.get = async (req, res) => {
 
                 if (billData != "" && cancelData == null) {
                     billDetailList = ((await (cleint.query(`SELECT * FROM tbl_bill_detail WHERE bill_id = $1`, [ bill.billId]))).rows)
-                } else if (billData != "" && cancelData != null) {
-                    const cancelDetailList = ((await (cleint.query(`SELECT * FROM tbl_bill_cancel_detail WHERE cancel_id = $1`, [cancelData.rows[0].cancel_id]))).rows)
+                 } 
+                 else if (billData != "" && cancelData != null) {
+
+                    const cancelDetailList =  cleint.query(`SELECT * FROM tbl_bill_cancel_detail WHERE cancel_id = $1`, [cancelData[0].cancel_id])
+                   
                     if ((await cancelDetailList).rowCount > 0) {
                         let billDetail = []
-                        for (let i = 0; i < cancelDetailList.length; i++) {
-                            billDetail.push(cancelDetailList.rows[i].lottery_number, cancelDetailList.rows[i].lottery_price)
+                        for (let i = 0; i < (await cancelDetailList).rows.length; i++) {
+
+                            billDetail.push({lottery_number: (await cancelDetailList).rows[i].lottery_number, lottery_price: (await cancelDetailList).rows[i].lottery_price})
                         }
                         billDetailList = billDetail
                     }
@@ -81,6 +85,7 @@ exports.billCancel = async (req, res) => {
     const cancel_id = uuidv4();
     SQL = `SELECT bill_id, bill_number, period_number, device_code, bill_price, ref_code FROM tbl_bill 
            WHERE device_code = $1  AND bill_id = $2`
+
     //First case conncect DB
     await db.connect(async (err, cleint, done) => {
         if (!err) {
@@ -96,8 +101,8 @@ exports.billCancel = async (req, res) => {
                         return res.status(404).send({ message: "Bill not found" })
                     }
                     else {
-                        
-                        SQL = `INSERT INTO tbl_bill_cancel VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`
+
+                        SQL = `INSERT INTO tbl_bill_cancel VALUES ($1, $2, $3, $4, $5, $6, 0, $7, $8, $9)`
                         // (Insert into bill cancel)
                         await cleint.query(SQL, 
                             [cancel_id,
@@ -106,7 +111,6 @@ exports.billCancel = async (req, res) => {
                              results.rows[0].device_code,
                              results.rows[0].bill_price,
                              bill.reasonCancel,
-                             bill.cancel_by, 
                              date.getdate(), 
                              date.gettime(),
                              results.rows[0].ref_code],

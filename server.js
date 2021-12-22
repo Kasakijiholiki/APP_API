@@ -18,7 +18,7 @@ const sale = require('./routes/salemanagement.route')
 const billcancel = require('./routes/billcancel.route')
 const dashboard = require('./routes/dashboard')
 const His = require('./routes/HistorySalePeriod')
-
+const numberstatus = require('./routes/numberstatus.route')
 //use routes
 app.use('/api/', account)
 app.use('/api/', period)
@@ -26,7 +26,7 @@ app.use('/api/', sale)
 app.use('/api/', dashboard);
 app.use('/api/', billcancel)
 app.use('/api/', His)
-
+app.use('/api/', numberstatus)
 
 //Swagger
 const PORT = process.env.port || 8000
@@ -57,20 +57,22 @@ const option = {
       {
         // url: `http://49.0.198.122:7000`
         url: `http://localhost:8000`
-       
       }
 
        
     ],
   },
-
 apis: ['./routes/*.js']
 }
 const swaggerDocs = swaggerJSDoc(option)
 app.use('/Swagger', swaggerUI.serve, swaggerUI.setup(swaggerDocs))
 
 
+const l = [1,2,3,4]
 
+l.forEach(e=> {
+  console.log(e)
+});
 
 app.listen(PORT, console.log(`Server Running on port ${PORT}`))
 module.exports = app;

@@ -31,7 +31,7 @@ exports.createsale = async (req, res) => {
                 const curentPeriod = (await cleint.query(`SELECT period_number FROM tbl_online WHERE  online_status = 1`))
                 if (curentPeriod.rowCount > 0) period_number = curentPeriod.rows[0].period_number
                 //______________________server online_________________________________//
-                if (period_number != 0 || period_number != null || period_number != "") {
+                if (period_number != "") {
 
                     let lotteryNumberList = []
                     let lotteryPriceList = []
@@ -48,7 +48,6 @@ exports.createsale = async (req, res) => {
 
                     const numberList = numList.toString()
 
-                    //return console.log(numberList)
                     SQL = ` SELECT tbl_bill_detail.lottery_number AS number, sum(tbl_bill_detail.lottery_price) AS price FROM tbl_bill_detail, tbl_bill
                             WHERE tbl_bill_detail.bill_number = tbl_bill.bill_number
                             AND   tbl_bill.period_number = $1 AND tbl_bill_detail.lottery_number IN (${numberList})
@@ -94,7 +93,6 @@ exports.createsale = async (req, res) => {
                     let num_P = 0
                     let number_L = ""
                     let index = []
-                    // return console.log(lotteryList.length)
                     // LOTTERY NUMBER ALREADY HAVE IN BILL
                     if (lotteryList.length != "") {
 
@@ -107,9 +105,9 @@ exports.createsale = async (req, res) => {
                                 if (lotteryList[x].number == number_L && number_L.length === 1) {
                                     num_P = parseInt(lotteryList[x].price)
                                     price = parseInt(lotteryPriceList[j] + num_P)
+
                                     if (price > price1) {
                                         removeBillNumberList.push(lotteryNumberList[j])
-                                        //saleViewModelList.SaleList.splice(j, 1)
                                         index.push(j)
                                     }
 
@@ -119,7 +117,6 @@ exports.createsale = async (req, res) => {
                                     price = parseInt(lotteryPriceList[j] + num_P)
                                     if (price > price2) {
                                         removeBillNumberList.push(lotteryNumberList[j])
-                                        //saleViewModelList.SaleList.splice(j, 1)
                                         index.push(j)
                                     }
 
@@ -129,7 +126,6 @@ exports.createsale = async (req, res) => {
                                     price = parseInt(lotteryPriceList[j] + num_P)
                                     if (price > price3) {
                                         removeBillNumberList.push(lotteryNumberList[j])
-                                        //saleViewModelList.SaleList.splice(j, 1)
                                         index.push(j)
                                     }
 
@@ -139,7 +135,6 @@ exports.createsale = async (req, res) => {
                                     price = parseInt(lotteryPriceList[j] + num_P)
                                     if (price > price4) {
                                         removeBillNumberList.push(lotteryNumberList[j])
-                                        //saleViewModelList.SaleList.splice(j, 1)
                                         index.push(j)
                                     }
 
@@ -149,7 +144,6 @@ exports.createsale = async (req, res) => {
                                     price = parseInt(lotteryPriceList[j] + num_P)
                                     if (price > price5) {
                                         removeBillNumberList.push(lotteryNumberList[j])
-                                        // saleViewModelList.SaleList.splice(j, 1)
                                         index.push(j)
                                     }
 
@@ -159,145 +153,125 @@ exports.createsale = async (req, res) => {
                                     price = parseInt(lotteryPriceList[j] + num_P)
                                     if (price > price6) {
                                         removeBillNumberList.push(lotteryNumberList[j])
-                                        //saleViewModelList.SaleList.splice(j, 1)
                                         index.push(j)
                                     }
 
                                 }
                                 else {
-                                    new_P = parseInt(lotteryPriceList[j])
+                                    price = parseInt(lotteryPriceList[j])
                                     if (number_L.length === 1) {
 
-                                        if (new_P > price1) {
+                                        if (price > price1) {
                                             removeBillNumberList.push(lotteryNumberList[j])
-                                            //saleViewModelList.SaleList.splice(j, 1)
                                             index.push(j)
                                         }
                                     }
                                     else if (number_L.length === 2) {
 
-                                        if (new_P > price2) {
+                                        if (price > price2) {
                                             removeBillNumberList.push(lotteryNumberList[j])
-                                            //saleViewModelList.SaleList.splice(j, 1)
                                             index.push(j)
                                         }
                                     }
                                     else if (number_L.length === 3) {
-                                        if (new_P > price3) {
+                                        if (price > price3) {
                                             removeBillNumberList.push(lotteryNumberList[j])
-                                            // saleViewModelList.SaleList.splice(j, 1)
                                             index.push(j)
                                         }
                                     }
                                     else if (number_L.length === 4) {
-                                        if (new_P > price4) {
+                                        if (price > price4) {
                                             removeBillNumberList.push(lotteryNumberList[j])
-                                            //saleViewModelList.SaleList.splice(j, 1)
                                             index.push(j)
                                         }
                                     }
                                     else if (number_L.length === 5) {
-                                        if (new_P > price5) {
+                                        if (price > price5) {
                                             removeBillNumberList.push(lotteryNumberList[j])
-                                            // saleViewModelList.SaleList.splice(j, 1)
                                             index.push(j)
                                         }
 
                                     }
                                     else if (number_L.length === 6) {
-                                        if (new_P > price6) {
+                                        if (price > price6) {
                                             removeBillNumberList.push(lotteryNumberList[j])
-                                            //saleViewModelList.SaleList.splice(j, 1)
                                             index.push(j)
                                         }
                                     }
                                 }
-
+                                price = 0 
                             }
-
                             price = 0
-                            new_P = 0
                             number_L = ""
                         }
                     }
+                    
                     //These lottery number do not exit in DB    
                     else {
 
                         for (let j = 0; j < lotteryNumberList.length; j++) {
 
-                            new_P = parseInt(lotteryPriceList[j])
+                            price = parseInt(lotteryPriceList[j])
 
                             number_L = lotteryNumberList[j].toString()
 
                             if (number_L.length == 1) {
 
-                                if (new_P > price1) {
+                                if (price > price1) {
                                     removeBillNumberList.push(lotteryNumberList[j])
-                                    // saleViewModelList.SaleList.splice(j, 1)
                                     index.push(j)
                                 }
                             }
                             else if (number_L.length == 2) {
-                                if (new_P > price2) {
+                                if (price > price2) {
                                     removeBillNumberList.push(lotteryNumberList[j])
-                                    saleViewModelList.SaleList.splice(j, 1)
+                                    index.push(j)
                                 }
                             }
                             else if (number_L.length == 3) {
-                                if (new_P > price3) {
+                                if (price > price3) {
                                     removeBillNumberList.push(lotteryNumberList[j])
-                                    // saleViewModelList.SaleList.splice(j, 1)
                                     index.push(j)
                                 }
                             }
                             else if (number_L.length == 4) {
-                                if (new_P > price4) {
+                                if (price > price4) {
                                     removeBillNumberList.push(lotteryNumberList[j])
-                                    //saleViewModelList.SaleList.splice(j, 1)
                                     index.push(j)
                                 }
                             }
                             else if (number_L.length == 5) {
-                                if (new_P > price5) {
+                                if (price > price5) {
                                     removeBillNumberList.push(lotteryNumberList[j])
-                                    //saleViewModelList.SaleList.splice(j, 1)
                                     index.push(j)
                                 }
-
                             }
                             else if (number_L.length == 6) {
-
-                                if (new_P > price6) {
-
+                                if (price > price6) {
                                     removeBillNumberList.push(lotteryNumberList[j])
-
-                                    // saleViewModelList.SaleList.splice(j, 1)
                                     index.push(j)
-
-
                                 }
                             }
                         }
-
                         price = 0
-                        new_P = 0
                         number_L = ""
                     }
 
+               
                     //_____________________CHECK PRICE AND LOTTERY NUMBER LENGHT FOR SELL ____________________//
-                    for (let l = 0; l < saleViewModelList.SaleList.length; l++) {
-                        let length = '' + saleViewModelList.SaleList[l].lotteryNumber
-                        if (length.length > 6) {
-                            return res.status(300).send({ message: "can not sell lottery length more than 6" })
-                        }
-                        else if (saleViewModelList.SaleList[l].lotteryPrice < 1000) {
+                    // for (let l = 0; l < saleViewModelList.SaleList.length; l++) {
+                    //     let length = '' + saleViewModelList.SaleList[l].lotteryNumber
+                    //     if (length.length > 6) {
+                    //         return res.status(300).send({ message: "can not sell lottery length more than 6" })
+                    //     }
+                    //     else if (saleViewModelList.SaleList[l].lotteryPrice < 1000) {
 
-                            return res.status(301).send({ message: "can not sell price less than 1000 kip" })
-                        }
-                        else if (saleViewModelList.SaleList[l].lotteryPrice % 1000 != 0) {
-                            return res.status(302).send({ message: "price should be multi 1000 kip" })
-                        }
-                    }
+                    //         return res.status(301).send({ message: "can not sell price less than 1000 kip" })
+                    //     }
+                    //     else if (saleViewModelList.SaleList[l].lotteryPrice % 1000 != 0) {
+                    //         return res.status(302).send({ message: "price should be multi 1000 kip" })
+                    //     }
+                    // }
 
                     //________________________CHECK PRICE BALANCH PER DEVICE________________//
                     let maxsell = 0
@@ -311,13 +285,13 @@ exports.createsale = async (req, res) => {
                                                 AND tbl_bill.period_number = $1
                                                 AND tbl_bill.device_code   = $2`, [periodNumber, deviceCode])
 
-                    if ((await saled).rows[0].total != null || (await saled).rows[0].total != 0 || (await saled).rows[0].total != "") {
+                    if ((await saled).rows[0].total != null && (await saled).rows[0].total != 0 && (await saled).rows[0].total != "") {
                         Sale = (await saled).rows[0].total
                     }
 
 
                     let flag = true
-                    if (maxsell != null || maxsell > 0 || maxsell != "") {
+                    if (maxsell > 0) {
                         let totalPrice = 0
                         let cansell = 0
                         for (price = 0; price < saleViewModelList.SaleList.length; price++) {
@@ -333,6 +307,7 @@ exports.createsale = async (req, res) => {
                             return res.status(405).send({ message: `You can can sell price ${maxsell} only. But now is:  ${cansell}` })
                         }
                     }
+                    
                     saleViewModelList.SaleList = saleViewModelList.SaleList.filter(function (value, i) {
                         return index.indexOf(i) == -1;
 
@@ -528,65 +503,65 @@ exports.getCurrentperiodnumber = (req, res) => {
     })
 }
 //Check number price 
-exports.checknumberprice = async (req, res) => {
-    const { lotteryNumber, lotteryPrice, totalPrice, deviceCode, periodNumber } = req.params
-    await db.connect(async (err, cleint, done) => {
-        if (!err) {
-            try {
-                //Get max digit length
-                let max_lenght = 0
-                const _maxdg = cleint.query(`SELECT max_lenght FROM tbl_digit_lenght`)
-                if ((await _maxdg).rowCount > 0) {
-                    max_lenght = ((await _maxdg).rows[0].max_lenght)
-                }
-                //Beging check
-                if (lotteryNumber.length > max_lenght) {
-                    return res.status(403).send(`ເລກສ່ຽງສາມາດຂາຍໄດ້ ${max_lenght} ເທົ່ານັ້ນ`)
-                }
+// exports.checknumberprice = async (req, res) => {
+//     const { lotteryNumber, lotteryPrice, totalPrice, deviceCode, periodNumber } = req.params
+//     await db.connect(async (err, cleint, done) => {
+//         if (!err) {
+//             try {
+//                 //Get max digit length
+//                 let max_lenght = 0
+//                 const _maxdg = cleint.query(`SELECT max_lenght FROM tbl_digit_lenght`)
+//                 if ((await _maxdg).rowCount > 0) {
+//                     max_lenght = ((await _maxdg).rows[0].max_lenght)
+//                 }
+//                 //Beging check
+//                 if (lotteryNumber.length > max_lenght) {
+//                     return res.status(403).send(`ເລກສ່ຽງສາມາດຂາຍໄດ້ ${max_lenght} ເທົ່ານັ້ນ`)
+//                 }
 
-                if (lotteryPrice < 1000) {
-                    return res.status(403).send(`ລາຄາຕ້ອງແມ່ນຫນຶ່ງພັນຂຶ້ນໄປ`)
-                }
+//                 if (lotteryPrice < 1000) {
+//                     return res.status(403).send(`ລາຄາຕ້ອງແມ່ນຫນຶ່ງພັນຂຶ້ນໄປ`)
+//                 }
 
-                if (lotteryPrice % 1000 != 0) {
-                    return res.status(403).send(`ລາຄາຄວນເປັນສອງເທົ້່າຂອງ 1000 ກີບ`)
-                }
+//                 if (lotteryPrice % 1000 != 0) {
+//                     return res.status(403).send(`ລາຄາຄວນເປັນສອງເທົ້່າຂອງ 1000 ກີບ`)
+//                 }
 
-                let max_sell = 0
-                const _ln_Data = cleint.query(`SELECT * FROM tbl_lottery_number WHERE lottery_number = $1`, [lotteryNumber])
-                if ((await _ln_Data).rowCount > 0) {
-                    max_sell = (await _ln_Data).rows.max_sell
-                    if ((await _ln_Data).rows[0].ln_status != 1) {
-                        return res.status(403).send(`ເລກສ່ຽງ ${lotteryNumber}ເຕັມແລ້ວ`)
-                    }
-                    let lottery_price = 0
-                    const _lottery_price = cleint.query(`SELECT SUM(lottery_price) AS price FROM tbl_bill_detail WHERE lottery_number = $1`, [lotteryNumber])
+//                 let max_sell = 0
+//                 const _ln_Data = cleint.query(`SELECT * FROM tbl_lottery_number WHERE lottery_number = $1`, [lotteryNumber])
+//                 if ((await _ln_Data).rowCount > 0) {
+//                     max_sell = (await _ln_Data).rows.max_sell
+//                     if ((await _ln_Data).rows[0].ln_status != 1) {
+//                         return res.status(403).send(`ເລກສ່ຽງ ${lotteryNumber}ເຕັມແລ້ວ`)
+//                     }
+//                     let lottery_price = 0
+//                     const _lottery_price = cleint.query(`SELECT SUM(lottery_price) AS price FROM tbl_bill_detail WHERE lottery_number = $1`, [lotteryNumber])
 
-                    if ((await _lottery_price).rowCount > 0) {
-                        lottery_price = (await _lottery_price).rows[0].price
-                    }
+//                     if ((await _lottery_price).rowCount > 0) {
+//                         lottery_price = (await _lottery_price).rows[0].price
+//                     }
 
-                    const realTimeMaxPrice = max_sell - lottery_price
+//                     const realTimeMaxPrice = max_sell - lottery_price
 
-                    if (lottery_price == 0) {
-                        if (lotteryPrice > max_sell) {
-                            return res.status(403).send(`ເລກສ່ຽງ ${lotteryNumber}ເຕັມແລ້ວ`)
-                        }
-                    }
-                }
+//                     if (lottery_price == 0) {
+//                         if (lotteryPrice > max_sell) {
+//                             return res.status(403).send(`ເລກສ່ຽງ ${lotteryNumber}ເຕັມແລ້ວ`)
+//                         }
+//                     }
+//                 }
 
-            } catch (error) {
-                logger.error(error.stack)
-                return res.status(500).send({ message: error.stack })
-            }
-            done();
-        }
-        else {
-            logger.error(err.stack)
-            return res.status(500).send({ message: "Server error", error: err.stack })
-        }
-    })
-}
+//             } catch (error) {
+//                 logger.error(error.stack)
+//                 return res.status(500).send({ message: error.stack })
+//             }
+//             done();
+//         }
+//         else {
+//             logger.error(err.stack)
+//             return res.status(500).send({ message: "Server error", error: err.stack })
+//         }
+//     })
+// }
 
 function removeDups(number) {
     let unique = {};

@@ -32,12 +32,8 @@ exports.get = async (req, res) => {
                     totalBill = (await _billlist).rowCount
                     bill = (await _billlist).rows
                 }
-<<<<<<< HEAD
-                console.log('Hi ' + bill)
-=======
                 //#endregion
 
->>>>>>> fec33c4a93e502fa39ec5595b7eec71716524055
 
                 //#region totalSell
                 let totalSell = '';
@@ -47,13 +43,9 @@ exports.get = async (req, res) => {
                                        AND    device_code = $1 
                                        AND    period_number = $2`, [deviceCode, periodNumber])
                 if ((await _totalSell).rows[0].total != null)
-<<<<<<< HEAD
-                    totalSell = (await _totalSell).rows[0].total
-=======
                     totalSell = (await _totalSell).rows[0].total                 
                 //#endregion
 
->>>>>>> fec33c4a93e502fa39ec5595b7eec71716524055
                 //#region maxSell
                 let maxsell = 0;
                 const _maxSell = client.query(`SELECT max_sell AS maxsell
@@ -77,99 +69,6 @@ exports.get = async (req, res) => {
                                                         GROUP BY LENGTH(tbl_bill_detail.lottery_number)
                                                         ORDER BY LENGTH(tbl_bill_detail.lottery_number) DESC
                 `, [deviceCode, periodNumber])
-<<<<<<< HEAD
-                totalDigitSell = (await _totalDigitSell).rows
-                //#region totalCancel
-                let totalCancel = 0
-                const _totalCancel = cleint.query(`SELECT count(*) FROM tbl_bill WHERE period_number = $1 AND device_code = $2`, [periodNumber, deviceCode])
-                totalCancel = (await _totalCancel).rowCount
-                //#endregion
-                let billDetailList = ""
-                let lj_cancel = null
-                let lastBill = null
-
-                //#region get bill
-                const _bill = cleint.query(`    
-                        SELECT  tbl_bill.bill_id AS key, 
-                                tbl_bill_cancel.cancel_id,
-                                tbl_bill_cancel.cancel_by,
-                                tbl_bill.bill_number,
-                                CONCAT(
-                                    to_char("date_bill",'DD/MM/YYYY'), ' ',
-                                    tbl_bill.time_bill
-                                    ) AS dateTime
-                         FROM    tbl_bill, tbl_bill_cancel 
-                         WHERE tbl_bill.bill_number = tbl_bill_cancel.bill_number
-                        `)
-                if ((await _bill).rowCount > 0) {
-                    lj_cancel = (await _bill).rows
-                }
-                //#region LastBill
-                const _lastBill = cleint.query(`SELECT bill_number
-                                                FROM  tbl_bill
-                                                WHERE device_code = $1
-                                                AND   period_number = $2
-                                                ORDER BY bill_number DESC `, [deviceCode, periodNumber])
-                if ((await _lastBill).rowCount > 0) {
-                    lastBill = (await _lastBill).rows
-                }
-            
-                billDetailList = {
-                    key: (lj_cancel != null && lj_cancel.cancel_by == 0) ? lj_cancel.cancel_id : bill == "" ? bill.bill_id : "",
-                    billNumber: bill != "" ? bill.bill_number : "",
-                    dateTime: lj_cancel.dateTime,
-                    billPrice: bill == "" ? bill.bill_price : "",
-                    billStatus: lj_cancel == null ? "ປົກກະຕິ" : (lj_cancel.cancel_by == 0 ? `${deviceCode} (ຍົກເລິກ)` : "ແອັບມິນຍົກເລີກ"),
-                    isLast: bill != "" ? (lastBill.bill_number == bill.bill_number) && (lj_cancel == null) : "",
-                    isCancel: lj_cancel != null && (lj_cancel.cancel_by == 0 || lj_cancel.cancel_by == 1)
-                }
-        
-                done();
-                const dataTest = {
-                    "maxSell": -25000,
-                    "startPeriod": "22/07/2021",
-                    "totalSell": "25000",
-                    "totalBill": "2",
-                    "totalCancel": "0",
-                    "totalDigitSell": [
-                      {
-                        "key": "9f13a7aa-cd29-4919-b664-0e51626dbbb8",
-                        "digit": 2,
-                        "price": 25000
-                      }
-                    ],
-                    "billDetailList": [
-                      {
-                        "key": "9f13a7aa-cd29-4919-b664-0e51626dbbb8",
-                        "billNumber": "21057218080080006",
-                        "dateTime": "26/07/2021 18:33:42",
-                        "billPrice": "15000",
-                        "billStatus": "ປົກກະຕິ",
-                        "isLast": true,
-                        "isCancel": false
-                      },
-                      {
-                        "key": "1e2711bd-f79a-4982-9d29-f3a40208bdf4",
-                        "billNumber": "21057218080080005",
-                        "dateTime": "26/07/2021 16:52:10",
-                        "billPrice": "10000",
-                        "billStatus": "ປົກກະຕິ",
-                        "isLast": false,
-                        "isCancel": false
-                      }
-                    ]
-                  }
-                return res.send(
-                    dataTest
-                    // maxsell: maxsell,
-                    // startPeriod: startPeriod,
-                    // totalSell: totalSell,
-                    // totalBill: totalBill,
-                    // totalCancel: totalCancel,
-                    // totalDigitSell: totalDigitSell,
-                    // billDetailList: billDetailList
-                )
-=======
                 if ((await _totalDigitSell).rowCount > 0)
                 totalDigitSell = (await _totalDigitSell).rows
                 //#endregion
@@ -223,14 +122,15 @@ exports.get = async (req, res) => {
                     totalDigitSell: totalDigitSell,
                     billDetailList: (await _billDetailList).rows
                 })
->>>>>>> fec33c4a93e502fa39ec5595b7eec71716524055
-
             } catch (error) {
-                logger.error(error)
+                logger.error(error)           
+                return res.status(500).send('Database Error');
             }
 
         } else {
             logger.error(err)
+            return res.status(500).send('Server error');
+
         }
     })
 }

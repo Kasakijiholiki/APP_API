@@ -139,24 +139,13 @@
 <a name='L80'></a><a href='#L80'>80</a>
 <a name='L81'></a><a href='#L81'>81</a>
 <a name='L82'></a><a href='#L82'>82</a>
-<<<<<<< HEAD
 <a name='L83'></a><a href='#L83'>83</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-=======
-<a name='L83'></a><a href='#L83'>83</a>
-<a name='L84'></a><a href='#L84'>84</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
->>>>>>> fec33c4a93e502fa39ec5595b7eec71716524055
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -193,11 +182,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<<<<<<< HEAD
-<span class="cline-any cline-yes">2x</span>
-=======
-<span class="cline-any cline-yes">1x</span>
->>>>>>> fec33c4a93e502fa39ec5595b7eec71716524055
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -207,10 +192,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<<<<<<< HEAD
 <span class="cline-any cline-neutral">&nbsp;</span>
-=======
->>>>>>> fec33c4a93e502fa39ec5595b7eec71716524055
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -233,11 +215,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<<<<<<< HEAD
-=======
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
->>>>>>> fec33c4a93e502fa39ec5595b7eec71716524055
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -290,7 +267,6 @@ exports.getperiod = async (req, res) =&gt; {
 exports.getperiodv2 = <span class="fstat-no" title="function not covered" >as</span>ync (req, res) =&gt; {
 <span class="cstat-no" title="statement not covered" >deviceCode = req.params.deviceCode</span>
 <span class="cstat-no" title="statement not covered" >SQL = `SELECT </span>
-<<<<<<< HEAD
                 tbl_bill.period_number AS periodNumber,
                 tbl_bill.device_code AS deviceCode, 
                 to_char("date_offline", 'DD-MM-YYYY') AS dateOffline
@@ -299,15 +275,6 @@ exports.getperiodv2 = <span class="fstat-no" title="function not covered" >as</s
         AND     tbl_bill.device_code = $1
         GROUP BY tbl_bill.period_number,tbl_bill.device_code,  tbl_online.date_offline
         ORDER BY tbl_bill.period_number DESC `
-=======
-             tbl_bill.period_number AS periodNumber,
-             tbl_bill.device_code AS deviceCode, 
-             tbl_online.date_offline AS dateOffline
-      FROM   tbl_bill, tbl_online
-       WHERE tbl_bill.period_number = tbl_online.period_number
-       AND   tbl_bill.device_code = $1
-    ORDER BY tbl_bill.period_number DESC  `
->>>>>>> fec33c4a93e502fa39ec5595b7eec71716524055
 <span class="cstat-no" title="statement not covered" >connection.connect(<span class="fstat-no" title="function not covered" >(e</span>rr, cleint, done) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >    if(!err) {</span>
 <span class="cstat-no" title="statement not covered" >        cleint.query(SQL, [deviceCode], <span class="fstat-no" title="function not covered" >(e</span>rror, results) =&gt; {</span>
@@ -325,13 +292,7 @@ exports.getperiodv2 = <span class="fstat-no" title="function not covered" >as</s
                     message: "OK",
                     totalRecords: 0,
                     data: {
-<<<<<<< HEAD
                         billDetailList:  results.rows
-=======
-                        billDetailList: [
-                            results.rows
-                        ]
->>>>>>> fec33c4a93e502fa39ec5595b7eec71716524055
                     }
                 })
             }
@@ -349,11 +310,7 @@ exports.getperiodv2 = <span class="fstat-no" title="function not covered" >as</s
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-<<<<<<< HEAD
-                at Wed Dec 22 2021 16:41:40 GMT+0700 (Indochina Time)
-=======
-                at Wed Dec 22 2021 17:35:44 GMT+0700 (Indochina Time)
->>>>>>> fec33c4a93e502fa39ec5595b7eec71716524055
+                at Thu Dec 23 2021 13:50:11 GMT+0700 (Indochina Time)
             </div>
         </div>
         <script src="../../prettify.js"></script>
